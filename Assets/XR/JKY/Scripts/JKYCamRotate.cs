@@ -22,13 +22,11 @@ public class JKYCamRotate : MonoBehaviour
         mx += mouse_X * rotSpeed * Time.deltaTime;
         my += mouse_Y * rotSpeed * Time.deltaTime;
 
-        my = Mathf.Clamp(my, -90f, 90f);
+        my = Mathf.Clamp(my, -70f, 70f);
 
-        Vector3 dir = new Vector3(-mouse_Y, mouse_X, 0);
-        transform.eulerAngles += dir * rotSpeed * Time.deltaTime;
+        Vector3 angle = new Vector3(-my, mx, 0);
+        transform.eulerAngles = angle;
 
-        Vector3 rot = transform.eulerAngles;
-        rot.x = Mathf.Clamp(rot.x, -90f, 90f);
-        transform.eulerAngles = rot;
+     
     }
 }

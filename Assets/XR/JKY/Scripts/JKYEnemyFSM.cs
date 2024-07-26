@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using Unity.VisualScripting.FullSerializer;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class JKYEnemyFSM : MonoBehaviour
 {
@@ -53,7 +56,23 @@ public class JKYEnemyFSM : MonoBehaviour
     public float moveDistance = 20f;
 
     // 에너미의 체력
-    public int hp = 15;
+    public int hp = 55;
+    public int maxhp = 65;
+    Animator anim;
+
+    // 내비게이션 에이전트 변수
+    NavMeshAgent smith;
+
+
+
+    // 에너미 시야각
+    public float lookRadius = 8f; // 시야반경
+    public float fieldOfView = 120f; //시야각도
+    private bool playerInSight = false; //플레이어가 시야에 있는지 여부
+
+
+    // 더가까운 플레이어찾기
+    private Transform target;
 
     void Start()
     {
@@ -64,14 +83,20 @@ public class JKYEnemyFSM : MonoBehaviour
 
         //자신의 초기 위치 저장하기 
         originPos = transform.position;
+
+        anim = transform.GetComponentInChildren<Animator>();
+        smith = GetComponent<NavMeshAgent>();
+        //hp = maxhp;
+
         //
     }
 
     // Update is called once per frame
     void Update()
     {
-    // 에너미 상태상수
-        switch(m_State)
+        FindClosestTarget();
+        // 에너미 상태상수
+        switch (m_State)
         {
             case EnemyState.Idle:
                 Idle();
@@ -95,49 +120,125 @@ public class JKYEnemyFSM : MonoBehaviour
     }
     void Idle()
     {
-        if (Vector3.Distance(transform.position, player.position) < findDistance)
+        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        if (distanceToPlayer < findDistance)
         {
-            m_State = EnemyState.Move;
-            print("상태전환 : Idle -> Move");
+            if (distanceToPlayer <= lookRadius)
+            {
+                //플레이어가 시야각도 내에 있는지 확인
+                Vector3 directionToPlayer = (target.position - transform.position).normalized;
+                float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+
+                if(angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
+                {
+                    //raycast로 장애물
+                    if(Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
+                    {
+                        if (hit.transform == target)
+                        {
+                            playerInSight = true;
+                            m_State = EnemyState.Move;
+                            print("상태전환 : Idle -> Move");
+
+                            // 이동 애니메이션으로 전환하기
+                            anim.SetTrigger("IdleToMove");
+                        }
+                        else
+                        {
+                            playerInSight = false;
+                        }
+                    }
+                }
+                else { playerInSight = false; }
+            }
+            else { playerInSight = false; }
         }    
     }
 
+    public float extraRotationSpeed = 0.3f;
     void Move()
     {
-        if (Vector3.Distance(transform.position, player.position) > attackDistance)
+
+        if (Vector3.Distance(transform.position, target.position) > attackDistance)
         {
             // 이동 방향 설정
-            Vector3 dir = (player.position - transform.position).normalized;
-            //캐릭터 컨트롤러를 이용해 이동하기
-            cc.Move(dir * moveSpeed * Time.deltaTime);
+            //Vector3 dir = (player.position - transform.position).normalized;
+            ////캐릭터 컨트롤러를 이용해 이동하기
+            //cc.Move(dir * moveSpeed * Time.deltaTime);
+
+            ////플레이어를 향해 방향을 전환한다.
+            //transform.forward = dir;
+
+            // 내비게이션 에이전트의 이동을 멈추고 경로를 초기화한다.
+            //smith.isStopped = true;
+            //smith.ResetPath();
+            // 내비게이션으로 접근하는 최소 거리를 공격 가능 거리로 설정한다.
+            smith.stoppingDistance = attackDistance;
+
+            //내비게이션의 목적지를 플레이어의 위치로 설정한다.
+
+            NavMeshPath path = new NavMeshPath();
+            
+            if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
+            {
+                smith.SetDestination(target.position);
+            }
+            else
+            {
+                Vector3 dir = target.transform.position - transform.position;
+                dir.y = 0;
+                dir.Normalize();
+
+                cc.Move(dir * moveSpeed * Time.deltaTime);
+            }
+
+            
+
+            //자동으 회전하지만...너무 느려서 보정을 해준다
+            //내가 바라볼 방향의 벡터를 구하고
+            Vector3 lookRotation = target.position - transform.position;
+            //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), extraRotationSpeed * Time.deltaTime);
+            //러프를 이용해서 좀 더 빨리 회전하게 시킨다
 
         }
         else
         {
+            smith.isStopped = true;
+            smith.ResetPath();
+
             m_State = EnemyState.Attack;
             print("상태전환 Move -> attack");
 
             // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
-            currentTime = attackDelay; 
-
+            currentTime = attackDelay;
+            anim.SetTrigger("MoveToAttackDelay");
         }
 
         // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
         
     }
-
+    //여기 바꿧다!!!!!!!!!!!!!!!!!!!!!!!!!1
+    public float rotationSpeed = 15f;
     void Attack()
     {
+        Vector3 direction = target.position - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
         // 만일 플레이어가 공격 범위 이내에 있다면 플레이어 공격
-        if(Vector3.Distance(transform.position, player.position) < attackDistance)
+        if(Vector3.Distance(transform.position, target.position) < attackDistance)
         {
             // 일정시간마다 플레이어 공격
             currentTime += Time.deltaTime;
             if(currentTime > attackDelay)
             {
-                player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+                //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 print("공격");
                 currentTime = 0;
+
+                anim.SetTrigger("StartAttack");
+
             }
         }
         else
@@ -145,8 +246,17 @@ public class JKYEnemyFSM : MonoBehaviour
             m_State = EnemyState.Move;
             print("상태전환 : attack ->move");
             currentTime = 0;
+
+            anim.SetTrigger("AttackToMove");
+
         }
-    }    
+    }
+
+    public void AttackAction()
+    {
+        //print("attackaction");
+        player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+    }
     void Damaged()
     {
         // 피격 상태를 처리하기 위한 코루틴\
@@ -165,6 +275,11 @@ public class JKYEnemyFSM : MonoBehaviour
 
     public void HitEnemy(int hitPower)
     {
+        //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
+        if(m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
+        {
+            return;
+        }
         //플레이어 공격력만큼 에너미의 체력을 감소시킨다.
         hp -= hitPower;
 
@@ -180,10 +295,59 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             m_State = EnemyState.Die;
             print("상태전환 Any state -> Die");
-            //Die();
+
+            anim.SetTrigger("Die");
+            Die();
         }
     }
 
+    void Die()
+    {
+        // 진행중인 피격 코루틴을 중지한다.
+        StopAllCoroutines();
+        // 죽음상태를 처리하기 위한 코루틴을 실행한다.
+        print("코루틴 시작");
+        StartCoroutine(DieProcess());
+
+    }
+    IEnumerator DieProcess()
+    {
+        print("소멸");
+        //캐릭터 콘트롤러를 비활성
+        cc.enabled = false;
+
+        // 2초 동안 기다린 후에 자기 자신을 제거한다.
+        yield return new WaitForSeconds(2f);
+        print("소멸");
+        Destroy(gameObject);
+        
+    }
+
+
+    void FindClosestTarget()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        List<GameObject> allTargets = new List<GameObject>();
+        allTargets.AddRange(players);
+        allTargets.AddRange(allies);
+
+        float closestDistance = Mathf.Infinity;
+        Transform closestTarget = null;
+
+        foreach (GameObject target in allTargets)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+            if (distanceToTarget < closestDistance)
+            {
+                closestDistance = distanceToTarget;
+                closestTarget = target.transform;
+            }
+        }
+
+        target = closestTarget;
+        //print(target);
+    }
 
 }
 
