@@ -72,25 +72,74 @@ public class BotSight_JSW : MonoBehaviour
         zombiesInRange = zombiesInRange.OrderBy(zombie => Vector3.Distance(transform.position, zombie.transform.position)).ToArray();
         // 각도, 시아 체크
         foreach (Collider zombie in zombiesInRange)
-        {   // 시아 체크
-            if (SightCheck(zombie.transform.gameObject))
+        {   // 최상위부모 오브젝트
+            GameObject topObj = zombie.gameObject;
+            while (topObj.transform.parent.gameObject != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Zombie_JSW"))
             {
-                return zombie.gameObject;
+                topObj = topObj.transform.parent.gameObject;
+            }
+            // 시아 체크
+            if (SightCheck(topObj))
+            {
+                return topObj;
+            }
+        }
+        return null;
+    }
+    public GameObject ItemDetect(int slotNum)
+    {
+        // 범위 내 감지
+        Collider[] itemsInRange = Physics.OverlapSphere(transform.position, sightRange, 1 << LayerMask.NameToLayer("Item_JSW"));
+        // 가까운 순 정렬
+        itemsInRange = itemsInRange.OrderBy(item => Vector3.Distance(transform.position, item.transform.position)).ToArray();
+        // 시아 체크
+        foreach (Collider item in itemsInRange)
+        {   // 최상위부모 오브젝트
+            GameObject topObj = item.gameObject;
+            while (topObj.transform.parent.gameObject != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
+            {
+                topObj = topObj.transform.parent.gameObject;
+            }
+            if (SightCheck(topObj, 360))
+            {
+                if (slotNum == 0 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.MainWeapon)
+                {
+                    return topObj;
+                }
+                else if (slotNum == 1 && (ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.SubWeapon || ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.MeleeWeapon))
+                {
+                    return topObj;
+                }
+                else if (slotNum == 2 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.Projectile)
+                {
+                    return topObj;
+                }
+                if (slotNum == 3 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.Recovery)
+                {
+                    return topObj;
+                }
             }
         }
         return null;
     }
     // 시아 체크
-    public bool SightCheck(GameObject _object)
+    public bool SightCheck(GameObject _object, float _fov = -1)
     {
+        if (_fov < 0) _fov = fov;
         Vector3 offset = transform.forward + Vector3.up * 1.6f;
         Vector3 dir = (_object.transform.position - (transform.position + offset)).normalized;
         float angle = Vector3.Angle(transform.forward, dir);
         RaycastHit hitInfo;
         // 각도와 장애물이 없는지 체크 - 살아있는지 체크 추가해야됨
-        if (angle <= fov && Physics.Raycast(transform.position + offset, dir, out hitInfo, sightRange) && hitInfo.transform.gameObject == _object)
-        {
-            return true;
+        if (angle <= _fov && Physics.Raycast(transform.position + offset, dir, out hitInfo, sightRange))
+        {   // 최상위부모 오브젝트
+            GameObject topObj = hitInfo.transform.gameObject;
+            while (topObj.transform.parent.gameObject != null && topObj.transform.parent.gameObject.layer == _object.layer)
+            {
+                topObj = topObj.transform.parent.gameObject;
+            }
+            if (topObj == _object) return true;
+            else return false;
         }
         else return false;
     }
@@ -103,8 +152,4 @@ public class BotSight_JSW : MonoBehaviour
         transform.Rotate(Vector3.up * deltaAngle * Time.deltaTime * rotSpeed);
     }
     // 아이템 체크
-    public GameObject DetectItem()
-    {
-        return null;
-    }
 }
