@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4529635786691475950}
   - component: {fileID: 3120709946002552515}
   - component: {fileID: 4575125792883567011}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4002518499012202388}
   - component: {fileID: 6689908045244367711}
   - component: {fileID: 4708894006654684278}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,6 +137,9 @@ MonoBehaviour:
   deceleration: 4
   jumPower: 4
   jumpMaxcnt: 2
+  hp: 20
+  hpSlider: {fileID: 0}
+  hitEffect: {fileID: 0}
 --- !u!114 &6689908045244367711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,7 +194,7 @@ GameObject:
   - component: {fileID: 3874436902116184138}
   - component: {fileID: 682592609829830663}
   - component: {fileID: 2341704542780927258}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -342,7 +345,7 @@ GameObject:
   - component: {fileID: 4891248549539187978}
   - component: {fileID: 5128767810174841484}
   - component: {fileID: 3378736153271563178}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
