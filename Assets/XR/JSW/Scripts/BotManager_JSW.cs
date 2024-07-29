@@ -63,7 +63,7 @@ public class BotManager_JSW : MonoBehaviour
                 }
                 // 없을 때 탐지
                 if (farmingTarget == null)
-                { 
+                {
                     // 주무기가 없을 때
                     if (farmingTarget == null && inventory[0] == null)
                     {   // 주무기 탐지

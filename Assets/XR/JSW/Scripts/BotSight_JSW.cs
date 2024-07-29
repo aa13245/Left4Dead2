@@ -74,7 +74,7 @@ public class BotSight_JSW : MonoBehaviour
         foreach (Collider zombie in zombiesInRange)
         {   // 최상위부모 오브젝트
             GameObject topObj = zombie.gameObject;
-            while (topObj.transform.parent.gameObject != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Zombie_JSW"))
+            while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Zombie_JSW"))
             {
                 topObj = topObj.transform.parent.gameObject;
             }
@@ -96,7 +96,7 @@ public class BotSight_JSW : MonoBehaviour
         foreach (Collider item in itemsInRange)
         {   // 최상위부모 오브젝트
             GameObject topObj = item.gameObject;
-            while (topObj.transform.parent.gameObject != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
+            while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
             {
                 topObj = topObj.transform.parent.gameObject;
             }
@@ -134,7 +134,7 @@ public class BotSight_JSW : MonoBehaviour
         if (angle <= _fov && Physics.Raycast(transform.position + offset, dir, out hitInfo, sightRange))
         {   // 최상위부모 오브젝트
             GameObject topObj = hitInfo.transform.gameObject;
-            while (topObj.transform.parent.gameObject != null && topObj.transform.parent.gameObject.layer == _object.layer)
+            while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == _object.layer)
             {
                 topObj = topObj.transform.parent.gameObject;
             }
