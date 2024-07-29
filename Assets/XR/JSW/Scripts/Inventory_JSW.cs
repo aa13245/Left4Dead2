@@ -11,6 +11,13 @@ public class Inventory_JSW : MonoBehaviour
     // 슬롯 4개
     Item_JSW[] slots = new Item_JSW[4];
     public Item_JSW this[int idx] { get{ return slots[idx]; } }
+    // 현재 선택된 슬롯
+    int slotNum = 0;
+    public int SlotNum
+    {
+        get { return slotNum; }
+        set { slotNum = value; }
+    }
 
     // Start is called before the first frame update
     void Start()
