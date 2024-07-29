@@ -21,6 +21,11 @@ public class ObjRotate_KJS : MonoBehaviour
 
     void Update()
     {
+        //게임 상태가 '게임 중' 상태일때만 조작할 수 있게한다.
+        if (GameManager_KJS.gm.gState != GameManager_KJS.GameState.Run)
+        {
+            return;
+        }
         // 마우스 움직임값을 받아오자.
         float mx = Input.GetAxis("Mouse X");
         float my = Input.GetAxis("Mouse Y");
@@ -42,5 +47,21 @@ public class ObjRotate_KJS : MonoBehaviour
         */
         // 물체를 회전 각도로 셋팅 하자.
         transform.localEulerAngles = new Vector3(-rotX, rotY, 0);
+
+        CursorSet();
+    }
+
+    void CursorSet()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+    {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 }
