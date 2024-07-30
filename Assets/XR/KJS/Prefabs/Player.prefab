@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4529635786691475950}
   - component: {fileID: 3120709946002552515}
   - component: {fileID: 4575125792883567011}
-  m_Layer: 18
+  m_Layer: 6
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,9 @@ GameObject:
   - component: {fileID: 4002518499012202388}
   - component: {fileID: 6689908045244367711}
   - component: {fileID: 4708894006654684278}
-  m_Layer: 18
+  - component: {fileID: 2481839016693298330}
+  - component: {fileID: 8846445397183707609}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,6 +120,7 @@ Transform:
   - {fileID: 4529635786691475950}
   - {fileID: 4891248549539187978}
   - {fileID: 6524008802708606888}
+  - {fileID: 958498019669736543}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4002518499012202388
@@ -181,6 +184,75 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2481839016693298330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159480021993355730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d83e70708134c04da7b9ae6d286ea07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePosition: {fileID: 5207415221581109435}
+  bombFactory: {fileID: 2739914139579394558, guid: 0747b1f44380ff449bda983d163c1a69,
+    type: 3}
+  throwPower: 15
+--- !u!114 &8846445397183707609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159480021993355730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc74fd526470de41ab091beb436274a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletFactory: {fileID: 7995544547077806524, guid: cb7a51ee2b43d7c4791ddfc3ec8c1928,
+    type: 3}
+  firePosition: {fileID: 5207415221581109435}
+  fireRate: 0.1
+  bulletArray: []
+  bombFactory: {fileID: 2739914139579394558, guid: 0747b1f44380ff449bda983d163c1a69,
+    type: 3}
+  throwPower: 15
+  weapons: []
+  healAmount: 20
+--- !u!1 &5207415221581109435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 958498019669736543}
+  m_Layer: 6
+  m_Name: firePosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &958498019669736543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5207415221581109435}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.28, z: 1.011}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2284430175439075600}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7088161171620807250
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +266,7 @@ GameObject:
   - component: {fileID: 3874436902116184138}
   - component: {fileID: 682592609829830663}
   - component: {fileID: 2341704542780927258}
-  m_Layer: 18
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -345,7 +417,7 @@ GameObject:
   - component: {fileID: 4891248549539187978}
   - component: {fileID: 5128767810174841484}
   - component: {fileID: 3378736153271563178}
-  m_Layer: 18
+  m_Layer: 6
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}

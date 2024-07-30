@@ -135,7 +135,7 @@ public class JKYEnemyFSM : MonoBehaviour
             currentTime += Time.deltaTime;
             if(currentTime > attackDelay)
             {
-                player.GetComponent<PlayerMove_KJS>().DamageAction(attackPower);
+                player.GetComponent<PlayerControler_KJS>().DamageAction(attackPower);
                 print("공격");
                 currentTime = 0;
             }

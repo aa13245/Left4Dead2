@@ -32,9 +32,11 @@ public class GameManager_KJS : MonoBehaviour
     //현재의 게임 상태 변수
     public GameState gState;
 
-    PlayerMove_KJS player;
+    PlayerControler_KJS player;
     void Start()
     {
+        //플레이어 오브젝트를 찾은 후 플레이어의 PlayerMove 컴포넌트 받아오기.
+        player = GameObject.Find("Player").GetComponent<PlayerControler_KJS>();
         //초기 게임 상태는 준비 상태로 설정한다.
         gState = GameState.Ready;
         //게임 상태 UI오브젝트에서 Text 컴포넌트를 가져온다.
@@ -62,16 +64,13 @@ public class GameManager_KJS : MonoBehaviour
 
         //상태를 '게임 중' 상태로 변경한다.
         gState = GameState.Run;
-
-        //플레이어 오브젝트를 찾은 후 플레이어의 PlayerMove 컴포넌트 받아오기.
-        player = GameObject.Find("Player").GetComponent<PlayerMove_KJS>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //만일, 플레이어의 hp가 0이하라면...
-        if (player != null && player.hp <= 0)
+        if (player != null && player.human.HP <= 0)
         {
             //상태 텍스트를 활성화 한다.
             gameLabel.SetActive(true);
