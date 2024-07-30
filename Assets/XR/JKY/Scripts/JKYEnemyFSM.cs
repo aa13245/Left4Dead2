@@ -400,6 +400,7 @@ public class JKYEnemyFSM : MonoBehaviour
             if(currentTime > attackDelay)
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+                player.GetComponent<Human_KJS>().GetDamage(attackPower);
                 print("공격");
                 currentTime = 0;
 
