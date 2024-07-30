@@ -45,6 +45,7 @@ public class Human_KJS : MonoBehaviour
         if (gameObject.name == "Player") isPlayer = true;
         player = GetComponent<PlayerControler_KJS>();
         inventory = GetComponent<Inventory_JSW>();
+        hp = maxHP;
         ////배열을 이용해서 공간을 확보해라
         //bulletArray = new GameObject[40];
         ////배열을 채우자
@@ -66,21 +67,25 @@ public class Human_KJS : MonoBehaviour
     public void GetDamage(float value)
     {
         hp -= value;
-        if (isPlayer) player.DamageAction();
+        if (isPlayer)
+        {
+            print(gameObject.name + "/" + isPlayer);
+            player.DamageAction();
+        }
     }
-    public void MouseClick()
+    public void MouseClick(Vector3 origin = new Vector3(), Vector3 pos = new Vector3())
     {
         //유저가 Fire(LMB)을 클릭하면
         if (inventory[inventory.SlotNum] == null) return;
         // 주무기
         if (inventory.SlotNum == 0)
         {
-            MainWeapon();
+            MainWeapon(origin, pos);
         }
         // 보조무기
         else if (inventory.SlotNum == 1)
         {
-            SubWeapon();
+            SubWeapon(origin, pos);
         }
         // 투척
         else if (inventory.SlotNum == 2)
@@ -93,7 +98,7 @@ public class Human_KJS : MonoBehaviour
             ForthSlot();
         }
     }
-    void MainWeapon()
+    void MainWeapon(Vector3 origin, Vector3 dir)
     {
         #region
         /* 
@@ -133,7 +138,8 @@ public class Human_KJS : MonoBehaviour
                     // 발사
                     currTime = 0f;
                     RaycastHit hitInfo;
-                    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, itemInfo.maxRange))
+                    if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin, 
+                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
                         bullettEffect.transform.position = hitInfo.point;
@@ -147,7 +153,7 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
-    void SubWeapon()
+    void SubWeapon(Vector3 origin, Vector3 dir)
     {
         // 권총이냐
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon itemInfo)
@@ -163,7 +169,8 @@ public class Human_KJS : MonoBehaviour
                 {
                     currTime = 0f;
                     RaycastHit hitInfo;
-                    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, itemInfo.maxRange))
+                    if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
+                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
                         bullettEffect.transform.position = hitInfo.point;
@@ -211,12 +218,12 @@ public class Human_KJS : MonoBehaviour
     void GiveDamage(GameObject target, float dmg)
     {
         // 좀비 공격
-        //if (target.layer == LayerMask.NameToLayer("Enemy"))
-        //{
-            //target.GetComponent<JKYEnemyFSM>().HitEnemy(dmg);
-       // }
+        if (target.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            target.GetComponent<JKYEnemyFSM>().HitEnemy(dmg);
+        }
         // 아군 공격
-        //else
+        else
         {
 
         }

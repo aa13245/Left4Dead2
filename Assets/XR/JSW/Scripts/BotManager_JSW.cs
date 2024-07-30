@@ -7,6 +7,8 @@ public class BotManager_JSW : MonoBehaviour
     public BotMove botMove;
     public BotSight_JSW botSight;
     public Inventory_JSW inventory;
+    public Human_KJS human;
+
     // 우선순위 타겟
     GameObject priorityTarget;
     public GameObject PriorityTarget {  get { return priorityTarget; } }
@@ -21,6 +23,7 @@ public class BotManager_JSW : MonoBehaviour
         botMove = GetComponent<BotMove>();
         botSight = GetComponent<BotSight_JSW>();
         inventory = GetComponent<Inventory_JSW>();
+        human = GetComponent<Human_KJS>();
     }
 
     // Update is called once per frame
@@ -103,7 +106,13 @@ public class BotManager_JSW : MonoBehaviour
         // 공격
         if (botSight.FireEnable)
         {
-
+            GameObject target = null;
+            if (priorityTarget != null) target = priorityTarget;
+            else if (botSight.Target != null) target = botSight.Target;
+            if (target == null) return;
+            Vector3 origin = transform.position + transform.forward + Vector3.up * 1.6f;
+            Vector3 dir = target.transform.position - origin;
+            human.MouseClick(origin, dir);
         }
     }
 }
