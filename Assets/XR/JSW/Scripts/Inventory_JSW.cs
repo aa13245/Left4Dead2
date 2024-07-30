@@ -12,11 +12,11 @@ public class Inventory_JSW : MonoBehaviour
     Item_JSW[] slots = new Item_JSW[4];
     public Item_JSW this[int idx] { get{ return slots[idx]; } }
     // 현재 선택된 슬롯
-    int slotNum = 0;
+    int slotNum = 1;
     public int SlotNum
     {
         get { return slotNum; }
-        set { slotNum = value; }
+        set { if (slots[value] != null) slotNum = value; }
     }
 
     // Start is called before the first frame update
@@ -63,7 +63,7 @@ public class Inventory_JSW : MonoBehaviour
         // 투척류 교체
         else if (item is ItemTable_JSW.Projectile)
         {   // 현재 소지템과 동일한지 확인
-            if (slots[2].kind != itemComp.kind)
+            if (slots[2] == null || slots[2].kind != itemComp.kind)
             {
                 slot = 2;
             }
@@ -72,7 +72,7 @@ public class Inventory_JSW : MonoBehaviour
         // 회복템 교체
         else if (item is ItemTable_JSW.Recovery)
         {   // 현재 소지템과 동일한지 확인
-            if (slots[3].kind != itemComp.kind)
+            if (slots[3] == null || slots[3].kind != itemComp.kind)
             {
                 slot = 3;
             }
