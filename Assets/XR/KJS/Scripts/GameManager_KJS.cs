@@ -9,6 +9,11 @@ public class GameManager_KJS : MonoBehaviour
     public static GameManager_KJS gm;
     // 게임 상태 UI 오브젝트 변수
     public GameObject gameLabel;
+    //패널 배열
+    public GameObject[] panels;
+    private int currentPanelIndex = -1;
+
+    PlayerControler_KJS human;
     // 게임 상태 UI 텍스트 컴포넌트 변수
     Text gameText;
 
@@ -47,6 +52,11 @@ public class GameManager_KJS : MonoBehaviour
         gameText.color = new Color32(255, 0, 0, 255);
         //게임 준비 > 게임 중 상태로 전환하기
         StartCoroutine(ReadyToStart());
+        // 시작시 모든 패널을 비 활성화
+        foreach (GameObject panel in panels)
+        {
+            panel.SetActive(false);
+        }
     }
     IEnumerator ReadyToStart()
     {
@@ -69,6 +79,7 @@ public class GameManager_KJS : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //for(int i=0; i)
         //만일, 플레이어의 hp가 0이하라면...
         if (player != null && player.human.HP <= 0)
         {
