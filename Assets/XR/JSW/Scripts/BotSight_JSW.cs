@@ -67,14 +67,14 @@ public class BotSight_JSW : MonoBehaviour
     // 좀비 시아 감지
     GameObject DetectBySight()
     {   // 범위 내 감지
-        Collider[] zombiesInRange = Physics.OverlapSphere(transform.position, sightRange, 1 << LayerMask.NameToLayer("Zombie_JSW"));
+        Collider[] zombiesInRange = Physics.OverlapSphere(transform.position, sightRange, 1 << LayerMask.NameToLayer("Enemy"));
         // 가까운 순 정렬
         zombiesInRange = zombiesInRange.OrderBy(zombie => Vector3.Distance(transform.position, zombie.transform.position)).ToArray();
         // 각도, 시아 체크
         foreach (Collider zombie in zombiesInRange)
         {   // 최상위부모 오브젝트
             GameObject topObj = zombie.gameObject;
-            while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Zombie_JSW"))
+            while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 topObj = topObj.transform.parent.gameObject;
             }
