@@ -8,16 +8,15 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
 
-public class JKYEnemyFSM : MonoBehaviour
+public class JKYEnemySpawn1 : MonoBehaviour
 {
     // Start is called before the first frame update
     enum EnemyState
     {
         Idle,
-        Move, 
+        Move,
         Attack,
         Return,
-        Climb,
         Damaged,
         Die
     }
@@ -46,20 +45,20 @@ public class JKYEnemyFSM : MonoBehaviour
     CharacterController cc;
 
     //에너미 공격력
-    public float attackPower = 3;
+    public int attackPower = 3;
     //
     // 초기 위치 저장용 변수
     Vector3 originPos;
 
     // 발사 무기 공격력
-    public float weaponPower = 5;
+    public int weaponPower = 5;
 
     // 이동가능범위
     public float moveDistance = 20f;
 
     // 에너미의 체력
-    public float hp = 50;
-    public float maxhp = 50;
+    public int hp = 55;
+    public int maxhp = 65;
     Animator anim;
 
     // 내비게이션 에이전트 변수
@@ -73,7 +72,6 @@ public class JKYEnemyFSM : MonoBehaviour
     private Rigidbody rb;
     public float climbHeight = 5;
     private Vector3 climbTarget;
-    private bool isMoving = false;
 
 
 
@@ -85,7 +83,7 @@ public class JKYEnemyFSM : MonoBehaviour
 
     // 더가까운 플레이어찾기
     private Transform target;
-    //private Transform enemy;
+
     void Start()
     {
         // 최초상태 대기
@@ -101,7 +99,6 @@ public class JKYEnemyFSM : MonoBehaviour
 
         //hp = maxhp;
         rb = GetComponent<Rigidbody>();
-        //Vector3 enemyy = enemy.position.y;
         //
     }
 
@@ -124,9 +121,6 @@ public class JKYEnemyFSM : MonoBehaviour
             //case EnemyState.Return:
             //Return();
             //break;
-            case EnemyState.Climb:
-                Climb();
-                break;
             case EnemyState.Damaged:
                 //Damaged();
                 break;
@@ -137,40 +131,40 @@ public class JKYEnemyFSM : MonoBehaviour
     }
     void Idle()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
-        if (distanceToPlayer < findDistance)
-        {
-            if (distanceToPlayer <= lookRadius)
-            {
-                //플레이어가 시야각도 내에 있는지 확인
-                Vector3 directionToPlayer = (target.position - transform.position).normalized;
-                float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+        //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        //if (distanceToPlayer < findDistance)
+        //{
+        //    if (distanceToPlayer <= lookRadius)
+        //    {
+        //        //플레이어가 시야각도 내에 있는지 확인
+        //        Vector3 directionToPlayer = (target.position - transform.position).normalized;
+        //        float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
-                if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
-                {
-                    //raycast로 장애물
-                    if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
-                    {
-                        if (hit.transform == target)
-                        {
-                            playerInSight = true;
-                            m_State = EnemyState.Move;
-                            print("상태전환 : Idle -> Move");
+        //        if(angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
+        //        {
+        //            //raycast로 장애물
+        //            if(Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
+        //            {
+        //                if (hit.transform == target)
+        //                {
+        //                    playerInSight = true;
+        //                    m_State = EnemyState.Move;
+        //                    print("상태전환 : Idle -> Move");
 
-                            // 이동 애니메이션으로 전환하기
-                            anim.SetTrigger("IdleToMove");
-                        }
-                        else
-                        {
-                            playerInSight = false;
-                        }
-                    }
-                }
-                else { playerInSight = false; }
-            }
-            else { playerInSight = false; }
-        }
-
+        //                    // 이동 애니메이션으로 전환하기
+        //                    anim.SetTrigger("IdleToMove");
+        //                }
+        //                else
+        //                {
+        //                    playerInSight = false;
+        //                }
+        //            }
+        //        }
+        //        else { playerInSight = false; }
+        //    }
+        //    else { playerInSight = false; }
+        //}    
+        m_State = EnemyState.Move;
     }
 
     public float extraRotationSpeed = 0.3f;
@@ -197,12 +191,10 @@ public class JKYEnemyFSM : MonoBehaviour
 
 
             NavMeshPath path = new NavMeshPath();
-            
+            isClimbing = false;
             if (isClimbing)
             {
-                print("climb함수들어왔다 트루");
-                m_State = EnemyState.Climb;
-                print("상태전환 Move -> Climb");
+                ClimbWall();
             }
             else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
             {
@@ -211,11 +203,9 @@ public class JKYEnemyFSM : MonoBehaviour
                 smith.SetDestination(target.position);
 
             }
-            
-            // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
+
             else
             {
-                print("이건뭐지?");
                 Vector3 dir = target.transform.position - transform.position;
                 dir.y = 0;
                 dir.Normalize();
@@ -246,19 +236,19 @@ public class JKYEnemyFSM : MonoBehaviour
         }
 
         // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
-        
+
     }
 
     void checkForClimbingShortcut()
     {
-        
+        print("climb?");
         // 벽을 타고 올라가는 경로를 계산
         RaycastHit hit;
 
         if (Physics.Raycast(transform.position, transform.forward, out hit, climbHeight, climb))
         {
             print("climb");
-            //climbTarget = new Vector3(transform.position.x, hit.transform.localScale.y, transform.position.z);
+            climbTarget = new Vector3(transform.position.x, hit.transform.localScale.y, transform.position.z);
 
             //// 현재 경로와 벽을 타고 올라가는 경로 비교
             //float navMeshDistance = smith.remainingDistance;
@@ -271,9 +261,7 @@ public class JKYEnemyFSM : MonoBehaviour
             smith.enabled = false;
             //    cc.Move(player.transform.position - transform.position);
             isClimbing = true;
-            print("네비끝");
-            isMoving = true;
-            cc.Move((target.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
+
             //}
             //smith.enabled = false;
             //cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
@@ -281,74 +269,24 @@ public class JKYEnemyFSM : MonoBehaviour
 
         }
     }
-    void Climb()
-    {
-        print("왜여기까지안오냐고");
-        //isClimbing = true;
-        isMoving = false;
-        print("부딪혓다");
-        cc.Move(Vector3.up * climbSpeed * Time.deltaTime);
-        //if (gameObject.transform.position.y > cy + cly + ey)
-        //{
-        //    print("끝까지 올라왔다");
-        //    movingTime += Time.deltaTime;
-        //    isMovingUp = false;
-        //    isMoving = true;
-        //    //cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
-
-        //    if (movingTime > 2f)
-        //    {
-        //        print("좀만 앞으로가");
-        //        isMoving = false;
-        //        movingTime = 0;
-        //        smith.enabled = true;
-        //        smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-        //        smith.destination = player.position;
-        //    }
-        //}
-    }
-    float movingTime = 0;
-    bool isMovingUp = false;
-    float ey;
-    public void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("climb"))
         {
             isClimbing = true;
-            float cy = collision.transform.position.y;
-            float cly = collision.transform.localScale.y/2;
+            print("부딪혓다");
+            cc.Move((climbTarget - transform.position) * climbSpeed * Time.deltaTime);
+            if (gameObject.transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2 + gameObject.transform.position.y)
+            {
+                isClimbing = false;
+                cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
+                smith.enabled = true;
+                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
+                smith.destination = player.position;
+            }
+
         }
     }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(collision.gameObject.layer == LayerMask.NameToLayer("climb"))
-    //    {
-    //        ey = gameObject.transform.position.y;
-    //        isMoving = false;
-    //        print("부딪혓다");
-    //        isMovingUp = true;
-    //        cc.Move((climbTarget - transform.position) * climbSpeed * Time.deltaTime);
-    //        if (gameObject.transform.position.y > collision.transform.position.y + collision.transform.localScale.y/2 + ey)
-    //        {
-    //            print("끝까지 올라왔다");
-    //            movingTime += Time.deltaTime;
-    //            isMovingUp = false;
-    //            isMoving = true;
-    //            //cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
-
-    //            if (movingTime > 2f)
-    //            {
-    //                print("좀만 앞으로가");
-    //                isMoving = false;
-    //                movingTime = 0;
-    //                smith.enabled = true;
-    //                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-    //                smith.destination = player.position;
-    //            }
-    //        }
-
-    //    }
-    //}
     //void DetectWall()
     //{
     //    RaycastHit hit;
@@ -374,7 +312,7 @@ public class JKYEnemyFSM : MonoBehaviour
         print("올라간다");
         //cc.Move((climbTarget- transform.position) * climbSpeed * Time.deltaTime);
         cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
-        
+
         //// 벽을 다 올라갔는지 체크
         //if (Vector3.Distance(transform.position, climbTarget) < 0.1f)
         //{
@@ -393,11 +331,11 @@ public class JKYEnemyFSM : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         // 만일 플레이어가 공격 범위 이내에 있다면 플레이어 공격
-        if(Vector3.Distance(transform.position, target.position) < attackDistance)
+        if (Vector3.Distance(transform.position, target.position) < attackDistance)
         {
             // 일정시간마다 플레이어 공격
             currentTime += Time.deltaTime;
-            if(currentTime > attackDelay)
+            if (currentTime > attackDelay)
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 print("공격");
@@ -436,13 +374,13 @@ public class JKYEnemyFSM : MonoBehaviour
 
         m_State = EnemyState.Move;
         print("상태전환 Damaged -.move");
-        
+
     }
 
-    public void HitEnemy(float hitPower)
+    public void HitEnemy(int hitPower)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
-        if(m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
+        if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
         {
             return;
         }
@@ -450,7 +388,7 @@ public class JKYEnemyFSM : MonoBehaviour
         hp -= hitPower;
 
         // 에너미의 체력이 0보다 크면 피격 상태로 전환
-        if( hp >0)
+        if (hp > 0)
         {
             m_State = EnemyState.Damaged;
             print("상태 전환 Any State -> Damaged");
@@ -486,16 +424,14 @@ public class JKYEnemyFSM : MonoBehaviour
         yield return new WaitForSeconds(2f);
         print("소멸");
         Destroy(gameObject);
-        
+
     }
 
 
     void FindClosestTarget()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
-        //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);
         allTargets.AddRange(allies);

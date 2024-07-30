@@ -21,9 +21,9 @@ public class JKYPlayerMove : MonoBehaviour
     // 현재 점프 횟수
     int jumpCurrCnt;
 
-    public int hp = 500;
+    public float hp = 500;
 
-    int maxHp = 1000;
+    float maxHp = 1000;
     public Slider hpSlider;
 
     // HIt 효과 이펙트
@@ -90,7 +90,7 @@ public class JKYPlayerMove : MonoBehaviour
     }
 
     //플레이어 피격함수
-    public void DamageAction(int damage)
+    public void DamageAction(float damage)
     {
         //print("d여기까지");
         hp -= damage;
