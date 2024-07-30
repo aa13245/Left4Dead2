@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JKYPlayerMove : MonoBehaviour
 {
@@ -19,6 +20,17 @@ public class JKYPlayerMove : MonoBehaviour
     public int jumpMaxCnt = 2;
     // 현재 점프 횟수
     int jumpCurrCnt;
+
+    public float hp = 500;
+
+    float maxHp = 1000;
+    public Slider hpSlider;
+
+    // HIt 효과 이펙트
+    public GameObject hitEffect;
+
+
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -71,13 +83,30 @@ public class JKYPlayerMove : MonoBehaviour
         //transform.position += dir * moveSpeed * Time.deltaTime;
         cc.Move(dir * moveSpeed * Time.deltaTime);
 
+        // 현재 플레이어 hp(%)를 hp 슬라이더의 value에 반영한다.
+        //hpSlider.value = (float)hp / (float)maxHp;
 
         
     }
 
     //플레이어 피격함수
-    public void DamageAction(int damage)
+    public void DamageAction(float damage)
     {
-        //hp -= damage;
+        //print("d여기까지");
+        hp -= damage;
+
+        if ( hp > 0)
+        {
+            // 피격 이펙트 코루틴을 시작
+            StartCoroutine(PlayHitEffect());
+
+        }
+    }
+
+    IEnumerator PlayHitEffect()
+    {
+        hitEffect.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        hitEffect.SetActive(false);
     }
 }
