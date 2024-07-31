@@ -10,21 +10,22 @@ public class BotMove : MonoBehaviour
     NavMeshAgent agent;
     BotManager_JSW botManager;
 
-    public enum BotState
+    public enum BotMoveState
     {
         Idle,
         Follow,
+        Farming
     }
-    BotState botState;
-    void ChangeBotState(BotState s)
+    BotMoveState botMoveState;
+    public void ChangeBotMoveState(BotMoveState s)
     {
-        if (botState == s) return;
-        botState = s;
-        if (s == BotState.Idle)
+        if (botMoveState == s) return;
+        botMoveState = s;
+        if (s == BotMoveState.Idle)
         {
 
         }
-        else if (s == BotState.Follow)
+        else if (s == BotMoveState.Follow)
         {
 
         }
@@ -36,6 +37,7 @@ public class BotMove : MonoBehaviour
         player = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
         botManager = GetComponent<BotManager_JSW>();
+        GetComponent<Human_KJS>().slow += Slow;
     }
 
     // 플레이어와의 거리
@@ -46,27 +48,46 @@ public class BotMove : MonoBehaviour
     void Update()
     {
         targetDis = Vector3.Distance(transform.position, botManager.PriorityTarget != null ? botManager.PriorityTarget.transform.position : player.transform.position);
-        if (botState == BotState.Idle)
+        if (botMoveState == BotMoveState.Idle)
         {   // 타겟을 쫒아가야 함 || 플레이어 거리 멀어짐
             if ((botManager.PriorityTarget != null && (!botManager.TargetVisible || targetDis > botManager.botSight.FireRange)) || targetDis > followDis)
             {
                 agent.isStopped = false;
                 agent.avoidancePriority = Random.Range(0, 100);
                 agent.SetDestination(player.transform.position);
-                ChangeBotState(BotState.Follow);
+                ChangeBotMoveState(BotMoveState.Follow);
             }
         }
-        else if (botState == BotState.Follow)
+        else if (botMoveState == BotMoveState.Follow)
         {   // 타겟을 사격 가능 || 플레이어가 거리 내로 옴
             if ((botManager.PriorityTarget != null && (botManager.TargetVisible && targetDis <= botManager.botSight.FireRange - 1)) || targetDis < followDis - 1)
             {   // 도착
                 agent.isStopped = true;
-                ChangeBotState(BotState.Idle);
+                ChangeBotMoveState(BotMoveState.Idle);
             }
             else
             {   // 멀음
                 agent.SetDestination(player.transform.position);
             }
         }
+        else if (botMoveState == BotMoveState.Farming)
+        {
+            if (botManager.botSight.Target != null || botManager.PriorityTarget != null || botManager.farmingTarget == null)
+            {   // 파밍 중단
+                botManager.farmingTarget = null;
+                ChangeBotMoveState(BotMoveState.Idle);
+            }
+            else
+            {
+                agent.SetDestination(botManager.farmingTarget.transform.position);
+                agent.isStopped = false;
+            }
+        }
+    }
+
+    // 맞았을 때 감속되는 함수
+    public void Slow()
+    {
+        agent.velocity = Vector3.zero;
     }
 }

@@ -16,7 +16,7 @@ public class BotManager_JSW : MonoBehaviour
     bool targetVisible;
     public bool TargetVisible { get { return targetVisible; } }
     // 파밍할 아이템 타겟
-    GameObject farmingTarget;
+    public GameObject farmingTarget;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,11 +53,17 @@ public class BotManager_JSW : MonoBehaviour
             else
             {
                 /*
-                 * 1. 기절 살리기
-                 * 2. 회복 - 플레이어, 아군, 본인
-                 * 3. 장전
-                 * 4. 파밍
+                  1. 기절 살리기
+                  2. 회복 - 플레이어, 아군, 본인
+                  3. 장전
+                  4. 파밍
                  */
+                // 장전
+                if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
+                {
+                    human.Reload();
+                    return;
+                }
                 // 파밍
                 // 목표가 있을 때
                 if (farmingTarget != null)
@@ -91,14 +97,15 @@ public class BotManager_JSW : MonoBehaviour
                 // 목표 아이템으로 이동하기
                 if (farmingTarget != null)
                 {   // 가까이 왔을 때 아이템 줍기
-                    if (Vector3.Distance(gameObject.transform.position, farmingTarget.transform.position) < 1.5f)
+                    if (Vector3.Distance(transform.position, farmingTarget.transform.position) < 1.5f)
                     {
-
+                        botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
+                        human.PickUp(farmingTarget);
                     }
                     // 멀 때 이동하기
                     else
                     {
-
+                        botMove.ChangeBotMoveState(BotMove.BotMoveState.Farming);
                     }
                 }
             }

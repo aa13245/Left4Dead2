@@ -39,6 +39,8 @@ public class Human_KJS : MonoBehaviour
     public PlayerControler_KJS player;
     // 인벤토리 컴포넌트
     Inventory_JSW inventory;
+    // 공격받을 때 슬로우걸리는 함수
+    public Action slow;
 
     void Start()
     {
@@ -64,14 +66,14 @@ public class Human_KJS : MonoBehaviour
     {
         if (currTime < 100) currTime += Time.deltaTime;
     }
-    public void GetDamage(float value)
+    public void GetDamage(float value, GameObject attacker)
     {
         hp -= value;
         if (isPlayer)
         {
-            print(gameObject.name + "/" + isPlayer);
             player.DamageAction();
         }
+        if (slow != null) slow();
     }
     public void MouseClick(Vector3 origin = new Vector3(), Vector3 pos = new Vector3())
     {
@@ -228,15 +230,24 @@ public class Human_KJS : MonoBehaviour
 
         }
     }
-    public void PickUp()
+    public void PickUp(GameObject item = null)
     {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 2))
+        // 플레이어 일 때
+        if (item == null)
         {
-            if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
+            RaycastHit hitInfo;
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 2))
             {
-                inventory.PickUp(hitInfo.transform.gameObject);
+                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
+                {
+                    inventory.PickUp(hitInfo.transform.gameObject);
+                }
             }
+        }
+        // 봇일 때
+        else
+        {
+            inventory.PickUp(item);
         }
     }
     public void Drop()
@@ -256,5 +267,9 @@ public class Human_KJS : MonoBehaviour
             topObj = topObj.transform.parent.gameObject;
         }
         return topObj;
+    }
+    public void Stun()
+    {
+
     }
 }
