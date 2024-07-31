@@ -8,14 +8,16 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
 
-public class JKYEnemyFSM : MonoBehaviour
+public class JKYHammerFS : MonoBehaviour
 {
     // Start is called before the first frame update
     enum EnemyState
     {
         Idle,
-        Move, 
+        Move,
         Attack,
+        Throw,
+        Run,
         Return,
         Climb,
         Damaged,
@@ -26,16 +28,16 @@ public class JKYEnemyFSM : MonoBehaviour
     EnemyState m_State;
 
     //플레이어 발견 범위
-    public float findDistance = 8f;
+    public float findDistance = 70f;
 
     // 플레이어 트랜스폼
     Transform player;
 
     // 공격 가능범위
-    public float attackDistance = 2f;
+    public float attackDistance = 4f;
 
     // 이동속도
-    public float moveSpeed = 5f;
+    public float moveSpeed = 7f;
 
     // 누적 시간
     float currentTime = 0;
@@ -58,8 +60,8 @@ public class JKYEnemyFSM : MonoBehaviour
     public float moveDistance = 20f;
 
     // 에너미의 체력
-    public float hp = 50;
-    public float maxhp = 50;
+    public float hp = 500;
+    public float maxhp = 500;
     Animator anim;
 
     // 내비게이션 에이전트 변수
@@ -71,7 +73,7 @@ public class JKYEnemyFSM : MonoBehaviour
     public LayerMask climb;
     private bool isClimbing = false;
     private Rigidbody rb;
-    public float detectionRange = 15;
+    
     private Vector3 climbTarget;
     private bool isMoving = false;
 
@@ -82,7 +84,20 @@ public class JKYEnemyFSM : MonoBehaviour
     public float fieldOfView = 120f; //시야각도
     private bool playerInSight = false; //플레이어가 시야에 있는지 여부
 
+    //헤머
+    
+    public float spawnRange = 30.0f;
+    public float detectionRange = 50.0f;
+    public float throwCooldownMin = 3.0f;
+    public float throwCooldownMax = 7.0f;
+    public float chargeSpeed = 20.0f;
+    public float knockbackDistance = 7.0f;
+    public GameObject rockPrefab;
 
+    private float spawnCooldown = 30.0f;
+    private float throwCooldown;
+    private float nextThrowTime;
+    private bool isCharging = false;
     // 더가까운 플레이어찾기
     private Transform target;
     //private Transform enemy;
@@ -103,7 +118,14 @@ public class JKYEnemyFSM : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //Vector3 enemyy = enemy.position.y;
         //
+
+
+        //스폰
+        InvokeRepeating("SpawnZombie", 0, spawnCooldown);
+        ResetThrowCooldown();
     }
+
+    int a = 10;
 
     // Update is called once per frame
     void Update()
@@ -121,6 +143,13 @@ public class JKYEnemyFSM : MonoBehaviour
             case EnemyState.Attack:
                 Attack();
                 break;
+            case EnemyState.Throw:
+                Throw();
+                print(a);
+                break;
+            case EnemyState.Run:
+                Run();
+                break;
             //case EnemyState.Return:
             //Return();
             //break;
@@ -137,48 +166,48 @@ public class JKYEnemyFSM : MonoBehaviour
     }
     void Idle()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
-        if (distanceToPlayer < findDistance)
-        {
-            if (distanceToPlayer <= lookRadius)
-            {
-                //플레이어가 시야각도 내에 있는지 확인
+        //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        //if (distanceToPlayer < findDistance)
+        //{
+        //    if (distanceToPlayer <= lookRadius)
+        //    {
+        //        //플레이어가 시야각도 내에 있는지 확인
 
-                Vector3 directionToPlayer = (target.position - transform.position).normalized;
-                float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+        //        Vector3 directionToPlayer = (target.position - transform.position).normalized;
+        //        float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
-                if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
-                {
-                    //raycast로 장애물
-                    if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
-                    {
-                        //print(hit.transform.gameObject.name + "/" + target.name);
-                        if (hit.transform == target)
-                        {
-                            playerInSight = true;
+        //        if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
+        //        {
+        //            //raycast로 장애물
+        //            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
+        //            {
+        //                //print(hit.transform.gameObject.name + "/" + target.name);
+        //                if (hit.transform == target)
+        //                {
+        //                    playerInSight = true;
+        //                }
+        //                else
+        //                {
+        //                    playerInSight = false;
+        //                }
+        //            }
+        //        }
+        //        else { playerInSight = false; }
+        //    }
+        //    else { playerInSight = false; }
+        //}
                             m_State = EnemyState.Move;
                             print("상태전환 : Idle -> Move");
 
                             // 이동 애니메이션으로 전환하기
                             anim.SetTrigger("IdleToMove");
-                        }
-                        else
-                        {
-                            playerInSight = false;
-                        }
-                    }
-                }
-                else { playerInSight = false; }
-            }
-            else { playerInSight = false; }
-        }
 
     }
 
     public float extraRotationSpeed = 0.3f;
     void Move()
     {
-
+        float distanceToPlayer = Vector3.Distance(transform.position, target.transform.position);
         if (Vector3.Distance(transform.position, target.position) > attackDistance)
         {
             // 이동 방향 설정
@@ -199,7 +228,7 @@ public class JKYEnemyFSM : MonoBehaviour
 
 
             NavMeshPath path = new NavMeshPath();
-            
+
             if (isClimbing)
             {
                 print("climb함수들어왔다 트루");
@@ -208,26 +237,65 @@ public class JKYEnemyFSM : MonoBehaviour
             }
             else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
             {
-
+                Vector3 lookRotation1 = target.position - transform.position;
+                //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
+                //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation1), extraRotationSpeed * Time.deltaTime);
+                print("돌았어");
                 checkForClimbingShortcut();
+                // 스킬 돌던지고 돌진
+                if (distanceToPlayer <= detectionRange && !isCharging)
+                {
+                    print("이제 레이 쏜다.");
+                    // 레이캐스트를 쏘아서 플레이어가 시야에 있는지 감지
+                    Vector3 directionToPlayer = (target.transform.position - transform.position).normalized;
+                    Ray ray = new Ray(transform.position, directionToPlayer);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(ray, out hit, spawnRange))
+                    {
+                        if (hit.collider.gameObject == player.gameObject)
+                        {
+                            // 플레이어가 시야에 잡혔으면 돌 던지기
+                            if (Time.time >= nextThrowTime)
+                            {
+                                print("이제 던진다?");
+                                m_State = EnemyState.Throw;
+                                print("throw로 상태변환;");
+                                //Throw();
+
+
+
+                            }
+                        }
+                    }
+
+                    // 플레이어와의 거리가 20m 이내이면 돌진 스킬 사용
+                    else if (distanceToPlayer <= 20.0f)
+                    {
+                        print("돌진할꺼야");
+                        m_State = EnemyState.Run;
+                        
+                    }
+                }
                 smith.SetDestination(target.position);
 
             }
-            
-            // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
-            else
-            {
-                print("이건뭐지?");
-                Vector3 dir = target.transform.position - transform.position;
-                dir.y = 0;
-                dir.Normalize();
 
-                cc.Move(dir * moveSpeed * Time.deltaTime);
-            }
+            // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
+            //else
+            //{
+            //    print("이건뭐지?");
+            //    Vector3 dir = target.transform.position - transform.position;
+            //    dir.y = 0;
+            //    dir.Normalize();
+
+            //    cc.Move(dir * moveSpeed * Time.deltaTime);
+            //}
 
 
             //자동으 회전하지만...너무 느려서 보정을 해준다
             //내가 바라볼 방향의 벡터를 구하고
+            print("돌아볼꺼야");
             Vector3 lookRotation = target.position - transform.position;
             //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), extraRotationSpeed * Time.deltaTime);
@@ -248,7 +316,7 @@ public class JKYEnemyFSM : MonoBehaviour
         }
 
         // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
-        
+
     }
 
     public float detectionAngle = 70.0f;
@@ -290,6 +358,78 @@ public class JKYEnemyFSM : MonoBehaviour
             }
         }
     }
+
+    // 헤머 스킬
+    void SpawnZombie()
+    {
+        // 랜덤한 위치에 좀비 소환
+        Vector3 randomPosition = player.transform.position + (Random.insideUnitSphere * spawnRange);
+        randomPosition.y = 0; // 지면에 맞추기 위해 y 좌표를 0으로 설정
+        transform.position = randomPosition;
+    }
+
+
+    void Throw()
+    {
+        StartCoroutine(PrepareAndThrowRock());
+        ResetThrowCooldown();
+        m_State = EnemyState.Move;
+
+    }
+    IEnumerator PrepareAndThrowRock()
+    {
+        // 돌을 에너미 위에 생성
+        GameObject rock = Instantiate(rockPrefab, transform.position + Vector3.up*0.4f   , Quaternion.identity);
+        print("위에 돌생성");
+        smith.isStopped = true;
+        yield return new WaitForSeconds(1.0f); // 2초 기다림
+        smith.isStopped = false;
+        // 돌을 플레이어에게 던짐
+        Vector3 directionToPlayer = ((target.transform.position + Vector3.down * 0.3f) - transform.position ).normalized;
+        print("돌던짐");
+        Rigidbody rb = rock.GetComponent<Rigidbody>();
+        rb.velocity = directionToPlayer * 29f; // 돌의 속도 설정
+    }
+
+    void Run()
+    {
+        StartCoroutine(ChargePlayer());
+    }
+    void ResetThrowCooldown()
+    {
+        throwCooldown = Random.Range(throwCooldownMin, throwCooldownMax);
+        nextThrowTime = Time.time + throwCooldown;
+    }
+
+    IEnumerator ChargePlayer()
+    {
+        isCharging = true;
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+        float chargeDuration = 1.0f; // 돌진하는 시간 (임의로 1초로 설정)
+        float startTime = Time.time;
+
+        while (Time.time < startTime + chargeDuration)
+        {
+            //transform.position += directionToPlayer * chargeSpeed * Time.deltaTime;
+            yield return null;
+        }
+
+        // 플레이어가 돌진에 맞았는지 체크
+        if (Vector3.Distance(transform.position, player.transform.position) <= 1.0f)
+        {
+            Rigidbody playerRb = player.GetComponent<Rigidbody>();
+            if (playerRb != null)
+            {
+                Vector3 knockbackDirection = (player.transform.position - transform.position).normalized;
+                playerRb.AddForce(knockbackDirection * knockbackDistance, ForceMode.Impulse);
+            }
+        }
+
+        isCharging = false;
+
+        m_State = EnemyState.Move;
+    }
     void Climb()
     {
         print("왜여기까지안오냐고");
@@ -328,7 +468,7 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             isClimbing = true;
             cy = collision.transform.position.y;
-            cly = collision.transform.localScale.y/2;
+            cly = collision.transform.localScale.y / 2;
         }
     }
     //private void OnCollisionEnter(Collision collision)
@@ -381,21 +521,21 @@ public class JKYEnemyFSM : MonoBehaviour
 
     //}
 
-    void ClimbWall()
-    {
-        print("올라간다");
-        //cc.Move((climbTarget- transform.position) * climbSpeed * Time.deltaTime);
-        cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
-        
-        //// 벽을 다 올라갔는지 체크
-        //if (Vector3.Distance(transform.position, climbTarget) < 0.1f)
-        //{
-        //    isClimbing = false;
-        //    smith.enabled = true;
-        //    smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-        //    smith.destination = player.position;
-        //}
-    }
+    //void ClimbWall()
+    //{
+    //    print("올라간다");
+    //    //cc.Move((climbTarget- transform.position) * climbSpeed * Time.deltaTime);
+    //    cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
+
+    //    //// 벽을 다 올라갔는지 체크
+    //    //if (Vector3.Distance(transform.position, climbTarget) < 0.1f)
+    //    //{
+    //    //    isClimbing = false;
+    //    //    smith.enabled = true;
+    //    //    smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
+    //    //    smith.destination = player.position;
+    //    //}
+    //}
     //여기 바꿧다!!!!!!!!!!!!!!!!!!!!!!!!!1
     public float rotationSpeed = 15f;
     void Attack()
@@ -405,11 +545,11 @@ public class JKYEnemyFSM : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         // 만일 플레이어가 공격 범위 이내에 있다면 플레이어 공격
-        if(Vector3.Distance(transform.position, target.position) < attackDistance)
+        if (Vector3.Distance(transform.position, target.position) < attackDistance)
         {
             // 일정시간마다 플레이어 공격
             currentTime += Time.deltaTime;
-            if(currentTime > attackDelay)
+            if (currentTime > attackDelay)
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
@@ -449,13 +589,13 @@ public class JKYEnemyFSM : MonoBehaviour
 
         m_State = EnemyState.Move;
         print("상태전환 Damaged -.move");
-        
+
     }
 
     public void HitEnemy(float hitPower)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
-        if(m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
+        if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
         {
             return;
         }
@@ -463,7 +603,7 @@ public class JKYEnemyFSM : MonoBehaviour
         hp -= hitPower;
 
         // 에너미의 체력이 0보다 크면 피격 상태로 전환
-        if( hp >0)
+        if (hp > 0)
         {
             m_State = EnemyState.Damaged;
             print("상태 전환 Any State -> Damaged");
@@ -499,7 +639,7 @@ public class JKYEnemyFSM : MonoBehaviour
         yield return new WaitForSeconds(2f);
         print("소멸");
         Destroy(gameObject);
-        
+
     }
 
 

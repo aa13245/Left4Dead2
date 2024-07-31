@@ -211,12 +211,12 @@ public class Human_KJS : MonoBehaviour
     void GiveDamage(GameObject target, float dmg)
     {
         // 좀비 공격
-        //if (target.layer == LayerMask.NameToLayer("Enemy"))
-        //{
-            //target.GetComponent<JKYEnemyFSM>().HitEnemy(dmg);
-       // }
-        // 아군 공격
-        //else
+        if (target.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            target.GetComponent<JKYEnemyFSM>().HitEnemy(dmg);
+        }
+        //아군 공격
+        else
         {
 
         }

@@ -17,9 +17,9 @@ public class HitEvent : MonoBehaviour
     {
         
     }
-    public void PlayerHit()
-    {
-        //print("playerhit");
-        efsm.AttackAction();
-    }
+    //public void PlayerHit()
+    //{
+    //    //print("playerhit");
+    //    efsm.AttackAction();
+    //}
 }

@@ -337,7 +337,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > attackDelay)
             {
-                //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
                 print("공격");
                 currentTime = 0;
 
@@ -356,11 +356,11 @@ public class JKYEnemySpawn1 : MonoBehaviour
         }
     }
 
-    public void AttackAction()
-    {
-        //print("attackaction");
-        player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
-    }
+    //public void AttackAction()
+    //{
+    //    //print("attackaction");
+    //    player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+    //}
     void Damaged()
     {
         // 피격 상태를 처리하기 위한 코루틴\

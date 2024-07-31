@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7639206943418209}
   - component: {fileID: 3611939740735778315}
   - component: {fileID: 8462428510053135684}
+  - component: {fileID: 5332241241549166850}
   m_Layer: 26
   m_Name: SpawnEnemy
   m_TagString: Untagged
@@ -96,7 +97,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4713825769694432486}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ec324e8269e473478ebed8909a73fc3, type: 3}
   m_Name: 
@@ -107,17 +108,19 @@ MonoBehaviour:
   attackPower: 3
   weaponPower: 5
   moveDistance: 20
-  hp: 30
-  maxhp: 65
+  hp: 500
+  maxhp: 500
   climbSpeed: 2
-  detectionDistance: 3
+  detectionDistance: 20
   climb:
     serializedVersion: 2
     m_Bits: 134217728
-  climbHeight: 5
+  detectionRange: 15
   lookRadius: 8
   fieldOfView: 120
   extraRotationSpeed: 27
+  detectionAngle: 70
+  angleStep: 1
   rotationSpeed: 10
 --- !u!143 &8545449314628158171
 CharacterController:
@@ -192,7 +195,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &8462428510053135684
 MonoBehaviour:
@@ -224,6 +227,29 @@ MonoBehaviour:
   fieldOfView: 120
   extraRotationSpeed: 0.3
   rotationSpeed: 15
+--- !u!136 &5332241241549166850
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4713825769694432486}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &8982812782476197727
 PrefabInstance:
   m_ObjectHideFlags: 0

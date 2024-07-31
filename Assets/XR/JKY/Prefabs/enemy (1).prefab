@@ -109,14 +109,16 @@ MonoBehaviour:
   hp: 30
   maxhp: 65
   climbSpeed: 2
-  detectionDistance: 3
+  detectionDistance: 20
   climb:
     serializedVersion: 2
     m_Bits: 134217728
-  climbHeight: 2
+  detectionRange: 15
   lookRadius: 8
   fieldOfView: 120
   extraRotationSpeed: 27
+  detectionAngle: 70
+  angleStep: 1
   rotationSpeed: 10
 --- !u!143 &1081393340728229860
 CharacterController:
