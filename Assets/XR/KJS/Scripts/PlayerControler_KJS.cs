@@ -22,7 +22,8 @@ public class PlayerControler_KJS : MonoBehaviour
 
     int jumpcurrCnt;
 
-    
+    public GameManager_KJS gameManager;
+
     //hp 슬라이더 변수
     public Slider hpSlider;
     //Hit 효과 오브젝트
@@ -30,7 +31,7 @@ public class PlayerControler_KJS : MonoBehaviour
     // 플레이어 컴퍼넌트
     public Human_KJS human;
     // 인벤토리 컴포넌트
-    Inventory_JSW inventory;
+    public Inventory_JSW inventory;
 
     // Start is called before the first frame update
 
@@ -94,7 +95,7 @@ public class PlayerControler_KJS : MonoBehaviour
         Vector3 dirH = transform.right * h;
         Vector3 dirV = transform.forward * v;
         Vector3 dir = dirH + dirV;
-
+        
         dir.Normalize();
 
         if (!cc.isGrounded)
@@ -158,11 +159,11 @@ public class PlayerControler_KJS : MonoBehaviour
             SlotUIChange();
         }
     }
-    void SlotUIChange()
+    public void SlotUIChange()
     {
         // 현재 슬롯과 ui를 동기화
         int slotNum = inventory.SlotNum;
-        
+
     }
     void Reload()
     {
@@ -197,7 +198,15 @@ public class PlayerControler_KJS : MonoBehaviour
         //피격 UI를 비활성화한다.
         hitEffect.SetActive(false);
     }
- }
+    void SwitchPanel(int index)
+    {
+        if (GameManager_KJS.gm != null)
+        {
+            GameManager_KJS.gm.SwitchPanel(index);
+        }
+    }
+}
+ 
 
 
 
