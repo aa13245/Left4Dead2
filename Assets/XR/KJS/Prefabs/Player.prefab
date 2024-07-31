@@ -141,9 +141,11 @@ MonoBehaviour:
   deceleration: 20
   jumPower: 4
   jumpMaxcnt: 2
+  gameManager: {fileID: 0}
   hpSlider: {fileID: 0}
   hitEffect: {fileID: 0}
   human: {fileID: 0}
+  inventory: {fileID: 0}
 --- !u!114 &6689908045244367711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,7 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3d49cc3e1858df4da6025a5c5086d2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pistolPrefab: {fileID: 0}
+  pistolPrefab: {fileID: 2212870741840709075, guid: f45ef0755a3b1354398c3a56008f3d11,
+    type: 3}
 --- !u!114 &9044781878026269649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,10 +232,10 @@ MonoBehaviour:
   isPlayer: 0
   bulletFactory: {fileID: 7995544547077806524, guid: cb7a51ee2b43d7c4791ddfc3ec8c1928,
     type: 3}
-  bulletEffectFactory: {fileID: 100002, guid: 54dd9cb5740188a488b8baebbf19207c, type: 3}
+  bulletEffectFactory: {fileID: 100002, guid: 9278d727490510e4f8b3b2c9c1e7e14f, type: 3}
   firePosition: {fileID: 5207415221581109435}
-  fireRate: 0.1
   bulletArray: []
+  fireRate: 0.1
   bombFactory: {fileID: 2739914139579394558, guid: 0747b1f44380ff449bda983d163c1a69,
     type: 3}
   throwPower: 15

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,11 +12,13 @@ public class GameManager_KJS : MonoBehaviour
     public GameObject gameLabel;
     //패널 배열
     public GameObject[] panels;
-    private int currentPanelIndex = -1;
 
     PlayerControler_KJS human;
     // 게임 상태 UI 텍스트 컴포넌트 변수
     Text gameText;
+    // 총알 정보를 표시할 텍스트 UI 요소
+    public Text currentAmmoText;
+    public Text totalAmmoText;
 
     // Start is called before the first frame update
 
@@ -57,6 +60,12 @@ public class GameManager_KJS : MonoBehaviour
         {
             panel.SetActive(false);
         }
+
+        // 게임 시작 시 기본 패널을 활성화
+        if (panels.Length > 0)
+        {
+            panels[1].SetActive(true); // 예를 들어, 첫 번째 패널을 기본으로 활성화
+        }
     }
     IEnumerator ReadyToStart()
     {
@@ -79,7 +88,22 @@ public class GameManager_KJS : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //for(int i=0; i)
+        if (gState != GameState.Run)
+        {
+            return;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            if (Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1 + i)))
+            {
+                if (IsSlotNotEmpty(i)) // 슬롯이 비어 있지 않은 경우에만 변경
+                {
+                    ChangePlayerSlot(i); // 숫자키에 따라 플레이어의 무기 슬롯 변경
+                    SwitchPanel(i); // UI 패널 변경
+                }
+            }
+        }
+
         //만일, 플레이어의 hp가 0이하라면...
         if (player != null && player.human.HP <= 0)
         {
@@ -91,6 +115,51 @@ public class GameManager_KJS : MonoBehaviour
             gameText.color = new Color32(255, 0, 0, 255);
             //상태를 '게임 오버' 상태로 변경한다.
             gState = GameState.GameOver;
+        }
+        // 총알 정보 업데이트
+        //UpdateAmmoUI();
+    }
+    public void SwitchPanel(int index)
+    {
+        if (index < 0 || index >= panels.Length)
+        {
+            Debug.LogError("Invalid panel index.");
+            return;
+        }
+
+        for (int i = 0; i < panels.Length; i++)
+        {
+            panels[i]?.SetActive(i == index);
+        }
+    }
+
+    private void ChangePlayerSlot(int slotIndex)
+    {
+        if (player == null) return;
+
+        player.inventory.SlotNum = slotIndex;
+        // 직접적으로 UI를 갱신할 메서드를 호출하는 것으로 변경
+        // player.SendMessage("SlotUIChange");
+        player.SlotUIChange(); // 직접 호출하는 방법을 사용
+    }
+    private bool IsSlotNotEmpty(int slotIndex)
+    {
+        return player.inventory[slotIndex] != null; // 슬롯이 비어있지 않으면 true 반환
+    }
+    private void UpdateAmmoUI()
+    {
+        if (player == null || player.inventory == null) return;
+
+        // 주무기 슬롯의 총알 정보 업데이트
+        if (player.inventory[0] != null && ItemTable_JSW.instance.itemTable[player.inventory[0].kind] is ItemTable_JSW.MainWeapon mainWeapon)
+        {
+            currentAmmoText.text = $"Ammo: {player.inventory[0].value1}/{mainWeapon.magazineCapacity}";
+            totalAmmoText.text = $"Total Ammo: {player.inventory[0].value2}";
+        }
+        else
+        {
+            currentAmmoText.text = "Ammo: N/A";
+            totalAmmoText.text = "Total Ammo: N/A";
         }
     }
 }

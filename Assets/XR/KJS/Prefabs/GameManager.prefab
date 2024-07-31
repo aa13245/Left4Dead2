@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2050904858243092678}
   - component: {fileID: 3864672265493497484}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,5 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameLabel: {fileID: 0}
-  panels: []
+  panels:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  currentAmmoText: {fileID: 0}
+  totalAmmoText: {fileID: 0}
   gState: 0

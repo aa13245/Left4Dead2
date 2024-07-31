@@ -13,10 +13,10 @@ public class Human_KJS : MonoBehaviour
     // Start is called before the first frame update
     public GameObject firePosition;
     //미사일을 담을 수 있는 배열
+    public GameObject[] bulletArray;
+
     public float fireRate = 0.1f;
 
-    public GameObject[] bulletArray;
-    
     public GameObject bombFactory;
 
     public float throwPower = 15F;
