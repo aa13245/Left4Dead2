@@ -10,6 +10,7 @@ public class BotMove : MonoBehaviour
     GameObject player;
     NavMeshAgent agent;
     BotManager_JSW botManager;
+    CharacterController cc;
 
     public enum BotMoveState
     {
@@ -40,6 +41,7 @@ public class BotMove : MonoBehaviour
         botManager = GetComponent<BotManager_JSW>();
         GetComponent<Human_KJS>().slow = Slow;
         GetComponent<Human_KJS>().stun = Stun;
+        cc = GetComponent<CharacterController>();
     }
     bool stun = true;
     public void Stun()
@@ -59,9 +61,17 @@ public class BotMove : MonoBehaviour
     float targetDis;
     // 플레이어와 유지하는 최대 거리
     float followDis = 7;
+    bool isKnockBacking;
+    float yVelocity;
     // Update is called once per frame
     void Update()
     {
+        if (cc.isGrounded) yVelocity = 0;
+        if (botManager.human.knockBackVector.magnitude > 0.1f)
+        {
+            yVelocity += -9.81f * Time.deltaTime;
+            cc.Move((botManager.human.knockBackVector + Vector3.up * yVelocity) * Time.deltaTime);
+        }
         if (!stun) return;
         targetDis = Vector3.Distance(transform.position, botManager.PriorityTarget != null ? botManager.PriorityTarget.transform.position : player.transform.position);
         if (botMoveState == BotMoveState.Idle)

@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class Human_KJS : MonoBehaviour
 {
     public bool isPlayer;
+    CharacterController cc;
     public GameObject bulletFactory;
     //총알 효과 주소
     public GameObject bulletEffectFactory;
@@ -42,6 +43,8 @@ public class Human_KJS : MonoBehaviour
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
 
+
+
     public enum HumanState
     {
         Normal,
@@ -52,6 +55,7 @@ public class Human_KJS : MonoBehaviour
 
     void Start()
     {
+        cc = GetComponent<CharacterController>();
         if (gameObject.name == "Player") isPlayer = true;
         player = GetComponent<PlayerControler_KJS>();
         inventory = GetComponent<Inventory_JSW>();
@@ -73,6 +77,7 @@ public class Human_KJS : MonoBehaviour
     void Update()
     {
         if (currTime < 100) currTime += Time.deltaTime;
+        KnockBackUpdate();
     }
     public void GetDamage(float value, GameObject attacker)
     {
@@ -281,10 +286,17 @@ public class Human_KJS : MonoBehaviour
     {
         stun();
     }
-    
+    float knockBackPow = 30;
+    public Vector3 knockBackVector = Vector3.zero;
     public void ApplyKnockBack(GameObject zombie)
     {
-        Vector3 dir = transform.position - zombie.transform.position;
-        //GetComponent<Rigidbody>().AddForce()
+        Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
+        dir.Normalize();
+        knockBackVector = dir * knockBackPow;
     }
+    void KnockBackUpdate()
+    {
+        knockBackVector -= knockBackVector * 1 * Time.deltaTime;
+    }
+
 }

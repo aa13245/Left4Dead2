@@ -133,7 +133,7 @@ public class PlayerControler_KJS : MonoBehaviour
         }
 
         // 움직임
-        cc.Move((velocity * moveSpeed + Vector3.up * yVelocity) * Time.deltaTime);
+        cc.Move((velocity * moveSpeed + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
     }
     void Swap()
     {
