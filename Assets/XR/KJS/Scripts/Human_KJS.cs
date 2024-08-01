@@ -276,7 +276,11 @@ public class Human_KJS : MonoBehaviour
         }
         return topObj;
     }
-    public void Stun()
+    public void Stun(GameObject stone)
+    {
+
+    }
+    public void ApplyKnockBack(GameObject zombie)
     {
 
     }
