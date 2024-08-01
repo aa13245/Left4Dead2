@@ -46,7 +46,7 @@ public class ObjRotate_KJS : MonoBehaviour
         }
         */
         // 물체를 회전 각도로 셋팅 하자.
-        transform.localEulerAngles = new Vector3(-rotX, rotY, 0);
+        transform.localEulerAngles = new Vector3(-rotX, rotY, Camera.main.transform.localEulerAngles.z);
 
         CursorSet();
     }

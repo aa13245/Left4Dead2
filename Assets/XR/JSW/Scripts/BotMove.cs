@@ -43,17 +43,24 @@ public class BotMove : MonoBehaviour
         GetComponent<Human_KJS>().stun = Stun;
         cc = GetComponent<CharacterController>();
     }
-    bool stun = true;
+    // 맞았을 때 감속
+    public void Slow()
+    {
+        agent.velocity = Vector3.zero;
+    }
+    // 탱크 돌 스턴
+    bool stun;
     public void Stun()
     {
         StartCoroutine(StunWait());
     }
     IEnumerator StunWait()
     {
-        stun = false;
-        agent.enabled = false;
-        yield return new WaitForSeconds(1);
         stun = true;
+        agent.enabled = false;
+        Slow();
+        yield return new WaitForSeconds(1);
+        stun = false;
         agent.enabled = true;
     }
 
@@ -72,7 +79,7 @@ public class BotMove : MonoBehaviour
             yVelocity += -9.81f * Time.deltaTime;
             cc.Move((botManager.human.knockBackVector + Vector3.up * yVelocity) * Time.deltaTime);
         }
-        if (!stun) return;
+        if (stun) return;
         targetDis = Vector3.Distance(transform.position, botManager.PriorityTarget != null ? botManager.PriorityTarget.transform.position : player.transform.position);
         if (botMoveState == BotMoveState.Idle)
         {   // 타겟을 쫒아가야 함 || 플레이어 거리 멀어짐
@@ -109,11 +116,5 @@ public class BotMove : MonoBehaviour
                 agent.isStopped = false;
             }
         }
-    }
-
-    // 맞았을 때 감속되는 함수
-    public void Slow()
-    {
-        agent.velocity = Vector3.zero;
     }
 }

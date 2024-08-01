@@ -42,6 +42,8 @@ public class PlayerControler_KJS : MonoBehaviour
         human = GetComponent<Human_KJS>();
         inventory = GetComponent<Inventory_JSW>();
         velocity = Vector3.zero;
+        GetComponent<Human_KJS>().slow = Slow;
+        GetComponent<Human_KJS>().stun = Stun;
     }
 
     // Update is called once per frame
@@ -80,6 +82,32 @@ public class PlayerControler_KJS : MonoBehaviour
 
         //현재 플레이어 hp를 hp슬라이더의 value에 반영한다.
         hpSlider.value = (float)human.HP / (float)human.maxHP;
+        if (Input.GetKeyDown(KeyCode.B)) Stun();
+        CamRecovery();
+    }
+    // 맞았을 때 감속
+    public void Slow()
+    {
+        velocity = Vector3.zero;
+    }
+    // 탱크 돌 스턴
+    bool stun;
+    public void Stun()
+    {
+        StartCoroutine(StunWait());
+    }
+    IEnumerator StunWait()
+    {
+        stun = true;
+        Slow();
+        // 카메라 회전
+        Camera.main.transform.Rotate(new Vector3(0, 0, -10));
+        yield return new WaitForSeconds(1);
+        stun = false;
+    }
+    void CamRecovery()
+    {
+        Camera.main.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 3 * Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
     }
     void Move()
     {
@@ -117,7 +145,7 @@ public class PlayerControler_KJS : MonoBehaviour
         }
 
         // 입력이 있을 시
-        if (h != 0 || v != 0)
+        if ((h != 0 || v != 0) && !stun)
         {   // 가속을 주겠다
             velocity += dir * acceleration * Time.deltaTime;
         }
@@ -133,7 +161,7 @@ public class PlayerControler_KJS : MonoBehaviour
         }
 
         // 움직임
-        cc.Move((velocity * moveSpeed + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
+        cc.Move((stun ? Vector3.zero : (velocity * moveSpeed) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
     }
     void Swap()
     {
