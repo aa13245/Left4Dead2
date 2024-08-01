@@ -276,12 +276,15 @@ public class Human_KJS : MonoBehaviour
         }
         return topObj;
     }
+    public Action stun;
     public void Stun(GameObject stone)
     {
-
+        stun();
     }
+    
     public void ApplyKnockBack(GameObject zombie)
     {
-
+        Vector3 dir = transform.position - zombie.transform.position;
+        //GetComponent<Rigidbody>().AddForce()
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -37,7 +38,21 @@ public class BotMove : MonoBehaviour
         player = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
         botManager = GetComponent<BotManager_JSW>();
-        GetComponent<Human_KJS>().slow += Slow;
+        GetComponent<Human_KJS>().slow = Slow;
+        GetComponent<Human_KJS>().stun = Stun;
+    }
+    bool stun = true;
+    public void Stun()
+    {
+        StartCoroutine(StunWait());
+    }
+    IEnumerator StunWait()
+    {
+        stun = false;
+        agent.enabled = false;
+        yield return new WaitForSeconds(1);
+        stun = true;
+        agent.enabled = true;
     }
 
     // 플레이어와의 거리
@@ -47,13 +62,14 @@ public class BotMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!stun) return;
         targetDis = Vector3.Distance(transform.position, botManager.PriorityTarget != null ? botManager.PriorityTarget.transform.position : player.transform.position);
         if (botMoveState == BotMoveState.Idle)
         {   // 타겟을 쫒아가야 함 || 플레이어 거리 멀어짐
             if ((botManager.PriorityTarget != null && (!botManager.TargetVisible || targetDis > botManager.botSight.FireRange)) || targetDis > followDis)
             {
                 agent.isStopped = false;
-                agent.avoidancePriority = Random.Range(0, 100);
+                agent.avoidancePriority = UnityEngine.Random.Range(0, 100);
                 agent.SetDestination(player.transform.position);
                 ChangeBotMoveState(BotMoveState.Follow);
             }
