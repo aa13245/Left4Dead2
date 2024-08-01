@@ -200,13 +200,13 @@ public class JKYEnemyFSM : MonoBehaviour
 
             NavMeshPath path = new NavMeshPath();
             
-            if (isClimbing)
-            {
-                print("climb함수들어왔다 트루");
-                m_State = EnemyState.Climb;
-                print("상태전환 Move -> Climb");
-            }
-            else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
+            //if (isClimbing)
+            //{
+            //    print("climb함수들어왔다 트루");
+            //    //m_State = EnemyState.Climb;
+            //    print("상태전환 Move -> Climb");
+            //}
+            if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
             {
 
                 checkForClimbingShortcut();
@@ -265,7 +265,7 @@ public class JKYEnemyFSM : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, detectionRange, climb))
             {
-                print("climb");
+                print("climb벽 찾음");
                 //climbTarget = new Vector3(transform.position.x, hit.transform.localScale.y, transform.position.z);
 
                 //// 현재 경로와 벽을 타고 올라가는 경로 비교
@@ -278,42 +278,20 @@ public class JKYEnemyFSM : MonoBehaviour
                 //    // 벽을 타고 올라가는 경로가 더 짧으면 벽 타기 시작
                 smith.enabled = false;
                 //    cc.Move(player.transform.position - transform.position);
-                isClimbing = true;
                 print("네비끝");
                 isMoving = true;
-                cc.Move((target.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
+                Vector3 directions = target.transform.position - gameObject.transform.position;
+                cc.Move((directions) * moveSpeed * Time.deltaTime);
+                directions.y = 0;
+                directions.Normalize();
+                //isClimbing = true;
+                
+                print("1");
                 //}
                 //smith.enabled = false;
                 //cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
                 //print(111);
 
-            }
-        }
-    }
-    void Climb()
-    {
-        print("왜여기까지안오냐고");
-        //isClimbing = true;
-        isMoving = false;
-        print("부딪혓다");
-        isMovingUp = true;
-        cc.Move(Vector3.up * climbSpeed * Time.deltaTime);
-        if (gameObject.transform.position.y > cy + cly + ey)
-        {
-            print("끝까지 올라왔다");
-            movingTime += Time.deltaTime;
-            isMovingUp = false;
-            isMoving = true;
-            cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
-
-            if (movingTime > 2f)
-            {
-                print("좀만 앞으로가");
-                isMoving = false;
-                movingTime = 0;
-                smith.enabled = true;
-                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-                smith.destination = player.position;
             }
         }
     }
@@ -326,9 +304,41 @@ public class JKYEnemyFSM : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("climb"))
         {
+            print("벽에부딪힘");
+            m_State = EnemyState.Climb;
             isClimbing = true;
             cy = collision.transform.position.y;
             cly = collision.transform.localScale.y/2;
+        }
+    }
+    void Climb()
+    {
+        print("왜여기까지안오냐고");
+        //isClimbing = true;
+        isMoving = false;
+        print("부딪혓다");
+        isMovingUp = true;
+        cc.Move(Vector3.up * climbSpeed * Time.deltaTime);
+        if (gameObject.transform.position.y > cy + cly + 0.5f)
+        {
+            print("끝까지 올라왔다");
+            movingTime += Time.deltaTime;
+            isMovingUp = false;
+            isMoving = true;
+            Vector3 directions = target.transform.position - gameObject.transform.position;
+            cc.Move((directions) * moveSpeed * Time.deltaTime);
+            directions.y = 0;
+            directions.Normalize();
+
+            if (movingTime > 3f)
+            {
+                print("좀만 앞으로가");
+                isMoving = false;
+                movingTime = 0;
+                smith.enabled = true;
+                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
+                smith.destination = player.position;
+            }
         }
     }
     //private void OnCollisionEnter(Collision collision)
@@ -385,8 +395,11 @@ public class JKYEnemyFSM : MonoBehaviour
     {
         print("올라간다");
         //cc.Move((climbTarget- transform.position) * climbSpeed * Time.deltaTime);
-        cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
-        
+        Vector3 directions = target.transform.position - gameObject.transform.position;
+        cc.Move((directions) * moveSpeed * Time.deltaTime);
+        directions.y = 0;
+        directions.Normalize();
+
         //// 벽을 다 올라갔는지 체크
         //if (Vector3.Distance(transform.position, climbTarget) < 0.1f)
         //{

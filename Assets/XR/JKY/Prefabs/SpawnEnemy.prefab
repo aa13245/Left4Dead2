@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 7639206943418209}
   - component: {fileID: 3611939740735778315}
   - component: {fileID: 8462428510053135684}
-  - component: {fileID: 5332241241549166850}
   m_Layer: 26
   m_Name: SpawnEnemy
   m_TagString: Untagged
@@ -147,7 +146,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!195 &7639206943418209
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -167,7 +166,7 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 0
   m_Height: 1.8
-  m_BaseOffset: 1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &3611939740735778315
@@ -227,29 +226,6 @@ MonoBehaviour:
   fieldOfView: 120
   extraRotationSpeed: 0.3
   rotationSpeed: 15
---- !u!136 &5332241241549166850
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4713825769694432486}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &8982812782476197727
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -301,7 +277,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 8f7380da49034cd488ddff94b1ac35d1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.85
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8f7380da49034cd488ddff94b1ac35d1,
         type: 3}
