@@ -28,10 +28,10 @@ public class JKYRock : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Player_KJS") || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
         {
             print("스턴되면서 카메라흔들림");
-           
+            other.GetComponent<Human_KJS>().Stun(gameObject);
             
             //StunPlayers(other.gameObject);
         }

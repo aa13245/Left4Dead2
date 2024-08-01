@@ -554,8 +554,8 @@ public class JKYHammerFS : MonoBehaviour
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 //target.GetComponent<Human_KJS>().tankerSkill1();
                 Vector3 knockbackDirection = (target.transform.position - gameObject.transform.position).normalized;
-                target.GetComponent<Human_KJS>().ApplyKnockback(knockbackDirection, knockbackDistance);
-                target.GetComponent<Human_KJS>().isKnockedBack = true;
+                target.GetComponent<Human_KJS>().ApplyKnockback(gameObject);
+                //target.GetComponent<Human_KJS>().isKnockedBack = true;
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
                 print("공격");
                 currentTime = 0;
