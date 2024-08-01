@@ -42,6 +42,14 @@ public class Human_KJS : MonoBehaviour
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
 
+    public enum HumanState
+    {
+        Normal,
+        KnockedDown,
+        Dead,
+
+    }
+
     void Start()
     {
         if (gameObject.name == "Player") isPlayer = true;
@@ -153,7 +161,7 @@ public class Human_KJS : MonoBehaviour
                         bullettEffect.transform.position = hitInfo.point;
                         bullettEffect.transform.forward = hitInfo.normal;
                         // 데미지 입히기
-                        GiveDamage(TobObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
+                        GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
                     }
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
@@ -184,7 +192,7 @@ public class Human_KJS : MonoBehaviour
                         bullettEffect.transform.position = hitInfo.point;
                         bullettEffect.transform.forward = hitInfo.normal;
                         // 데미지 입히기
-                        GiveDamage(TobObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
+                        GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
                     }
                     inventory.Use(inventory.SlotNum);
                 }
@@ -265,7 +273,7 @@ public class Human_KJS : MonoBehaviour
         // 장전 시간 구현 필요
         return inventory.Reload(inventory.SlotNum);
     }
-    GameObject TobObj(GameObject obj)
+    GameObject TopObj(GameObject obj)
     {
         GameObject topObj = obj;
         while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == obj.layer)
@@ -274,7 +282,11 @@ public class Human_KJS : MonoBehaviour
         }
         return topObj;
     }
-    public void Stun()
+    public void Stun(GameObject stone)
+    {
+
+    }
+    public void ApplyKnockBack(GameObject zombie)
     {
 
     }
