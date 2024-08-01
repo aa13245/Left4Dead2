@@ -31,7 +31,9 @@ public class JKYRock : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))
         {
             print("스턴되면서 카메라흔들림");
-            StunPlayers(other.gameObject);
+           
+            
+            //StunPlayers(other.gameObject);
         }
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {

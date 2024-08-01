@@ -65,6 +65,12 @@ public class Human_KJS : MonoBehaviour
     void Update()
     {
         if (currTime < 100) currTime += Time.deltaTime;
+
+        // 여기 내가 추가함
+        if (isKnockedBack)
+        {
+            KnockbackMovement();
+        }
     }
     public void GetDamage(float value, GameObject attacker)
     {
@@ -272,4 +278,97 @@ public class Human_KJS : MonoBehaviour
     {
 
     }
+
+
+    // 여기 내가 추가함;
+
+
+    public Camera playerCamera;
+    public bool isKnockedBack = false;
+    private bool isStunned = false;
+    private Vector3 knockbackStart;
+    private Vector3 knockbackEnd;
+    private float knockbackTime = 0.5f; // 넉백 이동 시간
+    private float knockbackElapsedTime = 0.0f;
+    //public void tankerSkill1()
+    //{
+    //    ApplyKnockback();
+    //}
+
+    public void ApplyKnockback(Vector3 direction, float distance)
+    {
+        if (!isKnockedBack)
+        {
+            knockbackStart = transform.position;
+            knockbackEnd = transform.position + direction.normalized * distance;
+            knockbackElapsedTime = 0.0f;
+            isKnockedBack = true;
+            StartCoroutine(StunAndAnimateCamera());
+        }
+    }
+
+    private void KnockbackMovement()
+    {
+        knockbackElapsedTime += Time.deltaTime;
+        float t = knockbackElapsedTime / knockbackTime;
+        print("back");
+        transform.position = Vector3.Lerp(knockbackStart, knockbackEnd, t);
+
+        if (t >= 1.0f)
+        {
+            isKnockedBack = false;
+        }
+    }
+
+    private IEnumerator StunAndAnimateCamera()
+    {
+        isStunned = true;
+
+        // 카메라 왼쪽으로 회전 및 흔들림 애니메이션
+        Quaternion originalRotation = playerCamera.transform.localRotation;
+        Quaternion targetRotation = originalRotation * Quaternion.Euler(0, -30, 0);
+        float shakeMagnitude = 0.5f;
+        float shakeDuration = 0.5f;
+        float shakeSpeed = 25.0f;
+
+        float elapsed = 0.0f;
+
+        // 빠르게 왼쪽으로 30도 회전
+        while (elapsed < 0.2f)
+        {
+            elapsed += Time.deltaTime;
+            playerCamera.transform.localRotation = Quaternion.Slerp(originalRotation, targetRotation, elapsed / 0.2f);
+
+            // 상하 흔들림 추가
+            float shakeOffset = Mathf.Sin(elapsed * shakeSpeed) * shakeMagnitude;
+            playerCamera.transform.localPosition = new Vector3(playerCamera.transform.localPosition.x, shakeOffset, playerCamera.transform.localPosition.z);
+
+            yield return null;
+        }
+
+        // 천천히 원래 각도로 회전
+        elapsed = 0.0f;
+        while (elapsed < 2.0f)
+        {
+            elapsed += Time.deltaTime;
+            playerCamera.transform.localRotation = Quaternion.Slerp(targetRotation, originalRotation, elapsed / 2.0f);
+
+            // 상하 흔들림 추가
+            float shakeOffset = Mathf.Sin(elapsed * shakeSpeed) * (shakeMagnitude * (1.0f - elapsed / 2.0f));
+            playerCamera.transform.localPosition = new Vector3(playerCamera.transform.localPosition.x, shakeOffset, playerCamera.transform.localPosition.z);
+
+            yield return null;
+        }
+
+        // 카메라 위치 초기화
+        playerCamera.transform.localPosition = new Vector3(playerCamera.transform.localPosition.x, 0, playerCamera.transform.localPosition.z);
+
+        yield return new WaitForSeconds(2.0f);
+
+        isStunned = false;
+    }
+    //public void tankerSkill2()
+    //{
+
+    //}
 }

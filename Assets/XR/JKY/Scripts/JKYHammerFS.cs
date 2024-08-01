@@ -91,7 +91,7 @@ public class JKYHammerFS : MonoBehaviour
     public float throwCooldownMin = 3.0f;
     public float throwCooldownMax = 7.0f;
     public float chargeSpeed = 20.0f;
-    public float knockbackDistance = 7.0f;
+    public float knockbackDistance = 10.0f;
     public GameObject rockPrefab;
 
     private float spawnCooldown = 30.0f;
@@ -552,6 +552,10 @@ public class JKYHammerFS : MonoBehaviour
             if (currentTime > attackDelay)
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+                //target.GetComponent<Human_KJS>().tankerSkill1();
+                Vector3 knockbackDirection = (target.transform.position - gameObject.transform.position).normalized;
+                target.GetComponent<Human_KJS>().ApplyKnockback(knockbackDirection, knockbackDistance);
+                target.GetComponent<Human_KJS>().isKnockedBack = true;
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
                 print("공격");
                 currentTime = 0;
