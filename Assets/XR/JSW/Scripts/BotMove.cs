@@ -11,7 +11,7 @@ public class BotMove : MonoBehaviour
     NavMeshAgent agent;
     BotManager_JSW botManager;
     CharacterController cc;
-
+    Animator anim;
     public enum BotMoveState
     {
         Idle,
@@ -41,6 +41,7 @@ public class BotMove : MonoBehaviour
         botManager = GetComponent<BotManager_JSW>();
         GetComponent<Human_KJS>().slow = Slow;
         GetComponent<Human_KJS>().stun = Stun;
+        anim = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
     }
     // 맞았을 때 감속
@@ -115,6 +116,16 @@ public class BotMove : MonoBehaviour
                 agent.SetDestination(botManager.farmingTarget.transform.position);
                 agent.isStopped = false;
             }
+        }
+    }
+    void FixedUpdate()
+    {
+        if (agent != null)
+        {
+            Vector3 velocity = agent.velocity;
+            Vector3 moveVector = Quaternion.Euler(Vector3.down * transform.eulerAngles.y) * velocity;
+            anim.SetFloat("MoveZ", moveVector.z);
+            anim.SetFloat("MoveX", moveVector.x);
         }
     }
 }

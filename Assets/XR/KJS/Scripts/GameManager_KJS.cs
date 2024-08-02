@@ -14,6 +14,7 @@ public class GameManager_KJS : MonoBehaviour
     public GameObject[] panels;
 
     PlayerControler_KJS human;
+    GameObject[] bots;
     // 게임 상태 UI 텍스트 컴포넌트 변수
     private Text gameText;
     // 총알 정보를 표시할 텍스트 UI 요소
@@ -50,6 +51,7 @@ public class GameManager_KJS : MonoBehaviour
         //초기 게임 상태는 준비 상태로 설정한다.
         gState = GameState.Ready;
         //게임 상태 UI오브젝트에서 Text 컴포넌트를 가져온다.
+        gameLabel = GameObject.Find("Canvas").transform.Find("Label_GameState").gameObject;
         gameText = gameLabel.GetComponent<Text>();
         //상태 텍스트의 내용을 'Ready...'로 한다.
         gameText.text = "Ready...";
@@ -71,7 +73,9 @@ public class GameManager_KJS : MonoBehaviour
         currentAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text1").GetComponent<Text>();
         totalAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text2").GetComponent<Text>();
         currentAmmoText2 = GameObject.Find("Canvas").transform.Find("Slot2/Text3").GetComponent<Text>();
-
+        // 아군 봇
+        bots = new GameObject[3];
+        for (int i = 0; i < 3; i++) { bots[i] = GameObject.Find("Bot" + i + 1); }
     }
     IEnumerator ReadyToStart()
     {

@@ -79,7 +79,7 @@ public class BotSight_JSW : MonoBehaviour
                 topObj = topObj.transform.parent.gameObject;
             }
             // 시아 체크
-            if (SightCheck(topObj))
+            if (SightCheck(topObj, -1, true))
             {
                 return topObj;
             }
@@ -123,11 +123,11 @@ public class BotSight_JSW : MonoBehaviour
         return null;
     }
     // 시아 체크
-    public bool SightCheck(GameObject _object, float _fov = -1)
+    public bool SightCheck(GameObject _object, float _fov = -1, bool isZombie = false)
     {
         if (_fov < 0) _fov = fov;
         Vector3 offset = transform.forward + Vector3.up * 1.6f;
-        Vector3 dir = (_object.transform.position - (transform.position + offset)).normalized;
+        Vector3 dir = (_object.transform.position + (isZombie ? Vector3.up : Vector3.zero) - (transform.position + offset)).normalized;
         float angle = Vector3.Angle(transform.forward, dir);
         RaycastHit hitInfo;
         // 각도와 장애물이 없는지 체크 - 살아있는지 체크 추가해야됨

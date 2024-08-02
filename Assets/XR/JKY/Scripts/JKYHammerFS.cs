@@ -387,10 +387,10 @@ public class JKYHammerFS : MonoBehaviour
         // 거리 계산
         float dist = Vector3.Distance(transform.position, target.transform.position);
         // 돌을 플레이어에게 던짐
-        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 20 + 1)).normalized;
+        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 2)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
-        rb.AddForce(directionToPlayer * 20f * dist); // 돌의 속도 설정
+        rb.AddForce(directionToPlayer * 20f * Mathf.Min(10, dist)); // 돌의 속도 설정
         rb.useGravity = true;
     }
 

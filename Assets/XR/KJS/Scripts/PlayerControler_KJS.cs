@@ -22,8 +22,6 @@ public class PlayerControler_KJS : MonoBehaviour
 
     int jumpcurrCnt;
 
-    public GameManager_KJS gameManager;
-
     //hp 슬라이더 변수
     public Slider hpSlider;
     //Hit 효과 오브젝트
@@ -44,6 +42,9 @@ public class PlayerControler_KJS : MonoBehaviour
         cc = GetComponent<CharacterController>();
         human = GetComponent<Human_KJS>();
         inventory = GetComponent<Inventory_JSW>();
+        GameObject canvas = GameObject.Find("Canvas");
+        hpSlider = canvas.transform.Find("HPbar").GetComponent<Slider>();
+        hitEffect = canvas.transform.Find("Hit").gameObject;
         velocity = Vector3.zero;
         anim = GetComponentInChildren<Animator>();
         GetComponent<Human_KJS>().slow = Slow;
@@ -180,7 +181,7 @@ public class PlayerControler_KJS : MonoBehaviour
         anim.SetFloat("MoveX", moveVector.x);
 
         // 움직임
-        cc.Move((stun ? Vector3.zero : (velocity * moveSpeed) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
+        cc.Move((stun ? Vector3.zero : velocity + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
     }
     void Swap()
     {
