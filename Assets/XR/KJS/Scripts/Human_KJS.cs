@@ -10,6 +10,8 @@ public class Human_KJS : MonoBehaviour
     public GameObject bulletFactory;
     //총알 효과 주소
     public GameObject bulletEffectFactory;
+
+    public float destroyTime = 1.5f;
     // Start is called before the first frame update
     public GameObject firePosition;
     //미사일을 담을 수 있는 배열
@@ -24,6 +26,8 @@ public class Human_KJS : MonoBehaviour
     public GameObject[] weapons;
 
     private float currTime;
+
+    private GameObject currentWeapon;
 
     //플레이어 체력 변수
     float hp = 100;
@@ -148,8 +152,9 @@ public class Human_KJS : MonoBehaviour
                     // 발사
                     currTime = 0f;
                     RaycastHit hitInfo;
-                    if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin, 
-                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange))
+                    if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
+                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange,
+                                        ~(1 << LayerMask.NameToLayer("Player_KJS"))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
                         bullettEffect.transform.position = hitInfo.point;
@@ -159,9 +164,13 @@ public class Human_KJS : MonoBehaviour
                     }
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
+
                 }
+
             }
+
         }
+
     }
     void SubWeapon(Vector3 origin, Vector3 dir)
     {
@@ -180,7 +189,8 @@ public class Human_KJS : MonoBehaviour
                     currTime = 0f;
                     RaycastHit hitInfo;
                     if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
-                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange))
+                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange,
+                                        ~(1 << LayerMask.NameToLayer("Player_KJS"))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
                         bullettEffect.transform.position = hitInfo.point;
@@ -189,13 +199,16 @@ public class Human_KJS : MonoBehaviour
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
                     }
                     inventory.Use(inventory.SlotNum);
+                
                 }
+
             }
+            
         }
         // 근접무기냐
         else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MeleeWeapon itemInfo2)
         {
-            
+
         }
     }
     void ThirdSlot()
@@ -214,7 +227,7 @@ public class Human_KJS : MonoBehaviour
     {
         // 회복템 사용
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Recovery itemInfo)
-        {   
+        {
             // 회복값보다 체력이 낮을 때
             if (HP < itemInfo.value)
             {
@@ -238,13 +251,29 @@ public class Human_KJS : MonoBehaviour
 
         }
     }
+    void EquipWeapon(int slotNum)
+    {
+        if (inventory[slotNum] != null)
+        {
+            // 기존 무기 해제
+            if (currentWeapon != null)
+            {
+                Destroy(currentWeapon);
+            }
+
+            // 새 무기 장착
+            currentWeapon = Instantiate(inventory[slotNum].gameObject, firePosition.transform.position, firePosition.transform.rotation, firePosition.transform);
+            currentWeapon.SetActive(true);
+        }
+    }
     public void PickUp(GameObject item = null)
     {
         // 플레이어 일 때
         if (item == null)
         {
             RaycastHit hitInfo;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 2))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 2,
+                ~(1 << LayerMask.NameToLayer("Player_KJS"))))
             {
                 if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
                 {
