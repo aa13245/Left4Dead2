@@ -15,10 +15,12 @@ public class GameManager_KJS : MonoBehaviour
 
     PlayerControler_KJS human;
     // 게임 상태 UI 텍스트 컴포넌트 변수
-    Text gameText;
+    private Text gameText;
     // 총알 정보를 표시할 텍스트 UI 요소
-    public Text currentAmmoText;
-    public Text totalAmmoText;
+    Text currentAmmoText;
+    Text totalAmmoText;
+    Text currentAmmoText2;
+
 
     // Start is called before the first frame update
 
@@ -66,6 +68,10 @@ public class GameManager_KJS : MonoBehaviour
         {
             panels[1].SetActive(true); // 예를 들어, 첫 번째 패널을 기본으로 활성화
         }
+        currentAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text1").GetComponent<Text>();
+        totalAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text2").GetComponent<Text>();
+        currentAmmoText2 = GameObject.Find("Canvas").transform.Find("Slot2/Text3").GetComponent<Text>();
+
     }
     IEnumerator ReadyToStart()
     {
@@ -117,7 +123,7 @@ public class GameManager_KJS : MonoBehaviour
             gState = GameState.GameOver;
         }
         // 총알 정보 업데이트
-        //UpdateAmmoUI();
+        UpdateAmmoUI();
     }
     public void SwitchPanel(int index)
     {
@@ -149,17 +155,28 @@ public class GameManager_KJS : MonoBehaviour
     private void UpdateAmmoUI()
     {
         if (player == null || player.inventory == null) return;
+        
 
-        // 주무기 슬롯의 총알 정보 업데이트
+        //주무기 슬롯의 총알 정보 업데이트
         if (player.inventory[0] != null && ItemTable_JSW.instance.itemTable[player.inventory[0].kind] is ItemTable_JSW.MainWeapon mainWeapon)
+         {
+         currentAmmoText.text = $"Ammo: {player.inventory[0].value1}/{mainWeapon.magazineCapacity}";
+         totalAmmoText.text = $"Total Ammo: {player.inventory[0].value2}";
+         }
+        else
+         {
+          currentAmmoText.text = "Ammo: N/A";
+         totalAmmoText.text = "Total Ammo: N/A";
+        }
+
+        if (player.inventory[1] != null && ItemTable_JSW.instance.itemTable[player.inventory[1].kind] is ItemTable_JSW.SubWeapon subWeapon)
         {
-            currentAmmoText.text = $"Ammo: {player.inventory[0].value1}/{mainWeapon.magazineCapacity}";
-            totalAmmoText.text = $"Total Ammo: {player.inventory[0].value2}";
+            currentAmmoText2.text = $"Ammo: {player.inventory[1].value1}/{subWeapon.magazineCapacity}";
         }
         else
         {
-            currentAmmoText.text = "Ammo: N/A";
-            totalAmmoText.text = "Total Ammo: N/A";
+            currentAmmoText2.text = "Ammo: N/A";
         }
+            
     }
 }
