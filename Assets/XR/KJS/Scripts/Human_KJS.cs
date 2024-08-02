@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class Human_KJS : MonoBehaviour
 {
     public bool isPlayer;
+    CharacterController cc;
     public GameObject bulletFactory;
     //총알 효과 주소
     public GameObject bulletEffectFactory;
@@ -34,10 +35,40 @@ public class Human_KJS : MonoBehaviour
     public float HP
     {
         get { return hp; }
-        set { hp = value; }
+        set
+        {   // 회복하는 경우
+            if (hp <= value)
+            {
+                // 채워지는 양
+                float v = value - hp;
+                // 일시체력이 있을 때
+                if (tempHP > 0)
+                {
+                    tempHP = Mathf.Max(0, tempHP - v);
+                }
+                hp = value;
+            }
+            else // 감소
+            {
+                // 감소하는 양
+                float v = hp - value;
+                if (tempHP > 0)
+                {
+                    tempHP = Mathf.Max(0, tempHP - v);
+                }
+                hp = value;
+            }
+        }
     }
     //최대 체력 변수
     public float maxHP = 100;
+    // 일시적인 체력
+    float tempHP;
+    public float TempHP
+    {
+        get { return tempHP; }
+        set { tempHP = value; }
+    }
 
     //PlayerMove_KJS player;
     public PlayerControler_KJS player;
@@ -46,6 +77,8 @@ public class Human_KJS : MonoBehaviour
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
 
+
+
     public enum HumanState
     {
         Normal,
@@ -53,9 +86,29 @@ public class Human_KJS : MonoBehaviour
         Dead,
 
     }
+    public HumanState humanState;
+    public void ChangeHumanState(HumanState s)
+    {
+        if (humanState == s) return;
+        if (s == HumanState.Normal)
+        {
+            HP = 20;
+            TempHP = 18;
+        }
+        else if (s == HumanState.KnockedDown)
+        {
+            HP = 100;
+            TempHP = 100;
+        }
+        else if (s == HumanState.Dead)
+        {
+
+        }
+    }
 
     void Start()
     {
+        cc = GetComponent<CharacterController>();
         if (gameObject.name == "Player") isPlayer = true;
         player = GetComponent<PlayerControler_KJS>();
         inventory = GetComponent<Inventory_JSW>();
@@ -77,6 +130,17 @@ public class Human_KJS : MonoBehaviour
     void Update()
     {
         if (currTime < 100) currTime += Time.deltaTime;
+        KnockBackUpdate();
+        HpUpdate();
+    }
+    void HpUpdate()
+    {
+        if (tempHP > 0)
+        {
+            float value = Time.deltaTime * 0.1f;
+            if (value > tempHP) value = tempHP;
+            HP -= value;
+        }
     }
     public void GetDamage(float value, GameObject attacker)
     {
@@ -310,10 +374,17 @@ public class Human_KJS : MonoBehaviour
     {
         stun();
     }
-    
+    float knockBackPow = 30;
+    public Vector3 knockBackVector = Vector3.zero;
     public void ApplyKnockBack(GameObject zombie)
     {
-        Vector3 dir = transform.position - zombie.transform.position;
-        //GetComponent<Rigidbody>().AddForce()
+        Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
+        dir.Normalize();
+        knockBackVector = dir * knockBackPow;
     }
+    void KnockBackUpdate()
+    {
+        knockBackVector -= knockBackVector * 1 * Time.deltaTime;
+    }
+
 }
