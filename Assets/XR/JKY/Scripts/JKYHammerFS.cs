@@ -121,7 +121,7 @@ public class JKYHammerFS : MonoBehaviour
 
 
         //스폰
-        InvokeRepeating("SpawnZombie", 0, spawnCooldown);
+        //InvokeRepeating("SpawnZombie", 0, spawnCooldown);
         ResetThrowCooldown();
     }
 
@@ -247,13 +247,13 @@ public class JKYHammerFS : MonoBehaviour
                 {
                     print("이제 레이 쏜다.");
                     // 레이캐스트를 쏘아서 플레이어가 시야에 있는지 감지
-                    Vector3 directionToPlayer = (target.transform.position - transform.position).normalized;
+                    Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * 0.5f).normalized;
                     Ray ray = new Ray(transform.position, directionToPlayer);
                     RaycastHit hit;
 
                     if (Physics.Raycast(ray, out hit, spawnRange))
                     {
-                        if (hit.collider.gameObject == player.gameObject)
+                        if (hit.collider.gameObject == target.gameObject)
                         {
                             // 플레이어가 시야에 잡혔으면 돌 던지기
                             if (Time.time >= nextThrowTime)
@@ -379,16 +379,19 @@ public class JKYHammerFS : MonoBehaviour
     IEnumerator PrepareAndThrowRock()
     {
         // 돌을 에너미 위에 생성
-        GameObject rock = Instantiate(rockPrefab, transform.position + Vector3.up*0.4f   , Quaternion.identity);
+        GameObject rock = Instantiate(rockPrefab, transform.position + Vector3.up* 2f   , Quaternion.identity);
         print("위에 돌생성");
         smith.isStopped = true;
         yield return new WaitForSeconds(1.0f); // 2초 기다림
         smith.isStopped = false;
+        // 거리 계산
+        float dist = Vector3.Distance(transform.position, target.transform.position);
         // 돌을 플레이어에게 던짐
-        Vector3 directionToPlayer = ((target.transform.position + Vector3.down * 0.3f) - transform.position ).normalized;
+        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 20 + 1)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
-        rb.velocity = directionToPlayer * 29f; // 돌의 속도 설정
+        rb.AddForce(directionToPlayer * 20f * dist); // 돌의 속도 설정
+        rb.useGravity = true;
     }
 
     void Run()

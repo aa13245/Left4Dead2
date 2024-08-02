@@ -31,10 +31,40 @@ public class Human_KJS : MonoBehaviour
     public float HP
     {
         get { return hp; }
-        set { hp = value; }
+        set
+        {   // 회복하는 경우
+            if (hp <= value)
+            {
+                // 채워지는 양
+                float v = value - hp;
+                // 일시체력이 있을 때
+                if (tempHP > 0)
+                {
+                    tempHP = Mathf.Max(0, tempHP - v);
+                }
+                hp = value;
+            }
+            else // 감소
+            {
+                // 감소하는 양
+                float v = hp - value;
+                if (tempHP > 0)
+                {
+                    tempHP = Mathf.Max(0, tempHP - v);
+                }
+                hp = value;
+            }
+        }
     }
     //최대 체력 변수
     public float maxHP = 100;
+    // 일시적인 체력
+    float tempHP;
+    public float TempHP
+    {
+        get { return tempHP; }
+        set { tempHP = value; }
+    }
 
     //PlayerMove_KJS player;
     public PlayerControler_KJS player;
@@ -51,6 +81,25 @@ public class Human_KJS : MonoBehaviour
         KnockedDown,
         Dead,
 
+    }
+    public HumanState humanState;
+    public void ChangeHumanState(HumanState s)
+    {
+        if (humanState == s) return;
+        if (s == HumanState.Normal)
+        {
+            HP = 20;
+            TempHP = 18;
+        }
+        else if (s == HumanState.KnockedDown)
+        {
+            HP = 100;
+            TempHP = 100;
+        }
+        else if (s == HumanState.Dead)
+        {
+
+        }
     }
 
     void Start()
@@ -78,6 +127,16 @@ public class Human_KJS : MonoBehaviour
     {
         if (currTime < 100) currTime += Time.deltaTime;
         KnockBackUpdate();
+        HpUpdate();
+    }
+    void HpUpdate()
+    {
+        if (tempHP > 0)
+        {
+            float value = Time.deltaTime * 0.1f;
+            if (value > tempHP) value = tempHP;
+            HP -= value;
+        }
     }
     public void GetDamage(float value, GameObject attacker)
     {
