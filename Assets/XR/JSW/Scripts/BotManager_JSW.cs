@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BotManager_JSW : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class BotManager_JSW : MonoBehaviour
     public Inventory_JSW inventory;
     public Human_KJS human;
 
+    Slider hpSlider;
+    Image hpImage;
+    Slider tempHpSlider;
+    Image tempHpImage;
     // 우선순위 타겟
     GameObject priorityTarget;
     public GameObject PriorityTarget {  get { return priorityTarget; } }
@@ -20,6 +25,11 @@ public class BotManager_JSW : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject canvas = GameObject.Find("Canvas");
+        hpSlider = canvas.transform.Find("Info"+ gameObject.name[3].ToString() +"/HPbar").GetComponent<Slider>();
+        hpImage = canvas.transform.Find("Info" + gameObject.name[3].ToString() + "/HPbar/Fill Area/Fill").GetComponent<Image>();
+        tempHpSlider = canvas.transform.Find("Info"+ gameObject.name[3].ToString() +"/TempHPbar").GetComponent<Slider>();
+        tempHpImage = canvas.transform.Find("Info"+ gameObject.name[3].ToString() +"/TempHPbar/Fill Area/Fill").GetComponent<Image>();
         botMove = GetComponent<BotMove>();
         botSight = GetComponent<BotSight_JSW>();
         inventory = GetComponent<Inventory_JSW>();
@@ -29,6 +39,7 @@ public class BotManager_JSW : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        HpUiUpdate();
         // 우선 타겟 검사 필요
         /*
             1. 나를 공격
@@ -40,14 +51,26 @@ public class BotManager_JSW : MonoBehaviour
         // 우선 타겟 있을 때
         if (priorityTarget != null)
         {   // 가시여부 체크
-            targetVisible = botSight.SightCheck(priorityTarget);
+            targetVisible = botSight.SightCheck(priorityTarget, -1, true);
+
+            // 장전
+            if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
+            {
+                human.Reload(true);
+                return;
+            }
         }
         // 우선 타겟 없을 때
         else
-        {
+        {   // 타겟 있을 때
             if (botSight.Target != null)
             {
-
+                // 장전
+                if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
+                {
+                    human.Reload(true);
+                    return;
+                }
             }
             // 타겟 없을 때
             else
@@ -61,7 +84,7 @@ public class BotManager_JSW : MonoBehaviour
                 // 장전
                 if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
                 {
-                    human.Reload();
+                    human.Reload(true);
                     return;
                 }
                 // 파밍
@@ -117,9 +140,30 @@ public class BotManager_JSW : MonoBehaviour
             if (priorityTarget != null) target = priorityTarget;
             else if (botSight.Target != null) target = botSight.Target;
             if (target == null) return;
-            Vector3 origin = transform.position + transform.forward + Vector3.up * 1.6f;
-            Vector3 dir = target.transform.position - origin;
+            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human_KJS.HumanState.KnockedDown ? 0.8f : 1.6f);
+            Vector3 dir = target.transform.position + Vector3.up - origin;
             human.MouseClick(origin, dir);
+        }
+    }
+    void HpUiUpdate()
+    {
+        hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        tempHpSlider.value = human.HP / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        if (human.humanState == Human_KJS.HumanState.Normal)
+        {
+            Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, tempHpSlider.value), 1, 1);
+            c.a = 1;
+            hpImage.color = c;
+            c.a = 0.5f;
+            tempHpImage.color = c;
+        }
+        else if (human.humanState == Human_KJS.HumanState.KnockedDown)
+        {
+            Color c = Color.HSVToRGB(0, 1, 1);
+            c.a = 1;
+            hpImage.color = c;
+            c.a = 0.5f;
+            tempHpImage.color = c;
         }
     }
 }

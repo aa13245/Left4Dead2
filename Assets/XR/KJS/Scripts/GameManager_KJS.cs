@@ -51,7 +51,8 @@ public class GameManager_KJS : MonoBehaviour
         //초기 게임 상태는 준비 상태로 설정한다.
         gState = GameState.Ready;
         //게임 상태 UI오브젝트에서 Text 컴포넌트를 가져온다.
-        gameLabel = GameObject.Find("Canvas").transform.Find("Label_GameState").gameObject;
+        GameObject canvas = GameObject.Find("Canvas");
+        gameLabel = canvas.transform.Find("Label_GameState").gameObject;
         gameText = gameLabel.GetComponent<Text>();
         //상태 텍스트의 내용을 'Ready...'로 한다.
         gameText.text = "Ready...";
@@ -59,6 +60,13 @@ public class GameManager_KJS : MonoBehaviour
         gameText.color = new Color32(255, 0, 0, 255);
         //게임 준비 > 게임 중 상태로 전환하기
         StartCoroutine(ReadyToStart());
+        // 패널 불러오기
+
+        panels = new GameObject[4];
+        for (int i = 0; i < 4; i++)
+        {
+            panels[i] = canvas.transform.Find("Slot" + (i + 1)).gameObject;
+        }
         // 시작시 모든 패널을 비 활성화
         foreach (GameObject panel in panels)
         {
@@ -113,7 +121,11 @@ public class GameManager_KJS : MonoBehaviour
                 }
             }
         }
-
+        // 총알 정보 업데이트
+        UpdateAmmoUI();
+    }
+    public void GameOver()
+    {
         //만일, 플레이어의 hp가 0이하라면...
         if (player != null && player.human.HP <= 0)
         {
@@ -126,8 +138,6 @@ public class GameManager_KJS : MonoBehaviour
             //상태를 '게임 오버' 상태로 변경한다.
             gState = GameState.GameOver;
         }
-        // 총알 정보 업데이트
-        UpdateAmmoUI();
     }
     public void SwitchPanel(int index)
     {
@@ -147,7 +157,7 @@ public class GameManager_KJS : MonoBehaviour
     {
         if (player == null) return;
 
-        player.inventory.SlotNum = slotIndex;
+        player.inventory.SetSlotNum(slotIndex);
         // 직접적으로 UI를 갱신할 메서드를 호출하는 것으로 변경
         // player.SendMessage("SlotUIChange");
         player.SlotUIChange(); // 직접 호출하는 방법을 사용

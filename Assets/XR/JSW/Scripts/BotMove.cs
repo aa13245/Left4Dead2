@@ -80,6 +80,11 @@ public class BotMove : MonoBehaviour
             yVelocity += -9.81f * Time.deltaTime;
             cc.Move((botManager.human.knockBackVector + Vector3.up * yVelocity) * Time.deltaTime);
         }
+        if (botManager.human.humanState != Human_KJS.HumanState.Normal)
+        {
+            agent.isStopped = true;
+            return;
+        }
         if (stun) return;
         targetDis = Vector3.Distance(transform.position, botManager.PriorityTarget != null ? botManager.PriorityTarget.transform.position : player.transform.position);
         if (botMoveState == BotMoveState.Idle)
@@ -101,6 +106,7 @@ public class BotMove : MonoBehaviour
             }
             else
             {   // 멀음
+                agent.isStopped = false;
                 agent.SetDestination(player.transform.position);
             }
         }

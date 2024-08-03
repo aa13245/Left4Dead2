@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static ItemTable_JSW;
 
 public class Human_KJS : MonoBehaviour
 {
     public bool isPlayer;
     CharacterController cc;
+    Animator anim;
     public GameObject bulletFactory;
     //총알 효과 주소
     public GameObject bulletEffectFactory;
@@ -62,6 +64,7 @@ public class Human_KJS : MonoBehaviour
     }
     //최대 체력 변수
     public float maxHP = 100;
+    public float knockedDownMaxHP = 300;
     // 일시적인 체력
     float tempHP;
     public float TempHP
@@ -77,8 +80,6 @@ public class Human_KJS : MonoBehaviour
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
 
-
-
     public enum HumanState
     {
         Normal,
@@ -90,25 +91,35 @@ public class Human_KJS : MonoBehaviour
     public void ChangeHumanState(HumanState s)
     {
         if (humanState == s) return;
+        humanState = s;
+        // 부활
         if (s == HumanState.Normal)
         {
-            HP = 20;
-            TempHP = 18;
+            HP = 30;
+            TempHP = 28;
+            if (isPlayer) player.SetKnockedDown(false);
         }
+        // 기절
         else if (s == HumanState.KnockedDown)
         {
-            HP = 100;
-            TempHP = 100;
+            HP = knockedDownMaxHP;
+            TempHP = knockedDownMaxHP;
+            Reload(false);
+            anim.SetTrigger("KnockDown");
+            if (isPlayer) player.SetKnockedDown(true);
         }
+        // 사망
         else if (s == HumanState.Dead)
         {
-
+            Reload(false);
+            anim.SetTrigger("Die");
         }
     }
 
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        anim = GetComponentInChildren<Animator>();
         if (gameObject.name == "Player") isPlayer = true;
         player = GetComponent<PlayerControler_KJS>();
         inventory = GetComponent<Inventory_JSW>();
@@ -131,20 +142,39 @@ public class Human_KJS : MonoBehaviour
     {
         if (currTime < 100) currTime += Time.deltaTime;
         KnockBackUpdate();
+        ReloadUpdate();
         HpUpdate();
     }
     void HpUpdate()
-    {
+    {   // 일시체력 감소
         if (tempHP > 0)
         {
             float value = Time.deltaTime * 0.1f;
             if (value > tempHP) value = tempHP;
             HP -= value;
         }
+        // 기절
+        if (humanState == HumanState.Normal)
+        {
+            if (HP <= 0)
+            {
+                ChangeHumanState(HumanState.KnockedDown);
+            }
+        }
+        // 사망
+        else if (humanState == HumanState.KnockedDown)
+        {
+            if (HP <= 0)
+            {
+                ChangeHumanState(HumanState.Dead);
+                if (isPlayer) GameManager_KJS.gm.GameOver();
+            }
+        }
     }
     public void GetDamage(float value, GameObject attacker)
     {
-        hp -= value;
+        if (humanState == HumanState.Dead) return;
+        HP -= value;
         if (isPlayer)
         {
             player.DamageAction();
@@ -153,6 +183,7 @@ public class Human_KJS : MonoBehaviour
     }
     public void MouseClick(Vector3 origin = new Vector3(), Vector3 pos = new Vector3())
     {
+        if (humanState == HumanState.Dead) return;
         //유저가 Fire(LMB)을 클릭하면
         if (inventory[inventory.SlotNum] == null) return;
         // 주무기
@@ -201,6 +232,8 @@ public class Human_KJS : MonoBehaviour
         }
         */
         #endregion
+        if (humanState == HumanState.Dead) return;
+        if (isReloaing) { return; }
         // 아이템 정보
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon itemInfo)
         {
@@ -218,9 +251,10 @@ public class Human_KJS : MonoBehaviour
                     RaycastHit hitInfo;
                     if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
                                         isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange,
-                                        ~(1 << LayerMask.NameToLayer("Player_KJS"))))
+                                        ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
+                        Destroy(bullettEffect, 3);
                         bullettEffect.transform.position = hitInfo.point;
                         bullettEffect.transform.forward = hitInfo.normal;
                         // 데미지 입히기
@@ -238,6 +272,8 @@ public class Human_KJS : MonoBehaviour
     }
     void SubWeapon(Vector3 origin, Vector3 dir)
     {
+        if (humanState == HumanState.Dead) return;
+        if (isReloaing) { return; }
         // 권총이냐
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon itemInfo)
         {
@@ -254,9 +290,10 @@ public class Human_KJS : MonoBehaviour
                     RaycastHit hitInfo;
                     if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
                                         isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange,
-                                        ~(1 << LayerMask.NameToLayer("Player_KJS"))))
+                                        ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
+                        Destroy(bullettEffect, 3);
                         bullettEffect.transform.position = hitInfo.point;
                         bullettEffect.transform.forward = hitInfo.normal;
                         // 데미지 입히기
@@ -277,6 +314,7 @@ public class Human_KJS : MonoBehaviour
     }
     void ThirdSlot()
     {
+        if (humanState == HumanState.Dead) return;
         //수류탄 오브젝트를 생성한 후 수류탄의 생성위치를 발사 위치로 한다.
         GameObject bomb = Instantiate(bombFactory);
         bomb.transform.position = firePosition.transform.position;
@@ -289,6 +327,7 @@ public class Human_KJS : MonoBehaviour
     }
     void ForthSlot()
     {
+        if (humanState == HumanState.Dead) return;
         // 회복템 사용
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Recovery itemInfo)
         {
@@ -310,9 +349,9 @@ public class Human_KJS : MonoBehaviour
             target.GetComponent<JKYEnemyFSM>().HitEnemy(dmg);
         }
         // 아군 공격
-        else
+        else if (target.layer == LayerMask.NameToLayer(isPlayer ? "Bot_JSW" : "Player_KJS"))
         {
-
+            target.GetComponent<Human_KJS>().GetDamage(dmg/100, gameObject);
         }
     }
     void EquipWeapon(int slotNum)
@@ -330,13 +369,24 @@ public class Human_KJS : MonoBehaviour
             currentWeapon.SetActive(true);
         }
     }
+    public bool ChangeSlotNum(int slotNum)
+    {
+        if (humanState == HumanState.Dead) return false;
+        if (inventory.SetSlotNum(slotNum))
+        {
+            Reload(false);
+            return true;
+        }
+        else return false;
+    }
     public void PickUp(GameObject item = null)
     {
+        if (humanState == HumanState.Dead) return;
         // 플레이어 일 때
         if (item == null)
         {
             RaycastHit hitInfo;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 2,
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 3,
                 ~(1 << LayerMask.NameToLayer("Player_KJS"))))
             {
                 if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
@@ -344,6 +394,7 @@ public class Human_KJS : MonoBehaviour
                     inventory.PickUp(hitInfo.transform.gameObject);
                 }
             }
+
         }
         // 봇일 때
         else
@@ -355,10 +406,49 @@ public class Human_KJS : MonoBehaviour
     {
         inventory.Drop(inventory.SlotNum);
     }
-    public bool Reload()
+    bool isReloaing;
+    public bool IsReloaing { get { return isReloaing; } }
+    float reloadTimer;
+    float reloadTime;
+    public void Reload(bool on)
     {
-        // 장전 시간 구현 필요
-        return inventory.Reload(inventory.SlotNum);
+        if (humanState == HumanState.Dead) return;
+        if (on)
+        {
+            if (!isReloaing && inventory.CheckReloadEnable(inventory.SlotNum))
+            {   // 주무기일 때
+                if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon mainWeapon)
+                {   // 장전 On
+                    reloadTimer = 0;
+                    isReloaing = true;
+                    reloadTime = mainWeapon.reloadSpeed;
+                }
+                else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon subWeapon)
+                {   // 장전 On
+                    reloadTimer = 0;
+                    isReloaing = true;
+                    reloadTime = subWeapon.reloadSpeed;
+                }
+            }
+        }
+        else
+        {
+            if (isReloaing)
+            {   // 장전 Off
+                isReloaing = false;
+            }
+        }
+    }
+    void ReloadUpdate()
+    {
+        if (!isReloaing || humanState == HumanState.Dead) return;
+        reloadTimer += Time.deltaTime;
+        if (reloadTimer >= reloadTime)
+        {   // 장전완료
+            isReloaing = false;
+            inventory.Reload(inventory.SlotNum);
+            if (isPlayer) player.SlotUIChange();
+        }
     }
     GameObject TopObj(GameObject obj)
     {
@@ -372,12 +462,14 @@ public class Human_KJS : MonoBehaviour
     public Action stun;
     public void Stun(GameObject stone)
     {
+        if (humanState == HumanState.Dead) return;
         stun();
     }
     float knockBackPow = 30;
     public Vector3 knockBackVector = Vector3.zero;
     public void ApplyKnockBack(GameObject zombie)
     {
+        if (humanState == HumanState.Dead) return;
         Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
         dir.Normalize();
         knockBackVector = dir * knockBackPow;

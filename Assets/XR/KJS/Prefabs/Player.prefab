@@ -53,12 +53,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd9c46300df1e7944b24e9cf72f4c5bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2.5
-  acceleration: 8
-  deceleration: 20
+  moveSpeed: 6
+  acceleration: 30
+  deceleration: 30
   jumPower: 3
   jumpMaxcnt: 2
-  hpSlider: {fileID: 0}
   hitEffect: {fileID: 0}
   human: {fileID: 0}
   inventory: {fileID: 0}
@@ -158,6 +157,7 @@ MonoBehaviour:
   throwPower: 15
   weapons: []
   maxHP: 100
+  knockedDownMaxHP: 300
   player: {fileID: 0}
   humanState: 0
   knockBackVector: {x: 0, y: 0, z: 0}
@@ -237,7 +237,7 @@ Transform:
   m_GameObject: {fileID: 7088161171620807250}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.396, z: 0.317}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.317}
   m_LocalScale: {x: 1, y: 1.2602, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -274,7 +274,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0

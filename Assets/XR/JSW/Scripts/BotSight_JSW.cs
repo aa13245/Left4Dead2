@@ -51,7 +51,7 @@ public class BotSight_JSW : MonoBehaviour
             // 타겟이 있을 때
             else
             {   // 있다면 시아 체크
-                if (!SightCheck(target)) 
+                if (!SightCheck(target, -1, true)) 
                 { 
                     target = null;
                     agent.updateRotation = true;

@@ -390,7 +390,7 @@ public class JKYHammerFS : MonoBehaviour
         Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 2)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
-        rb.AddForce(directionToPlayer * 20f * Mathf.Min(10, dist)); // 돌의 속도 설정
+        rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
         rb.useGravity = true;
     }
 

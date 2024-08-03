@@ -61,7 +61,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -139,6 +139,7 @@ MonoBehaviour:
   throwPower: 15
   weapons: []
   maxHP: 100
+  knockedDownMaxHP: 300
   player: {fileID: 0}
   humanState: 0
   knockBackVector: {x: 0, y: 0, z: 0}

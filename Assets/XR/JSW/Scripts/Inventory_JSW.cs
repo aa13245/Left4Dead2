@@ -13,10 +13,15 @@ public class Inventory_JSW : MonoBehaviour
     public Item_JSW this[int idx] { get{ return slots[idx]; } }
     // 현재 선택된 슬롯
     int slotNum = 1;
-    public int SlotNum
+    public int SlotNum { get { return slotNum; } }
+    public bool SetSlotNum(int value)
     {
-        get { return slotNum; }
-        set { if (slots[value] != null) slotNum = value; }
+        if (slots[value] != null && slotNum != value)
+        {
+            slotNum = value;
+            return true;
+        }
+        else return false;
     }
 
     // Start is called before the first frame update
@@ -113,6 +118,35 @@ public class Inventory_JSW : MonoBehaviour
                 slots[slot] = null;
             }
             return true;
+        }
+        else return false;
+    }
+    public bool CheckReloadEnable(int slot)
+    {   // 주무기
+        if (slot == 0)
+        {
+            if (ItemTable_JSW.instance.itemTable[slots[0].kind] is ItemTable_JSW.MainWeapon item)
+            {   // 가득 찼거나 보유 총알이 없을 때
+                if (slots[0].value1 == item.magazineCapacity || slots[0].value2 == 0) return false;
+                else
+                {   
+                    return true;
+                }
+            }
+            else return false;
+        }
+        // 보조무기
+        else if (slot == 1)
+        {
+            if (ItemTable_JSW.instance.itemTable[slots[1].kind] is ItemTable_JSW.SubWeapon item)
+            {
+                if (slots[1].value1 == item.magazineCapacity) return false;
+                else
+                {
+                    return true;
+                }
+            }
+            else return false;
         }
         else return false;
     }
