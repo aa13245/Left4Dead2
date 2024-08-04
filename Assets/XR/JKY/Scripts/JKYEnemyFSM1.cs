@@ -532,6 +532,7 @@ public class JKYEnemyFSM1 : MonoBehaviour
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+
                 print("공격");
                 currentTime = 0;
 
@@ -638,7 +639,7 @@ public class JKYEnemyFSM1 : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;

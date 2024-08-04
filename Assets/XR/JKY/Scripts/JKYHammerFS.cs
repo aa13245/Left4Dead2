@@ -232,7 +232,7 @@ public class JKYHammerFS : MonoBehaviour
             if (isClimbing)
             {
                 print("climb함수들어왔다 트루");
-                m_State = EnemyState.Climb;
+                //m_State = EnemyState.Climb;
                 print("상태전환 Move -> Climb");
             }
             else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
@@ -666,7 +666,7 @@ public class JKYHammerFS : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;
