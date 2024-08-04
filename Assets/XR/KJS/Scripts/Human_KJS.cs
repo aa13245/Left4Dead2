@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static ItemTable_JSW;
+using static UnityEngine.GraphicsBuffer;
 
 public class Human_KJS : MonoBehaviour
 {
@@ -124,8 +125,8 @@ public class Human_KJS : MonoBehaviour
         Reviving,
         GetReviving,
         Healing,
+        GetHealing,
         SelfHealing,
-        GetHealing
     }
     public InteractionState interactionState;
 
@@ -167,13 +168,14 @@ public class Human_KJS : MonoBehaviour
         if (interactionState == InteractionState.Reviving) // 팀 소생하는 중
         {
             interactionTimer += Time.deltaTime;
-            if (interactionTimer >= interactionTime)
-            {   // 완료
-                Revie(interactor, SetInterection.Success);
-            }
-            else if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || Input.GetKeyUp(KeyCode.E))
+            if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || Input.GetKeyUp(KeyCode.E) ||
+                humanState != HumanState.Normal || interactor.GetComponent<Human_KJS>().humanState != HumanState.KnockedDown)
             {   // 취소
                 Revie(interactor, SetInterection.Cancel);
+            }
+            else if (interactionTimer >= interactionTime)
+            {   // 완료
+                Revie(interactor, SetInterection.Success);
             }
         }
         else if (interactionState == InteractionState.GetReviving) // 소생 받는 중
@@ -182,15 +184,32 @@ public class Human_KJS : MonoBehaviour
         }
         else if (interactionState == InteractionState.Healing) // 팀 회복해 주는 중
         {
-
-        }
-        else if (interactionState == InteractionState.SelfHealing) // 자힐 중
-        {
-
+            interactionTimer += Time.deltaTime;
+            if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || Input.GetMouseButtonUp(1) ||
+                humanState != HumanState.Normal || interactor.GetComponent<Human_KJS>().humanState != HumanState.Normal)
+            {   // 취소
+                Heal(interactor, SetInterection.Cancel);
+            }
+            else if (interactionTimer >= interactionTime)
+            {   // 완료
+                Heal(interactor, SetInterection.Success);
+            }
         }
         else if (interactionState == InteractionState.GetHealing) // 회복 받는 중
         {
 
+        }
+        else if (interactionState == InteractionState.SelfHealing) // 자힐 중
+        {
+            interactionTimer += Time.deltaTime;
+            if (Input.GetMouseButtonUp(0) || humanState != HumanState.Normal)
+            {   // 취소
+                SelfHeal(SetInterection.Cancel);
+            }
+            else if (interactionTimer >= interactionTime)
+            {   // 완료
+                SelfHeal(SetInterection.Success);
+            }
         }
     }
     public enum SetInterection
@@ -312,6 +331,8 @@ public class Human_KJS : MonoBehaviour
         if (set == SetInterection.On)
         {
             interactionState = InteractionState.SelfHealing;
+            interactionTimer = 0;
+            interactionTime = 8;
             if (isPlayer)
             {
                 // 자힐 UI ON 필요
