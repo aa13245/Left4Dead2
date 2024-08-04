@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &968106481
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -277,7 +277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &986732702
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -456,6 +456,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Storage_keh
       objectReference: {fileID: 0}
+    - target: {fileID: 4801413476361369432, guid: 0a73e050449c06344828785fa8c9946a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -480,7 +485,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1315452515
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -659,6 +664,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: StageScene_sy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285597249082493261, guid: 106f17c41eefdb54a8fbfd55dbcc5a0a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
