@@ -14,11 +14,14 @@ public class GameManager_KJS : MonoBehaviour
     public GameObject[] panels;
 
     PlayerControler_KJS human;
+    GameObject[] bots;
     // 게임 상태 UI 텍스트 컴포넌트 변수
-    Text gameText;
+    private Text gameText;
     // 총알 정보를 표시할 텍스트 UI 요소
-    public Text currentAmmoText;
-    public Text totalAmmoText;
+    Text currentAmmoText;
+    Text totalAmmoText;
+    Text currentAmmoText2;
+
 
     // Start is called before the first frame update
 
@@ -48,6 +51,8 @@ public class GameManager_KJS : MonoBehaviour
         //초기 게임 상태는 준비 상태로 설정한다.
         gState = GameState.Ready;
         //게임 상태 UI오브젝트에서 Text 컴포넌트를 가져온다.
+        GameObject canvas = GameObject.Find("Canvas");
+        gameLabel = canvas.transform.Find("Label_GameState").gameObject;
         gameText = gameLabel.GetComponent<Text>();
         //상태 텍스트의 내용을 'Ready...'로 한다.
         gameText.text = "Ready...";
@@ -55,6 +60,13 @@ public class GameManager_KJS : MonoBehaviour
         gameText.color = new Color32(255, 0, 0, 255);
         //게임 준비 > 게임 중 상태로 전환하기
         StartCoroutine(ReadyToStart());
+        // 패널 불러오기
+
+        panels = new GameObject[4];
+        for (int i = 0; i < 4; i++)
+        {
+            panels[i] = canvas.transform.Find("Slot" + (i + 1)).gameObject;
+        }
         // 시작시 모든 패널을 비 활성화
         foreach (GameObject panel in panels)
         {
@@ -66,6 +78,12 @@ public class GameManager_KJS : MonoBehaviour
         {
             panels[1].SetActive(true); // 예를 들어, 첫 번째 패널을 기본으로 활성화
         }
+        currentAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text1").GetComponent<Text>();
+        totalAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text2").GetComponent<Text>();
+        currentAmmoText2 = GameObject.Find("Canvas").transform.Find("Slot2/Text3").GetComponent<Text>();
+        // 아군 봇
+        bots = new GameObject[3];
+        for (int i = 0; i < 3; i++) { bots[i] = GameObject.Find("Bot" + i + 1); }
     }
     IEnumerator ReadyToStart()
     {
@@ -103,7 +121,11 @@ public class GameManager_KJS : MonoBehaviour
                 }
             }
         }
-
+        // 총알 정보 업데이트
+        UpdateAmmoUI();
+    }
+    public void GameOver()
+    {
         //만일, 플레이어의 hp가 0이하라면...
         if (player != null && player.human.HP <= 0)
         {
@@ -116,8 +138,6 @@ public class GameManager_KJS : MonoBehaviour
             //상태를 '게임 오버' 상태로 변경한다.
             gState = GameState.GameOver;
         }
-        // 총알 정보 업데이트
-        //UpdateAmmoUI();
     }
     public void SwitchPanel(int index)
     {
@@ -137,7 +157,7 @@ public class GameManager_KJS : MonoBehaviour
     {
         if (player == null) return;
 
-        player.inventory.SlotNum = slotIndex;
+        player.inventory.SetSlotNum(slotIndex);
         // 직접적으로 UI를 갱신할 메서드를 호출하는 것으로 변경
         // player.SendMessage("SlotUIChange");
         player.SlotUIChange(); // 직접 호출하는 방법을 사용
@@ -149,17 +169,28 @@ public class GameManager_KJS : MonoBehaviour
     private void UpdateAmmoUI()
     {
         if (player == null || player.inventory == null) return;
+        
 
-        // 주무기 슬롯의 총알 정보 업데이트
+        //주무기 슬롯의 총알 정보 업데이트
         if (player.inventory[0] != null && ItemTable_JSW.instance.itemTable[player.inventory[0].kind] is ItemTable_JSW.MainWeapon mainWeapon)
+         {
+         currentAmmoText.text = $"Ammo: {player.inventory[0].value1}/{mainWeapon.magazineCapacity}";
+         totalAmmoText.text = $"Total Ammo: {player.inventory[0].value2}";
+         }
+        else
+         {
+          currentAmmoText.text = "Ammo: N/A";
+         totalAmmoText.text = "Total Ammo: N/A";
+        }
+
+        if (player.inventory[1] != null && ItemTable_JSW.instance.itemTable[player.inventory[1].kind] is ItemTable_JSW.SubWeapon subWeapon)
         {
-            currentAmmoText.text = $"Ammo: {player.inventory[0].value1}/{mainWeapon.magazineCapacity}";
-            totalAmmoText.text = $"Total Ammo: {player.inventory[0].value2}";
+            currentAmmoText2.text = $"Ammo: {player.inventory[1].value1}/{subWeapon.magazineCapacity}";
         }
         else
         {
-            currentAmmoText.text = "Ammo: N/A";
-            totalAmmoText.text = "Total Ammo: N/A";
+            currentAmmoText2.text = "Ammo: N/A";
         }
+            
     }
 }

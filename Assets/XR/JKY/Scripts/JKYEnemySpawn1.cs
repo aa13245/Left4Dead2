@@ -165,6 +165,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
         //    else { playerInSight = false; }
         //}    
         m_State = EnemyState.Move;
+        anim.SetTrigger("IdleToMove");
     }
 
     public float extraRotationSpeed = 0.3f;
@@ -442,7 +443,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;

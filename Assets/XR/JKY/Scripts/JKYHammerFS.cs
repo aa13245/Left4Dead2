@@ -91,7 +91,7 @@ public class JKYHammerFS : MonoBehaviour
     public float throwCooldownMin = 3.0f;
     public float throwCooldownMax = 7.0f;
     public float chargeSpeed = 20.0f;
-    public float knockbackDistance = 7.0f;
+    public float knockbackDistance = 10.0f;
     public GameObject rockPrefab;
 
     private float spawnCooldown = 30.0f;
@@ -121,7 +121,7 @@ public class JKYHammerFS : MonoBehaviour
 
 
         //스폰
-        InvokeRepeating("SpawnZombie", 0, spawnCooldown);
+        //InvokeRepeating("SpawnZombie", 0, spawnCooldown);
         ResetThrowCooldown();
     }
 
@@ -232,7 +232,7 @@ public class JKYHammerFS : MonoBehaviour
             if (isClimbing)
             {
                 print("climb함수들어왔다 트루");
-                m_State = EnemyState.Climb;
+                //m_State = EnemyState.Climb;
                 print("상태전환 Move -> Climb");
             }
             else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
@@ -247,13 +247,13 @@ public class JKYHammerFS : MonoBehaviour
                 {
                     print("이제 레이 쏜다.");
                     // 레이캐스트를 쏘아서 플레이어가 시야에 있는지 감지
-                    Vector3 directionToPlayer = (target.transform.position - transform.position).normalized;
+                    Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * 0.5f).normalized;
                     Ray ray = new Ray(transform.position, directionToPlayer);
                     RaycastHit hit;
 
                     if (Physics.Raycast(ray, out hit, spawnRange))
                     {
-                        if (hit.collider.gameObject == player.gameObject)
+                        if (hit.collider.gameObject == target.gameObject)
                         {
                             // 플레이어가 시야에 잡혔으면 돌 던지기
                             if (Time.time >= nextThrowTime)
@@ -379,16 +379,19 @@ public class JKYHammerFS : MonoBehaviour
     IEnumerator PrepareAndThrowRock()
     {
         // 돌을 에너미 위에 생성
-        GameObject rock = Instantiate(rockPrefab, transform.position + Vector3.up*0.4f   , Quaternion.identity);
+        GameObject rock = Instantiate(rockPrefab, transform.position + Vector3.up* 2f   , Quaternion.identity);
         print("위에 돌생성");
         smith.isStopped = true;
         yield return new WaitForSeconds(1.0f); // 2초 기다림
         smith.isStopped = false;
+        // 거리 계산
+        float dist = Vector3.Distance(transform.position, target.transform.position);
         // 돌을 플레이어에게 던짐
-        Vector3 directionToPlayer = ((target.transform.position + Vector3.down * 0.3f) - transform.position ).normalized;
+        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 2)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
-        rb.velocity = directionToPlayer * 29f; // 돌의 속도 설정
+        rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
+        rb.useGravity = true;
     }
 
     void Run()
@@ -552,6 +555,10 @@ public class JKYHammerFS : MonoBehaviour
             if (currentTime > attackDelay)
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
+                //target.GetComponent<Human_KJS>().tankerSkill1();
+                Vector3 knockbackDirection = (target.transform.position - gameObject.transform.position).normalized;
+                target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject);
+                //target.GetComponent<Human_KJS>().isKnockedBack = true;
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
                 print("공격");
                 currentTime = 0;
@@ -659,7 +666,7 @@ public class JKYHammerFS : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;

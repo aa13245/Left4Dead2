@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerControler_KJS : MonoBehaviour
 {
-    public float moveSpeed = 10;
-    public float acceleration = 4f; // 가속도
-    public float deceleration = 4f; // 감속도
+    public float moveSpeed = 6;
+    public float acceleration = 30; // 가속도
+    public float deceleration = 30; // 감속도
 
     private CharacterController cc;
     private Vector3 velocity;
@@ -22,10 +22,12 @@ public class PlayerControler_KJS : MonoBehaviour
 
     int jumpcurrCnt;
 
-    public GameManager_KJS gameManager;
-
     //hp 슬라이더 변수
-    public Slider hpSlider;
+    Slider hpSlider;
+    Image hpImage;
+    Slider tempHpSlider;
+    Image tempHpImage;
+    Text hpText;
     //Hit 효과 오브젝트
     public GameObject hitEffect;
     // 플레이어 컴퍼넌트
@@ -35,13 +37,26 @@ public class PlayerControler_KJS : MonoBehaviour
 
     // Start is called before the first frame update
 
+    //애니메이터 변수
+    Animator anim;
 
     void Start()
     {
+        //피격 이벤트 오브젝트에서 파티클 시스템 컴포넌트 가져오기
         cc = GetComponent<CharacterController>();
         human = GetComponent<Human_KJS>();
         inventory = GetComponent<Inventory_JSW>();
+        GameObject canvas = GameObject.Find("Canvas");
+        hpSlider = canvas.transform.Find("Info0/HPbar").GetComponent<Slider>();
+        hpImage = canvas.transform.Find("Info0/HPbar/Fill Area/Fill").GetComponent<Image>();
+        tempHpSlider = canvas.transform.Find("Info0/TempHPbar").GetComponent<Slider>();
+        tempHpImage = canvas.transform.Find("Info0/TempHPbar/Fill Area/Fill").GetComponent<Image>();
+        hpText = canvas.transform.Find("Info0/Text (Legacy)").GetComponent <Text>();
+        hitEffect = canvas.transform.Find("Hit").gameObject;
         velocity = Vector3.zero;
+        anim = GetComponentInChildren<Animator>();
+        GetComponent<Human_KJS>().slow = Slow;
+        GetComponent<Human_KJS>().stun = Stun;
     }
 
     // Update is called once per frame
@@ -56,30 +71,101 @@ public class PlayerControler_KJS : MonoBehaviour
             if (Input.GetButton("Fire1"))
             {
                 human.MouseClick();
-                SlotUIChange();
+                //SlotUIChange();
             }
         }
         // 한번만 받아야 하는 상황
         else if (Input.GetButtonDown("Fire1"))
         {
+           
             human.MouseClick();
-            SlotUIChange();
+            //SlotUIChange();
+
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
             human.PickUp();
-            SlotUIChange();
+            //SlotUIChange();
         }
-        if (Input.GetKeyDown(KeyCode.G)) human.Drop();
+        //if (Input.GetKeyDown(KeyCode.G)) human.Drop();
         Swap();
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Reload();
-            SlotUIChange();
+            human.Reload(true);
+            //Reload();
+            //SlotUIChange();
         }
 
+        HpUiUpdate();
+        CamRecovery();
+    }
+    void HpUiUpdate()
+    {
         //현재 플레이어 hp를 hp슬라이더의 value에 반영한다.
-        hpSlider.value = (float)human.HP / (float)human.maxHP;
+        hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        tempHpSlider.value = human.HP / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        hpText.text = ((int)human.HP).ToString();
+        if (human.humanState == Human_KJS.HumanState.Normal)
+        {
+            Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, tempHpSlider.value), 1, 1);
+            c.a = 1;
+            hpImage.color = c;
+            hpText.color = c;
+            c.a = 0.5f;
+            tempHpImage.color = c;
+        }
+        else if (human.humanState == Human_KJS.HumanState.KnockedDown)
+        {
+            Color c = Color.HSVToRGB(0, 1, 1);
+            c.a = 1;
+            hpImage.color = c;
+            hpText.color = c;
+            c.a = 0.5f;
+            tempHpImage.color = c;
+        }
+    }
+    // 맞았을 때 감속
+    public void Slow()
+    {
+        velocity = Vector3.zero;
+    }
+    // 탱크 돌 스턴
+    bool stun;
+    public void Stun()
+    {
+        if (human.humanState == Human_KJS.HumanState.Normal)
+        {
+            StartCoroutine(StunWait());
+        }
+    }
+    IEnumerator StunWait()
+    {
+        stun = true;
+        Slow();
+        // 카메라 회전
+        Camera.main.transform.Rotate(new Vector3(0, 0, -10));
+        yield return new WaitForSeconds(1);
+        stun = false;
+    }
+    void CamRecovery()
+    {
+        if (human.humanState == Human_KJS.HumanState.Normal)
+        {
+            Camera.main.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 3 * Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
+        }
+    }
+    public void SetKnockedDown(bool on)
+    {
+        if (on)
+        {
+            Camera.main.transform.Rotate(new Vector3(0, 0, Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0) - 10));
+            Camera.main.transform.Translate(new Vector3(0, -0.7f, 0), Space.World);
+        }
+        else
+        {
+            Camera.main.transform.Rotate(new Vector3(0, 0, Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
+            Camera.main.transform.Translate(new Vector3(0, 0.7f, 0), Space.World);
+        }
     }
     void Move()
     {
@@ -98,26 +184,36 @@ public class PlayerControler_KJS : MonoBehaviour
         
         dir.Normalize();
 
-        if (!cc.isGrounded)
+        //이동 블렌딩 트리를 호출하고 벡터의 크기 값을 넘겨준다
+        //anim.SetFloat("MoveMotion", dir.magnitude);
+
+        if (cc.isGrounded)
         {
-            yVelocity += gravity * Time.deltaTime;
-        }
-        else
-        {
-            yVelocity = -1f;
+            yVelocity = 0;
+            jumpcurrCnt = 0;
         }
 
-        if (Input.GetButtonDown("Jump"))
-
+        // 만약에 스페이스 바를 누르면
+        if (Input.GetButtonDown("Jump") && cc.isGrounded)
         {
-            if (cc.isGrounded)
-            {   // 점프 실행
-                yVelocity = jumPower;
-            }
+            // yVelocity에 jumpPower를 셋팅
+            yVelocity = jumPower;
+            // 현재 점프횟수를 증가 시키자
+            jumpcurrCnt++;
         }
+
+        // yVelocity를 중력값을 이용해서 감소시킨다.
+        // v = v0 + at;
+        yVelocity += gravity * Time.deltaTime;
+
+        // dir.y값에 yVelocity를 셋팅
+        dir.y = yVelocity;
+
+        // 이동 적용
+        //cc.Move(dir * Time.deltaTime);
 
         // 입력이 있을 시
-        if (h != 0 || v != 0)
+        if ((h != 0 || v != 0) && !stun && human.humanState == Human_KJS.HumanState.Normal)
         {   // 가속을 주겠다
             velocity += dir * acceleration * Time.deltaTime;
         }
@@ -131,32 +227,31 @@ public class PlayerControler_KJS : MonoBehaviour
         {
             velocity = velocity.normalized * moveSpeed;
         }
+        Vector3 moveVector = Quaternion.Euler(Vector3.down * transform.eulerAngles.y) * velocity;
+        anim.SetFloat("MoveZ", moveVector.z);
+        anim.SetFloat("MoveX", moveVector.x);
 
         // 움직임
-        cc.Move((velocity * moveSpeed + Vector3.up * yVelocity) * Time.deltaTime);
+        cc.Move(((!stun && human.humanState == Human_KJS.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
     }
     void Swap()
     {
         //각 무기들에 배당된 숫자키
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            inventory.SlotNum = 0;
-            SlotUIChange();
+            if (human.ChangeSlotNum(0)) SlotUIChange();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            inventory.SlotNum = 1;
-            SlotUIChange();
+            if (human.ChangeSlotNum(1)) SlotUIChange();
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            inventory.SlotNum = 2;
-            SlotUIChange();
+            if (human.ChangeSlotNum(2)) SlotUIChange();
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            inventory.SlotNum = 3;
-            SlotUIChange();
+            if (human.ChangeSlotNum(3)) SlotUIChange();
         }
     }
     public void SlotUIChange()
@@ -167,18 +262,86 @@ public class PlayerControler_KJS : MonoBehaviour
     }
     void Reload()
     {
-        if (human.Reload())
-        {   // 장전 성공
+        int currentSlot = inventory.SlotNum; // 현재 선택된 슬롯
+        Item_JSW currentItem = inventory[currentSlot]; // 현재 슬롯의 아이템
 
+        if (currentItem != null)
+        {
+            // 아이템의 종류를 확인하여 `ItemTable_JSW`에서 정보를 가져옴
+            ItemTable_JSW.Items itemKind = currentItem.kind;
+            if (ItemTable_JSW.instance.itemTable.TryGetValue(itemKind, out var itemObject))
+            {
+                float reloadSpeed = 0f;
+
+                if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
+                {
+                    reloadSpeed = mainWeapon.reloadSpeed;
+                }
+                else if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
+                {
+                    reloadSpeed = subWeapon.reloadSpeed;
+                }
+                else
+                {
+                    Debug.Log("현재 아이템은 재장전 속도가 없는 아이템입니다.");
+                    return;
+                }
+
+                // 재장전 애니메이션이나 효과를 여기에 추가할 수 있습니다.
+                StartCoroutine(ReloadCoroutine(reloadSpeed));
+            }
+            else
+            {
+                Debug.Log("아이템 정보를 찾을 수 없습니다.");
+            }
         }
         else
-        {   // 장전 실패
-
+        {
+            Debug.Log("현재 슬롯에 아이템이 없습니다.");
         }
     }
 
-    //플레이어의 피격 함수
-    public void DamageAction()
+    IEnumerator ReloadCoroutine(float reloadTime)
+    {
+        // 재장전 애니메이션이나 효과를 여기에 추가할 수 있습니다.
+        Debug.Log("재장전 중... 속도: " + reloadTime + "초");
+
+        // 실제 재장전 처리 시간
+        yield return new WaitForSeconds(reloadTime);
+
+        // 재장전 완료 후 처리
+        // 예를 들어, 총알 수를 다시 채우거나 상태를 업데이트합니다.
+        Debug.Log("재장전 완료.");
+
+        // 실제 재장전 후 처리 코드 추가
+        // 예: 총알 수를 다시 채우기
+        if (inventory.SlotNum == 0) // 주무기 슬롯을 가정
+        {
+            Item_JSW item = inventory[0];
+            if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
+            {
+                if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
+                {
+                    // 총알 수를 최대값으로 리셋
+                    item.value1 = mainWeapon.magazineCapacity;
+                }
+            }
+        }
+        else if (inventory.SlotNum == 1) // 보조무기 슬롯을 가정
+        {
+            Item_JSW item = inventory[1];
+            if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
+            {
+                if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
+                {
+                    // 총알 수를 최대값으로 리셋
+                    item.value1 = subWeapon.magazineCapacity;
+                }
+            }
+        }
+    }
+//플레이어의 피격 함수
+public void DamageAction()
     {
         //만일 플레이어의 체력이 0보다 크면 피격 효과를 출력한다.
         if(human.HP > 0)
