@@ -33,7 +33,7 @@ public class PlayerFire : MonoBehaviour
                 if ( hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     JKYEnemyFSM eFSM = hitInfo.transform.GetComponent<JKYEnemyFSM>();
-                    eFSM.HitEnemy(weaponPower);
+                    //eFSM.HitEnemy(weaponPower);
                 }
 
                 {

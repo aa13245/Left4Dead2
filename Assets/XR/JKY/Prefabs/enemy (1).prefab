@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 8224243824810971053}
   - component: {fileID: 3910060517511337494}
   - component: {fileID: 7338967103116994307}
-  - component: {fileID: 8351360813898038693}
   - component: {fileID: 219237433940292821}
   - component: {fileID: 553959683776525667}
-  - component: {fileID: 8009530874531237065}
+  - component: {fileID: 8027014161205914829}
+  - component: {fileID: 7717370568555305858}
+  - component: {fileID: 6137383602705501207}
   m_Layer: 26
   m_Name: enemy (1)
   m_TagString: Untagged
@@ -88,38 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8351360813898038693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6117518169804835236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ec324e8269e473478ebed8909a73fc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  findDistance: 8
-  attackDistance: 3
-  moveSpeed: 8
-  attackPower: 3
-  weaponPower: 5
-  moveDistance: 20
-  hp: 30
-  maxhp: 65
-  climbSpeed: 2
-  detectionDistance: 20
-  climb:
-    serializedVersion: 2
-    m_Bits: 134217728
-  detectionRange: 15
-  lookRadius: 8
-  fieldOfView: 120
-  extraRotationSpeed: 27
-  detectionAngle: 70
-  angleStep: 1
-  rotationSpeed: 10
 --- !u!143 &219237433940292821
 CharacterController:
   m_ObjectHideFlags: 0
@@ -156,10 +125,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 3
+  m_Speed: 6
   m_Acceleration: 22
   avoidancePriority: 50
-  m_AngularSpeed: 30000000
+  m_AngularSpeed: 360
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
@@ -168,33 +137,90 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!54 &8009530874531237065
-Rigidbody:
+--- !u!114 &8027014161205914829
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6117518169804835236}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f440a58daa31004fbdc9ce514cbfdd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_State: 0
+  findDistance: 8
+  attackDistance: 2
+  moveSpeed: 5
+  attackPower: 3
+  weaponPower: 5
+  moveDistance: 80
+  hp: 80
+  maxhp: 50
+  climbSpeed: 1
+  detectionDistance: 2
+  climb:
+    serializedVersion: 2
+    m_Bits: 134217728
+  detectionRange: 15
+  lookRadius: 8
+  fieldOfView: 120
+  testTr: {fileID: 0}
+  extraRotationSpeed: 0.3
+  detectionAngle: 70
+  angleStep: 1
+  moveDuration: 5
+  speed: 2
+  rotationSpeed: 15
+--- !u!114 &7717370568555305858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6117518169804835236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7cc5231aa10b43488b97f1991dffa62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6137383602705501207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6117518169804835236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec324e8269e473478ebed8909a73fc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_State: 0
+  findDistance: 30
+  attackDistance: 2
+  moveSpeed: 5
+  attackPower: 3
+  weaponPower: 5
+  moveDistance: 20
+  hp: 50
+  maxhp: 50
+  climbSpeed: 1
+  detectionDistance: 2
+  climb:
     serializedVersion: 2
     m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  detectionRange: 15
+  lookRadius: 8
+  fieldOfView: 120
+  testTr: {fileID: 0}
+  extraRotationSpeed: 0.3
+  detectionAngle: 70
+  angleStep: 1
+  moveDuration: 5
+  speed: 2
+  rotationSpeed: 15
 --- !u!1001 &8752206599193498918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -361,31 +387,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 8f7380da49034cd488ddff94b1ac35d1,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9005375741119823323}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f7380da49034cd488ddff94b1ac35d1, type: 3}
---- !u!1 &745337567419649071 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 8f7380da49034cd488ddff94b1ac35d1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8752206599193498918}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9005375741119823323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 745337567419649071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 925dd789baae43248b6b1381fe1c034a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  efsm: {fileID: 8351360813898038693}
 --- !u!4 &4327010678517513788 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 8f7380da49034cd488ddff94b1ac35d1,

@@ -186,31 +186,12 @@ public class JKYEnemyFSM1 : MonoBehaviour
 
         if (Vector3.Distance(transform.position, target.position) > attackDistance)
         {
-            // 이동 방향 설정
-            //Vector3 dir = (player.position - transform.position).normalized;
-            ////캐릭터 컨트롤러를 이용해 이동하기
-            //cc.Move(dir * moveSpeed * Time.deltaTime);
 
-            ////플레이어를 향해 방향을 전환한다.
-            //transform.forward = dir;
-
-            // 내비게이션 에이전트의 이동을 멈추고 경로를 초기화한다.
-            //smith.isStopped = true;
-            //smith.ResetPath();
-            // 내비게이션으로 접근하는 최소 거리를 공격 가능 거리로 설정한다.
             smith.stoppingDistance = attackDistance;
-
-            //내비게이션의 목적지를 플레이어의 위치로 설정한다.
-
 
             NavMeshPath path = new NavMeshPath();
 
-            //if (isClimbing)
-            //{
-            //    print("climb함수들어왔다 트루");
-            //    //m_State = EnemyState.Climb;
-            //    print("상태전환 Move -> Climb");
-            //}
+
             float angleBetween = Vector3.Angle(transform.forward, target.transform.position - gameObject.transform.position);
             if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
             {
@@ -616,7 +597,7 @@ public class JKYEnemyFSM1 : MonoBehaviour
         cc.enabled = false;
 
         // 2초 동안 기다린 후에 자기 자신을 제거한다.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.7f);
         print("소멸");
         Destroy(gameObject);
 

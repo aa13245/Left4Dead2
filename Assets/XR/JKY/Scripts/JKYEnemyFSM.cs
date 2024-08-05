@@ -105,6 +105,7 @@ public class JKYEnemyFSM : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //Vector3 enemyy = enemy.position.y;
         //
+        GetComponent<JKYEnemyHPSystem>().getDamage = HitEnemy;
     }
 
     // Update is called once per frame
@@ -546,7 +547,7 @@ public class JKYEnemyFSM : MonoBehaviour
         
     }
 
-    public void HitEnemy(float hitPower)
+    public void HitEnemy(float hitPower, GameObject attacker)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
         if(m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
