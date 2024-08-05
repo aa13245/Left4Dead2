@@ -13,12 +13,17 @@ public class JKYHammerSpawn : MonoBehaviour
     public float initialDelay = 1.0f; // 처음 스폰 시작 전 대기 시간 (초)
     //public float nextWaveDelay = 5.0f; // 다음 턴 스폰 전 대기 시간 (초)
     private bool isFirstWave = true;
+    bool spawnEnable;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))
         {
-            StartCoroutine(SpawnWaves());
+            if (!spawnEnable)
+            {
+                spawnEnable = true;
+                StartCoroutine(SpawnWaves());
+            }
         }
     }
 

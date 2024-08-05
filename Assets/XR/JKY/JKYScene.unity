@@ -7232,7 +7232,7 @@ PrefabInstance:
     - target: {fileID: 2353600345049940301, guid: 2c4c590a33e6991489462ca081e2fa2d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8942517279040574848, guid: 2c4c590a33e6991489462ca081e2fa2d,
         type: 3}
@@ -9804,6 +9804,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112722499750928515, guid: c34ad65d5e1a2d8469d82ec881c6ccfe,
+        type: 3}
+      propertyPath: hp
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112722499750928515, guid: c34ad65d5e1a2d8469d82ec881c6ccfe,
+        type: 3}
+      propertyPath: maxhp
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 7579977584169747185, guid: c34ad65d5e1a2d8469d82ec881c6ccfe,
+        type: 3}
+      propertyPath: m_Speed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7579977584169747185, guid: c34ad65d5e1a2d8469d82ec881c6ccfe,
         type: 3}
@@ -13717,7 +13732,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 176177794}
   spawnInterval: 30
-  initialDelay: 10
+  initialDelay: 20
 --- !u!1 &1334960075
 GameObject:
   m_ObjectHideFlags: 0
@@ -18926,7 +18941,7 @@ MonoBehaviour:
   spawnInterval: 1
   enemiesPerWave: 5
   initialDelay: 90
-  nextWaveDelay: 20
+  nextWaveDelay: 35
 --- !u!4 &1770800605
 Transform:
   m_ObjectHideFlags: 0
@@ -20398,7 +20413,7 @@ PrefabInstance:
     - target: {fileID: 2774561796032662858, guid: 1196ee1ccbc9d4948826d87bcf235338,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4127102575897555080, guid: 1196ee1ccbc9d4948826d87bcf235338,
         type: 3}
@@ -21460,7 +21475,7 @@ PrefabInstance:
     - target: {fileID: 7483987482565353713, guid: 7646765e4b452c0468bd36180558adb0,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
