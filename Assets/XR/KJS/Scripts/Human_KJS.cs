@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static ItemTable_JSW;
+using static UnityEngine.UI.Image;
 
 public class Human_KJS : MonoBehaviour
 {
@@ -386,12 +387,12 @@ public class Human_KJS : MonoBehaviour
         // 투척
         else if (inventory.SlotNum == 2)
         {
-            ThirdSlot();
+            Projectile(pos);
         }
         // 힐템
         else if (inventory.SlotNum == 3)
         {
-            ForthSlot();
+            Medikit();
         }
     }
     void MainWeapon(Vector3 origin, Vector3 dir)
@@ -499,20 +500,86 @@ public class Human_KJS : MonoBehaviour
 
         }
     }
-    void ThirdSlot()
+    void Projectile(Vector3 dir)
     {
-        if (humanState == HumanState.Dead) return;
-        //수류탄 오브젝트를 생성한 후 수류탄의 생성위치를 발사 위치로 한다.
-        GameObject bomb = Instantiate(bombFactory);
-        bomb.transform.position = firePosition.transform.position;
+        if (humanState == HumanState.Dead || isReloaing) return;
 
-        //수류탄 오브젝트의 Rigidbody component를 가져온다.
-        Rigidbody rb = bomb.GetComponent<Rigidbody>();
+        // 현재 아이템이 수류탄인지 확인
+        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Projectile itemInfo)
+        {
+            // 장탄 확인
+            if (inventory[inventory.SlotNum].value1 <= 0)
+            {
+                Debug.Log("No projectiles left.");
+                return;
+            }
+            else
+            {
+                // 수류탄 생성
+                GameObject projectile = Instantiate(bombFactory, firePosition.transform.position, Quaternion.identity);
+                Rigidbody rb = projectile.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddForce((isPlayer ? Camera.main.transform.forward : dir) * throwPower, ForceMode.Impulse);
+                }
 
-        //카메라의 정면 방향으로 수류탄에 물리적인 힘을 가한다.
-        rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
+                // 수류탄의 데미지, 범위 및 지속 시간 설정
+                float damage = itemInfo.dmg;
+                float range = itemInfo.range;
+                float duration = itemInfo.time;
+
+                // 수류탄의 스크립트에서 처리
+                StartCoroutine(HandleProjectile(projectile, damage, range, duration));
+
+                // 장탄 수 감소
+                inventory[inventory.SlotNum].value1--;
+                if (inventory[inventory.SlotNum].value1 <= 0)
+                {
+                    // 장탄이 0이 되면 아이템 사용 불가 처리
+                    inventory.Use(inventory.SlotNum);
+                }
+            }
+        }
     }
-    void ForthSlot()
+
+    //if (humanState == HumanState.Dead) return;
+    //수류탄 오브젝트를 생성한 후 수류탄의 생성위치를 발사 위치로 한다.
+    //GameObject bomb = Instantiate(bombFactory);
+    //bomb.transform.position = firePosition.transform.position;
+
+    //수류탄 오브젝트의 Rigidbody component를 가져온다.
+    //Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+    //카메라의 정면 방향으로 수류탄에 물리적인 힘을 가한다.
+    //rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
+
+    // 수류탄 처리 코루틴
+    private IEnumerator HandleProjectile(GameObject projectile, float damage, float range, float duration)
+    {
+        // 수류탄의 시작 시간
+        float startTime = Time.time;
+
+        while (Time.time - startTime < duration)
+        {
+            yield return null;
+        }
+
+        // 수류탄이 지속 시간 후 제거
+        Destroy(projectile);
+
+        // 수류탄이 충돌한 위치에서 데미지 처리
+        Collider[] colliders = Physics.OverlapSphere(projectile.transform.position, range);
+        foreach (var collider in colliders)
+        {
+            if (collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                // 데미지 적용
+                collider.gameObject.GetComponent<JKYEnemyFSM>().HitEnemy(damage);
+            }
+        }
+    }
+
+    void Medikit()
     {
         if (humanState == HumanState.Dead) return;
         // 회복템 사용
