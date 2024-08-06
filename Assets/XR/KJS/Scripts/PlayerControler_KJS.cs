@@ -89,7 +89,7 @@ public class PlayerControler_KJS : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            human.PickUp();
+            human.Interact();
             //SlotUIChange();
         }
         //if (Input.GetKeyDown(KeyCode.G)) human.Drop();
@@ -112,7 +112,7 @@ public class PlayerControler_KJS : MonoBehaviour
         hpText.text = ((int)human.HP).ToString();
         if (human.humanState == Human_KJS.HumanState.Normal)
         {
-            Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, tempHpSlider.value), 1, 1);
+            Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, hpSlider.value), 1, 1);
             c.a = 1;
             hpImage.color = c;
             hpText.color = c;

@@ -123,7 +123,7 @@ public class BotManager_JSW : MonoBehaviour
                     if (Vector3.Distance(transform.position, farmingTarget.transform.position) < 1.5f)
                     {
                         botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                        human.PickUp(farmingTarget);
+                        human.Interact(farmingTarget);
                     }
                     // 멀 때 이동하기
                     else
@@ -151,7 +151,7 @@ public class BotManager_JSW : MonoBehaviour
         tempHpSlider.value = human.HP / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
         if (human.humanState == Human_KJS.HumanState.Normal)
         {
-            Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, tempHpSlider.value), 1, 1);
+            Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, hpSlider.value), 1, 1);
             c.a = 1;
             hpImage.color = c;
             c.a = 0.5f;

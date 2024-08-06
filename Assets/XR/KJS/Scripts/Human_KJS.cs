@@ -270,6 +270,7 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 소생 UI Off 필요
+                player.InteractionUIEnable(false);
             }
         }
     }
@@ -284,12 +285,18 @@ public class Human_KJS : MonoBehaviour
                 // 소생 받는 UI On 필요
                 player.InteractionUIEnable(true);
             }
+            anim.SetTrigger("Revive");
         }
         else
         {
             if (set == SetInteraction.Success)
             {
                 ChangeHumanState(HumanState.Normal);
+                anim.SetTrigger("Revived");
+            }
+            else
+            {
+                anim.SetTrigger("KnockDown");
             }
             interactionState = InteractionState.None;
             if (isPlayer)
@@ -627,19 +634,24 @@ public class Human_KJS : MonoBehaviour
         }
         else return false;
     }
-    public void PickUp(GameObject item = null)
+    public void Interact(GameObject target = null, int layer = 0)
     {
         if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
         // 플레이어 일 때
-        if (item == null)
+        if (target == null)
         {
             RaycastHit hitInfo;
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 3,
                 ~(1 << LayerMask.NameToLayer("Player_KJS"))))
-            {
+            {   // 대상이 아이템
                 if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
                 {
                     inventory.PickUp(hitInfo.transform.gameObject);
+                }
+                // 대상이 기절한 아군
+                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
+                {
+                    Revie(hitInfo.transform.gameObject, SetInteraction.On);
                 }
             }
 
@@ -647,7 +659,7 @@ public class Human_KJS : MonoBehaviour
         // 봇일 때
         else
         {
-            inventory.PickUp(item);
+            inventory.PickUp(target);
         }
     }
     public void Drop()
