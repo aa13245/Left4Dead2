@@ -102,17 +102,17 @@ public class BotManager_JSW : MonoBehaviour
                         farmingTarget = botSight.ItemDetect(0);
                     }
                     // 주무기가 있는데 잔여 탄약이 최대 소지량 절반 이하일 때
-                    else if (farmingTarget == null && inventory[0] != null && ItemTable_JSW.instance.itemTable[inventory[0].kind] is ItemTable_JSW.MainWeapon item && inventory[0].value2 < item.maxAmmoCapacity / 2)
+                    if (farmingTarget == null && inventory[0] != null && ItemTable_JSW.instance.itemTable[inventory[0].kind] is ItemTable_JSW.MainWeapon item && inventory[0].value2 < item.maxAmmoCapacity / 2)
                     {   // 주무기 탐지
                         farmingTarget = botSight.ItemDetect(0);
                     }
                     // 투척류가 없을 때
-                    else if (farmingTarget == null && inventory[2] == null)
+                    if (farmingTarget == null && inventory[2] == null)
                     {
                         farmingTarget = botSight.ItemDetect(2);
                     }
                     // 회복템이 없을 때
-                    else if (farmingTarget == null && inventory[3] == null)
+                    if (farmingTarget == null && inventory[3] == null)
                     {
                         farmingTarget = botSight.ItemDetect(3);
                     }

@@ -39,6 +39,7 @@ public class JKYRock : MonoBehaviour
         {
             Destroy(gameObject, 1);
             print("없앳다");
+            
         }
     }
 

@@ -125,8 +125,8 @@ public class Human_KJS : MonoBehaviour
         Reviving,
         GetReviving,
         Healing,
-        GetHealing,
         SelfHealing,
+        GetHealing
     }
     public InteractionState interactionState;
 
@@ -135,7 +135,7 @@ public class Human_KJS : MonoBehaviour
         cc = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
         if (gameObject.name == "Player") isPlayer = true;
-        player = GetComponent<PlayerControler_KJS>();
+        player = GameObject.Find("Player").GetComponent<PlayerControler_KJS>();
         inventory = GetComponent<Inventory_JSW>();
         hp = maxHP;
         ////배열을 이용해서 공간을 확보해라
@@ -167,15 +167,25 @@ public class Human_KJS : MonoBehaviour
     {
         if (interactionState == InteractionState.Reviving) // 팀 소생하는 중
         {
+            Human_KJS targetComp = interactor.GetComponent<Human_KJS>();
             interactionTimer += Time.deltaTime;
-            if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || Input.GetKeyUp(KeyCode.E) ||
-                humanState != HumanState.Normal || interactor.GetComponent<Human_KJS>().humanState != HumanState.KnockedDown)
-            {   // 취소
-                Revie(interactor, SetInterection.Cancel);
+            // 상호작용 UI 업데이트
+            if (isPlayer)
+            {
+                player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
-            else if (interactionTimer >= interactionTime)
+            else if (targetComp.isPlayer)
+            {
+                player.InteractionSliderUpdate(interactionTimer / interactionTime);
+            }
+            if (interactionTimer >= interactionTime)
             {   // 완료
-                Revie(interactor, SetInterection.Success);
+                Revie(interactor, SetInteraction.Success);
+            }
+            else if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || 
+                Input.GetKeyUp(KeyCode.E) || humanState != HumanState.Normal || targetComp.humanState != HumanState.KnockedDown)
+            {   // 취소
+                Revie(interactor, SetInteraction.Cancel);
             }
         }
         else if (interactionState == InteractionState.GetReviving) // 소생 받는 중
@@ -184,15 +194,25 @@ public class Human_KJS : MonoBehaviour
         }
         else if (interactionState == InteractionState.Healing) // 팀 회복해 주는 중
         {
+            Human_KJS targetComp = interactor.GetComponent<Human_KJS>();
             interactionTimer += Time.deltaTime;
-            if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || Input.GetMouseButtonUp(1) ||
-                humanState != HumanState.Normal || interactor.GetComponent<Human_KJS>().humanState != HumanState.Normal)
-            {   // 취소
-                Heal(interactor, SetInterection.Cancel);
+            // 상호작용 UI 업데이트
+            if (isPlayer)
+            {
+                player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
-            else if (interactionTimer >= interactionTime)
+            else if (targetComp.isPlayer)
+            {
+                player.InteractionSliderUpdate(interactionTimer / interactionTime);
+            }
+            if (interactionTimer >= interactionTime)
             {   // 완료
-                Heal(interactor, SetInterection.Success);
+                Heal(interactor, SetInteraction.Success);
+            }
+            else if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || 
+                Input.GetMouseButtonUp(1) || humanState != HumanState.Normal || targetComp.humanState != HumanState.Normal)
+            {   // 취소
+                Heal(interactor, SetInteraction.Cancel);
             }
         }
         else if (interactionState == InteractionState.GetHealing) // 회복 받는 중
@@ -202,37 +222,44 @@ public class Human_KJS : MonoBehaviour
         else if (interactionState == InteractionState.SelfHealing) // 자힐 중
         {
             interactionTimer += Time.deltaTime;
-            if (Input.GetMouseButtonUp(0) || humanState != HumanState.Normal)
-            {   // 취소
-                SelfHeal(SetInterection.Cancel);
+            // 상호작용 UI 업데이트
+            if (isPlayer)
+            {
+                player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
-            else if (interactionTimer >= interactionTime)
-            {   // 완료
-                SelfHeal(SetInterection.Success);
+            if (interactionTimer >= interactionTime)
+            {
+                SelfHeal(SetInteraction.Success);
+            }
+            else if (Input.GetMouseButtonUp(0) || humanState != HumanState.Normal)
+            {
+                SelfHeal(SetInteraction.Cancel);
             }
         }
     }
-    public enum SetInterection
+    public enum SetInteraction
     {
         On, Cancel, Success
     }
-    public void Revie(GameObject target, SetInterection set)    
-    {   // 자신 조건 체크
-        if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
+    public void Revie(GameObject target, SetInteraction set)    
+    {   
         Human_KJS targetComp = target.GetComponent<Human_KJS>();
-        if (set == SetInterection.On)
-        {   // 대상 조건 체크
+        if (set == SetInteraction.On)
+        {   // 자신 조건 체크
+            if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
+            // 대상 조건 체크
             if (targetComp.humanState == HumanState.KnockedDown && targetComp.interactionState == InteractionState.None)
             {
                 Reload(false);
                 interactionState = InteractionState.Reviving;
                 interactor = target;
-                targetComp.GetRevive(gameObject, SetInterection.On);
+                targetComp.GetRevive(gameObject, SetInteraction.On);
                 interactionTimer = 0;
                 interactionTime = 5;
                 if (isPlayer)
                 {
                     // 소생 UI On 필요
+                    player.InteractionUIEnable(true);
                 }
             }
         }
@@ -246,20 +273,21 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
-    public void GetRevive(GameObject who, SetInterection set)
+    public void GetRevive(GameObject who, SetInteraction set)
     {
-        if (set == SetInterection.On)
+        if (set == SetInteraction.On)
         {
             interactionState = InteractionState.GetReviving;
             interactor = who;
             if (isPlayer)
             {
                 // 소생 받는 UI On 필요
+                player.InteractionUIEnable(true);
             }
         }
         else
         {
-            if (set == SetInterection.Success)
+            if (set == SetInteraction.Success)
             {
                 ChangeHumanState(HumanState.Normal);
             }
@@ -267,46 +295,49 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 소생 받는 UI Off 필요
+                player.InteractionUIEnable(false);
             }
         }
     }
-    public void Heal(GameObject target, SetInterection set)
+    public void Heal(GameObject target, SetInteraction set)
     {
-        if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
         Human_KJS targetComp = target.GetComponent<Human_KJS>();
-        if (set == SetInterection.On)
+        if (set == SetInteraction.On)
         {
+            if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
             if (targetComp.humanState == HumanState.Normal && targetComp.interactionState == InteractionState.None)
             {
                 interactionState = InteractionState.Healing;
                 interactor = target;
-                targetComp.GetHeal(gameObject, SetInterection.On);
+                targetComp.GetHeal(gameObject, SetInteraction.On);
                 interactionTimer = 0;
                 interactionTime = 8;
                 if (isPlayer)
                 {
                     // 회복 UI On 필요
+                    player.InteractionUIEnable(true);
                 }
             }
         }
         else
         {
-            if (set == SetInterection.Success)
+            if (set == SetInteraction.Success)
             {
                 // 회복템 제거 필요
-                // 회복시키기
+                
             }
             interactionState = InteractionState.None;
             targetComp.GetHeal(gameObject, set);
             if (isPlayer)
             {
                 // 회복 UI Off 필요
+                player.InteractionUIEnable(false);
             }
         }
     }
-    public void GetHeal(GameObject who, SetInterection set)
+    public void GetHeal(GameObject who, SetInteraction set)
     {
-        if (set == SetInterection.On)
+        if (set == SetInteraction.On)
         {
             Reload(false);
             interactionState = InteractionState.GetHealing;
@@ -314,41 +345,50 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 회복 받는 UI On 필요
+                player.InteractionUIEnable(true);
             }
         }
         else
         {
+            if (set == SetInteraction.Success)
+            {
+                HP = 80;
+            }
             interactionState = InteractionState.None;
             if (isPlayer)
             {
                 // 회복 받는 UI Off 필요
+                player.InteractionUIEnable(false);
             }
         }
     }
-    public void SelfHeal(SetInterection set)
+    public void SelfHeal(SetInteraction set)
     {
-        if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
-        if (set == SetInterection.On)
+        if (set == SetInteraction.On)
         {
+            if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
             interactionState = InteractionState.SelfHealing;
             interactionTimer = 0;
             interactionTime = 8;
             if (isPlayer)
             {
                 // 자힐 UI ON 필요
+                player.InteractionUIEnable(true);
             }
         }
         else
         {
-            if (set == SetInterection.Success)
+            if (set == SetInteraction.Success)
             {
                 // 회복템 제거 필요
-                // 회복
+                inventory.Use(3);
+                HP = 80;
             }
             interactionState = InteractionState.None;
             if (isPlayer)
             {
                 // 자힐 UI Off 필요
+                player.InteractionUIEnable(false);
             }
         }
     }
@@ -543,9 +583,9 @@ public class Human_KJS : MonoBehaviour
             if (HP < itemInfo.value)
             {
                 // 아이템 사용시간 구현 필요
-                hp = itemInfo.value;
-                inventory.Use(3);
-
+                //hp = itemInfo.value;
+                
+                SelfHeal(SetInteraction.On);
             }
         }
     }
@@ -554,7 +594,7 @@ public class Human_KJS : MonoBehaviour
         // 좀비 공격
         if (target.layer == LayerMask.NameToLayer("Enemy"))
         {
-            target.GetComponent<JKYEnemyFSM>().HitEnemy(dmg);
+            target.GetComponent<JKYEnemyHPSystem>().GetDamage(dmg, gameObject);
         }
         // 아군 공격
         else if (target.layer == LayerMask.NameToLayer(isPlayer ? "Bot_JSW" : "Player_KJS"))

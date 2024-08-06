@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 7579977584169747185}
   - component: {fileID: 5607385267239060081}
   - component: {fileID: 2112722499750928515}
+  - component: {fileID: 2724851305081644317}
   m_Layer: 26
   m_Name: Tanker
   m_TagString: Untagged
@@ -549,6 +550,18 @@ MonoBehaviour:
   detectionAngle: 70
   angleStep: 1
   rotationSpeed: 15
+--- !u!114 &2724851305081644317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209130252975101918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7cc5231aa10b43488b97f1991dffa62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1236645081197256879
 GameObject:
   m_ObjectHideFlags: 0
@@ -712,7 +725,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2325900631047492766}
   - component: {fileID: 5678266777661209060}
-  - component: {fileID: 7383384026273371110}
   m_Layer: 0
   m_Name: Zombie1
   m_TagString: Untagged
@@ -771,19 +783,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7383384026273371110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1593178698971326093}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 925dd789baae43248b6b1381fe1c034a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  efsm: {fileID: 0}
 --- !u!1 &1983301660248065777
 GameObject:
   m_ObjectHideFlags: 0

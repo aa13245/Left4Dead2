@@ -10,9 +10,9 @@ public class BotSight_JSW : MonoBehaviour
     BotManager_JSW botManager;
     GameObject target;
     public GameObject Target {  get { return target; } }
-    float fov = 150;
-    float sightRange = 30;
-    float fireRange = 25;
+    public float fov = 150;
+    public float sightRange = 30;
+    public float fireRange = 25;
     public float FireRange { get { return fireRange; } }
     bool fireEnable;
     public bool FireEnable { get { return fireEnable; } }

@@ -57,8 +57,8 @@ public class JKYEnemySpawn1 : MonoBehaviour
     public float moveDistance = 20f;
 
     // 에너미의 체력
-    public int hp = 55;
-    public int maxhp = 65;
+    public float hp = 55;
+    public float maxhp = 65;
     Animator anim;
 
     // 내비게이션 에이전트 변수
@@ -100,6 +100,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
         //hp = maxhp;
         rb = GetComponent<Rigidbody>();
         //
+        GetComponent<JKYEnemyHPSystem>().getDamage = HitEnemy;
     }
 
     // Update is called once per frame
@@ -165,6 +166,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
         //    else { playerInSight = false; }
         //}    
         m_State = EnemyState.Move;
+        anim.SetTrigger("IdleToMove");
     }
 
     public float extraRotationSpeed = 0.3f;
@@ -191,15 +193,12 @@ public class JKYEnemySpawn1 : MonoBehaviour
 
 
             NavMeshPath path = new NavMeshPath();
-            isClimbing = false;
-            if (isClimbing)
-            {
-                ClimbWall();
-            }
-            else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
+            
+
+            if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
             {
 
-                checkForClimbingShortcut();
+                //checkForClimbingShortcut();
                 smith.SetDestination(target.position);
 
             }
@@ -269,43 +268,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
 
         }
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("climb"))
-        {
-            isClimbing = true;
-            print("부딪혓다");
-            cc.Move((climbTarget - transform.position) * climbSpeed * Time.deltaTime);
-            if (gameObject.transform.position.y > collision.transform.position.y + collision.transform.localScale.y / 2 + gameObject.transform.position.y)
-            {
-                isClimbing = false;
-                cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
-                smith.enabled = true;
-                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-                smith.destination = player.position;
-            }
 
-        }
-    }
-    //void DetectWall()
-    //{
-    //    RaycastHit hit;
-    //    if (Physics.Raycast(transform.position, transform.forward, out hit, detectionDistance, climb))
-    //    {
-    //        if (hit.collider != null)
-    //        {
-    //            print(222);
-    //            isClimbing = true;
-    //            rb.useGravity = false; // 벽을 탈 때 중력을 제거합니다.
-    //        }
-    //    }
-    //    else
-    //    {
-    //        isClimbing = false;
-    //        rb.useGravity = true; // 벽을 타지 않을 때 중력을 다시 활성화합니다.
-    //    }
-
-    //}
 
     void ClimbWall()
     {
@@ -377,7 +340,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
 
     }
 
-    public void HitEnemy(int hitPower)
+    public void HitEnemy(float hitPower, GameObject attacker)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
         if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
@@ -421,7 +384,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
         cc.enabled = false;
 
         // 2초 동안 기다린 후에 자기 자신을 제거한다.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.7f);
         print("소멸");
         Destroy(gameObject);
 
@@ -442,7 +405,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;

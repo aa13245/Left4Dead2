@@ -107,7 +107,7 @@ public class JKYHammerFS : MonoBehaviour
         m_State = EnemyState.Idle;
         player = GameObject.Find("Player").transform;
         cc = GetComponent<CharacterController>();
-
+        GetComponent<JKYEnemyHPSystem>().getDamage = HitEnemy;
         //자신의 초기 위치 저장하기 
         originPos = transform.position;
 
@@ -232,7 +232,7 @@ public class JKYHammerFS : MonoBehaviour
             if (isClimbing)
             {
                 print("climb함수들어왔다 트루");
-                m_State = EnemyState.Climb;
+                //m_State = EnemyState.Climb;
                 print("상태전환 Move -> Climb");
             }
             else if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path))
@@ -599,7 +599,7 @@ public class JKYHammerFS : MonoBehaviour
 
     }
 
-    public void HitEnemy(float hitPower)
+    public void HitEnemy(float hitPower, GameObject attacker)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
         if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
@@ -666,7 +666,7 @@ public class JKYHammerFS : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;

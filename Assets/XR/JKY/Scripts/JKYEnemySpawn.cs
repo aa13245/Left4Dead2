@@ -10,8 +10,8 @@ public class JKYEnemySpawn : MonoBehaviour
     public int totalSpawnTime = 5; // 총 스폰 시간 (초)
     public float spawnInterval = 1.0f; // 스폰 간격 (초)
     public int enemiesPerWave = 3; // 한 번에 스폰되는 에너미 수
-    public float initialDelay = 20.0f; // 처음 스폰 시작 전 대기 시간 (초)
-    public float nextWaveDelay = 50.0f; // 다음 턴 스폰 전 대기 시간 (초)
+    public float initialDelay = 80.0f; // 처음 스폰 시작 전 대기 시간 (초)
+    public float nextWaveDelay = 30.0f; // 다음 턴 스폰 전 대기 시간 (초)
     private bool isFirstWave = true;
     void Start()
     {
