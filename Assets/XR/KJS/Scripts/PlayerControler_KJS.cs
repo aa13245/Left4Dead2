@@ -28,6 +28,9 @@ public class PlayerControler_KJS : MonoBehaviour
     Slider tempHpSlider;
     Image tempHpImage;
     Text hpText;
+    // 상호작용 상태 UI
+    GameObject interactionUI;
+    Slider interactionSlider;
     //Hit 효과 오브젝트
     public GameObject hitEffect;
     // 플레이어 컴퍼넌트
@@ -53,6 +56,8 @@ public class PlayerControler_KJS : MonoBehaviour
         tempHpImage = canvas.transform.Find("Info0/TempHPbar/Fill Area/Fill").GetComponent<Image>();
         hpText = canvas.transform.Find("Info0/Text (Legacy)").GetComponent <Text>();
         hitEffect = canvas.transform.Find("Hit").gameObject;
+        interactionUI = canvas.transform.Find("InteractionStatus").gameObject;
+        interactionSlider = canvas.transform.Find("InteractionStatus/Slider").GetComponent<Slider>();
         velocity = Vector3.zero;
         anim = GetComponentInChildren<Animator>();
         GetComponent<Human_KJS>().slow = Slow;
@@ -340,8 +345,8 @@ public class PlayerControler_KJS : MonoBehaviour
             }
         }
     }
-//플레이어의 피격 함수
-public void DamageAction()
+    //플레이어의 피격 함수
+    public void DamageAction()
     {
         //만일 플레이어의 체력이 0보다 크면 피격 효과를 출력한다.
         if(human.HP > 0)
@@ -367,6 +372,15 @@ public void DamageAction()
         {
             GameManager_KJS.gm.SwitchPanel(index);
         }
+    }
+    public void InteractionSliderUpdate(float _value)
+    {
+        interactionSlider.value = _value;
+    }
+    public void InteractionUIEnable(bool enable)
+    {
+        interactionUI.SetActive(enable);
+        if (enable) interactionSlider.value = 0;
     }
 }
  
