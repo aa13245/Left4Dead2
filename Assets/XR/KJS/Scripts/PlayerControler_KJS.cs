@@ -87,6 +87,11 @@ public class PlayerControler_KJS : MonoBehaviour
             //SlotUIChange();
 
         }
+        // 마우스 우클릭
+        if (Input.GetMouseButtonDown(1))
+        {
+            human.MouseRClick();
+        }
         if (Input.GetKeyDown(KeyCode.E))
         {
             human.Interact();

@@ -462,6 +462,26 @@ public class Human_KJS : MonoBehaviour
             ForthSlot();
         }
     }
+    public void MouseRClick(GameObject target = null)
+    {
+        if (humanState == HumanState.Dead || interactionState != InteractionState.None) return;
+        if (inventory[inventory.SlotNum] == null) return;
+        if (inventory.SlotNum == 3)
+        {
+            if (target == null)
+            {
+                RaycastHit hitInfo;
+                if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 3, 1 << LayerMask.NameToLayer("Bot_JSW")))
+                {
+                    ForthSlot(hitInfo.transform.gameObject);
+                }
+            }
+            else
+            {
+                ForthSlot(target);
+            }
+        }
+    }
     void MainWeapon(Vector3 origin, Vector3 dir)
     {
         #region
@@ -580,19 +600,29 @@ public class Human_KJS : MonoBehaviour
         //카메라의 정면 방향으로 수류탄에 물리적인 힘을 가한다.
         rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
     }
-    void ForthSlot()
+    void ForthSlot(GameObject target = null)
     {
         if (humanState == HumanState.Dead) return;
         // 회복템 사용
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Recovery itemInfo)
-        {
-            // 회복값보다 체력이 낮을 때
-            if (HP < itemInfo.value)
+        {   // 자힐
+            if (target == null)
             {
-                // 아이템 사용시간 구현 필요
-                //hp = itemInfo.value;
+                // 회복값보다 체력이 낮을 때
+                if (HP < itemInfo.value)
+                {
+                    // 아이템 사용시간 구현 필요
+                    //hp = itemInfo.value;
                 
-                SelfHeal(SetInteraction.On);
+                    SelfHeal(SetInteraction.On);
+                }
+            }
+            else
+            {
+                if (target.GetComponent<Human_KJS>().HP < itemInfo.value)
+                {
+                    Heal(target, SetInteraction.On);
+                }
             }
         }
     }
@@ -659,7 +689,14 @@ public class Human_KJS : MonoBehaviour
         // 봇일 때
         else
         {
-            inventory.PickUp(target);
+            if (layer == LayerMask.NameToLayer("Item_JSW"))
+            {
+                inventory.PickUp(target);
+            }
+            else if (layer == LayerMask.NameToLayer("Bot_JSW") || layer == LayerMask.NameToLayer("Player_KJS"))
+            {
+                Revie(target, SetInteraction.On);
+            }
         }
     }
     public void Drop()

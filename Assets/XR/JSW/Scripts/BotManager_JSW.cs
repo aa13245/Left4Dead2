@@ -123,7 +123,7 @@ public class BotManager_JSW : MonoBehaviour
                     if (Vector3.Distance(transform.position, farmingTarget.transform.position) < 1.5f)
                     {
                         botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                        human.Interact(farmingTarget);
+                        human.Interact(farmingTarget, farmingTarget.layer);
                     }
                     // 멀 때 이동하기
                     else
