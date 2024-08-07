@@ -368,7 +368,7 @@ public class JKYHammerFS : MonoBehaviour
         transform.position = randomPosition;
     }
 
-
+    GameObject rock;
     void Throw()
     {
         StartCoroutine(PrepareAndThrowRock());
@@ -379,7 +379,7 @@ public class JKYHammerFS : MonoBehaviour
     IEnumerator PrepareAndThrowRock()
     {
         // 돌을 에너미 위에 생성
-        GameObject rock = Instantiate(rockPrefab, transform.position + Vector3.up* 2f   , Quaternion.identity);
+        rock = Instantiate(rockPrefab, transform.position + Vector3.up* 2f   , Quaternion.identity);
         print("위에 돌생성");
         smith.isStopped = true;
         yield return new WaitForSeconds(1.0f); // 2초 기다림
@@ -646,7 +646,8 @@ public class JKYHammerFS : MonoBehaviour
         yield return new WaitForSeconds(2f);
         print("소멸");
         Destroy(gameObject);
-
+        //rockPrefab.SetActive(false);
+        Destroy(rock);
     }
 
 
