@@ -1275,6 +1275,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6689908045244367711, guid: 0dcd9f679fd1e5a49b129ccd326ec94f,
+        type: 3}
+      propertyPath: recoilAmount
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689908045244367711, guid: 0dcd9f679fd1e5a49b129ccd326ec94f,
+        type: 3}
+      propertyPath: recoilRecoverySpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9044781878026269649, guid: 0dcd9f679fd1e5a49b129ccd326ec94f,
+        type: 3}
+      propertyPath: recoilMagnitude
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 9044781878026269649, guid: 0dcd9f679fd1e5a49b129ccd326ec94f,
         type: 3}
       propertyPath: fireEffectFactory

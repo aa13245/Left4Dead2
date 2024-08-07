@@ -23,6 +23,9 @@ public class Human_KJS : MonoBehaviour
 
     public float fireRate = 0.1f;
 
+    public float shakeDuration = 0.1f;
+    public float shakeMagnitude = 0.1f;
+
     public GameObject bombFactory;
 
     public float throwPower = 15F;
@@ -32,6 +35,8 @@ public class Human_KJS : MonoBehaviour
     private float currTime;
 
     private GameObject currentWeapon;
+
+    private ObjRotate_KJS objRotate;
 
     //플레이어 체력 변수
     float hp = 100;
@@ -138,6 +143,7 @@ public class Human_KJS : MonoBehaviour
         player = GetComponent<PlayerControler_KJS>();
         inventory = GetComponent<Inventory_JSW>();
         hp = maxHP;
+        objRotate = Camera.main.GetComponent<ObjRotate_KJS>();
         ////배열을 이용해서 공간을 확보해라
         //bulletArray = new GameObject[40];
         ////배열을 채우자
@@ -451,7 +457,10 @@ public class Human_KJS : MonoBehaviour
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
 
-                }
+                    // 흔들림 효과 적용
+                    ApplyShakeToCamera();
+
+            }
 
             }
 
@@ -486,11 +495,10 @@ public class Human_KJS : MonoBehaviour
                         bullettEffect.transform.forward = hitInfo.normal;
                         // 데미지 입히기
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
+                        // 상하 반동 적용
                     }
                     inventory.Use(inventory.SlotNum);
-                
                 }
-
             }
             
         }
@@ -500,7 +508,15 @@ public class Human_KJS : MonoBehaviour
 
         }
     }
-    void Projectile(Vector3 dir)
+    void ApplyShakeToCamera()
+    {
+        if (objRotate != null)
+        {
+            objRotate.TriggerShake(shakeDuration, shakeMagnitude);
+        }
+    }
+
+void Projectile(Vector3 dir)
     {
         if (humanState == HumanState.Dead || isReloaing) return;
 
@@ -730,5 +746,4 @@ public class Human_KJS : MonoBehaviour
     {
         knockBackVector -= knockBackVector * 1 * Time.deltaTime;
     }
-
 }
