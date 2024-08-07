@@ -144,7 +144,7 @@ public class BotSight_JSW : MonoBehaviour
         else return false;
     }
     // 봇 캐릭터 방향 회전
-    void Rot(Vector3 pos)
+    public void Rot(Vector3 pos)
     {
         float rotY = Quaternion.LookRotation(pos - transform.position).eulerAngles.y;
         float deltaAngle = Mathf.DeltaAngle(transform.eulerAngles.y, rotY);

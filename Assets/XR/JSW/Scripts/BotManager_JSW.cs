@@ -9,6 +9,8 @@ public class BotManager_JSW : MonoBehaviour
     public BotSight_JSW botSight;
     public Inventory_JSW inventory;
     public Human_KJS human;
+    Human_KJS[] humans = new Human_KJS[4];
+    int myIdx;
 
     Slider hpSlider;
     Image hpImage;
@@ -22,6 +24,8 @@ public class BotManager_JSW : MonoBehaviour
     public bool TargetVisible { get { return targetVisible; } }
     // 파밍할 아이템 타겟
     public GameObject farmingTarget;
+    // 도움줄 타겟
+    public GameObject approchingTarget;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +38,13 @@ public class BotManager_JSW : MonoBehaviour
         botSight = GetComponent<BotSight_JSW>();
         inventory = GetComponent<Inventory_JSW>();
         human = GetComponent<Human_KJS>();
+        humans[0] = GameObject.Find("Player").GetComponent<Human_KJS>();
+        for (int i = 1; i < 4; i++)
+        {
+            string name = "Bot" + i;
+            humans[i] = GameObject.Find(name).GetComponent<Human_KJS>();
+            if (gameObject.name == name) myIdx = i;
+        }
     }
 
     // Update is called once per frame
@@ -50,22 +61,71 @@ public class BotManager_JSW : MonoBehaviour
          */
         // 우선 타겟 있을 때
         if (priorityTarget != null)
-        {   // 가시여부 체크
-            targetVisible = botSight.SightCheck(priorityTarget, -1, true);
-
+        {   
             // 장전
             if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
             {
                 human.Reload(true);
                 return;
             }
+            // 가시여부 체크
+            targetVisible = botSight.SightCheck(priorityTarget, -1, true);
+            if (targetVisible)
+            {
+                botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
+            }
+            else
+            {
+                botMove.ChangeBotMoveState(BotMove.BotMoveState.Follow);
+            }
         }
         // 우선 타겟 없을 때
         else
-        {   // 타겟 있을 때
-            if (botSight.Target != null)
+        {   /*
+                  1. 기절 살리기
+                  2. 회복 - 플레이어, 아군, 본인
+                  3. 장전
+                  4. 파밍
+            */
+
+            // 소생
+            foreach (Human_KJS h in humans)
             {
-                // 장전
+                if (h.humanState == Human_KJS.HumanState.KnockedDown && h.interactionState == Human_KJS.InteractionState.None)
+                {   // 내가 기절한 팀원과 가장 가까운지 체크
+                    bool isMe = true;
+                    for (int i = 1; i < 4; i++)
+                    {
+                        Human_KJS other = humans[i].GetComponent<Human_KJS>();
+                        if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
+                            Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(humans[i].transform.position, h.transform.position))
+                        {
+                            isMe = false;
+                        }
+                    }
+                    if (isMe)
+                    {   // 이동하기
+                        approchingTarget = h.gameObject;
+                        // 가까우면 상호작용
+                        if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
+                        {
+                            botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
+                            human.Interact(approchingTarget, approchingTarget.layer);
+                            return;
+                        }
+                        // 멀 때 이동하기
+                        else
+                        {
+                            botMove.ChangeBotMoveState(BotMove.BotMoveState.Approching);
+                            return;
+                        }
+                    }
+                    else approchingTarget = null;
+                }
+            }
+            // 타겟 있을 때
+            if (botSight.Target != null)
+            {   // 장전
                 if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
                 {
                     human.Reload(true);
@@ -75,12 +135,64 @@ public class BotManager_JSW : MonoBehaviour
             // 타겟 없을 때
             else
             {
-                /*
-                  1. 기절 살리기
-                  2. 회복 - 플레이어, 아군, 본인
-                  3. 장전
-                  4. 파밍
-                 */
+                GameObject teamTarget;
+                for (int i = 1; i < 4; i++)
+                {
+                    teamTarget = humans[i].GetComponent<BotSight_JSW>().Target;
+                    if (teamTarget != null)
+                    {
+                        botSight.Rot(teamTarget.transform.position);
+                        break;
+                    }
+                }
+                // 회복
+                if (inventory[3] != null) // 내 회복템 확인
+                {
+                    // 팀원 힐
+                    foreach (Human_KJS h in humans)
+                    {
+                        if (h.humanState == Human_KJS.HumanState.Normal && h.interactionState == Human_KJS.InteractionState.None && h.HP < 40 && h.gameObject != gameObject)
+                        {   // 내가 대사와 가장 가까운지 체크
+                            bool isMe = true;
+                            for (int i = 1; i < 4; i++)
+                            {
+                                Human_KJS other = humans[i].GetComponent<Human_KJS>();
+                                if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
+                                    other.GetComponent<Inventory_JSW>()[3] != null &&
+                                    Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(humans[i].transform.position, h.transform.position))
+                                {
+                                    isMe = false;
+                                }
+                            }
+                            if (isMe)
+                            {   // 이동하기
+                                inventory.SetSlotNum(3);
+                                approchingTarget = h.gameObject;
+                                // 가까우면 상호작용
+                                if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
+                                {
+                                    botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
+                                    human.Medikit(h.gameObject);
+                                    return;
+                                }
+                                // 멀 때 이동하기
+                                else
+                                {
+                                    botMove.ChangeBotMoveState(BotMove.BotMoveState.Approching);
+                                    return;
+                                }
+                            }
+                            else approchingTarget = null;
+                        }
+                    }
+                }
+                // 자힐
+                if (human.HP < 40)
+                {
+                    inventory.SetSlotNum(3);
+                    human.Medikit();
+                    return;
+                }
                 // 장전
                 if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)
                 {
@@ -135,7 +247,12 @@ public class BotManager_JSW : MonoBehaviour
         }
         // 공격
         if (botSight.FireEnable)
-        {
+        {   // 총을 안들고 있을 때
+            if (inventory.SlotNum != 0 && inventory.SlotNum != 1)
+            {   // 주무기가 있으면 들기
+                if (inventory[0] != null && (inventory[0].value1 != 0 || inventory[0].value2 != 0)) inventory.SetSlotNum(0);
+                else inventory.SetSlotNum(1);
+            }
             GameObject target = null;
             if (priorityTarget != null) target = priorityTarget;
             else if (botSight.Target != null) target = botSight.Target;

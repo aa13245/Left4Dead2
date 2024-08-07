@@ -116,6 +116,7 @@ public class Inventory_JSW : MonoBehaviour
             {
                 Destroy(slots[slot]);
                 slots[slot] = null;
+                SetSlotNum(1);
             }
             return true;
         }

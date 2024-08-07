@@ -16,7 +16,8 @@ public class BotMove : MonoBehaviour
     {
         Idle,
         Follow,
-        Farming
+        Farming,
+        Approching
     }
     BotMoveState botMoveState;
     public void ChangeBotMoveState(BotMoveState s)
@@ -80,7 +81,7 @@ public class BotMove : MonoBehaviour
             yVelocity += -9.81f * Time.deltaTime;
             cc.Move((botManager.human.knockBackVector + Vector3.up * yVelocity) * Time.deltaTime);
         }
-        if (botManager.human.humanState != Human_KJS.HumanState.Normal)
+        if (botManager.human.humanState != Human_KJS.HumanState.Normal || botManager.human.interactionState != Human_KJS.InteractionState.None)
         {
             agent.isStopped = true;
             return;
@@ -120,6 +121,19 @@ public class BotMove : MonoBehaviour
             else
             {
                 agent.SetDestination(botManager.farmingTarget.transform.position);
+                agent.isStopped = false;
+            }
+        }
+        else if (botMoveState == BotMoveState.Approching)
+        {
+            if (botManager.PriorityTarget != null || botManager.approchingTarget == null)
+            {   // 도움 중단
+                botManager.approchingTarget = null;
+                ChangeBotMoveState(BotMoveState.Idle);
+            }
+            else
+            {
+                agent.SetDestination(botManager.approchingTarget.transform.position);
                 agent.isStopped = false;
             }
         }

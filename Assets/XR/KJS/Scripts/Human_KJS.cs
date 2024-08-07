@@ -181,16 +181,17 @@ public class Human_KJS : MonoBehaviour
             {
                 player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
-            else if (targetComp.isPlayer)
+            else 
             {
-                player.InteractionSliderUpdate(interactionTimer / interactionTime);
+                GetComponent<BotSight_JSW>().Rot(interactor.transform.position);
+                if (targetComp.isPlayer) player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
             if (interactionTimer >= interactionTime)
             {   // 완료
                 Revie(interactor, SetInteraction.Success);
             }
             else if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || 
-                Input.GetKeyUp(KeyCode.E) || humanState != HumanState.Normal || targetComp.humanState != HumanState.KnockedDown)
+                (Input.GetKeyUp(KeyCode.E) && isPlayer) || humanState != HumanState.Normal || targetComp.humanState != HumanState.KnockedDown)
             {   // 취소
                 Revie(interactor, SetInteraction.Cancel);
             }
@@ -208,16 +209,17 @@ public class Human_KJS : MonoBehaviour
             {
                 player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
-            else if (targetComp.isPlayer)
+            else 
             {
-                player.InteractionSliderUpdate(interactionTimer / interactionTime);
+                GetComponent<BotSight_JSW>().Rot(interactor.transform.position);
+                if (targetComp.isPlayer) player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
             if (interactionTimer >= interactionTime)
             {   // 완료
                 Heal(interactor, SetInteraction.Success);
             }
             else if (Vector3.Distance(transform.position, interactor.transform.position) > 3 || 
-                Input.GetMouseButtonUp(1) || humanState != HumanState.Normal || targetComp.humanState != HumanState.Normal)
+                (Input.GetMouseButtonUp(1) && isPlayer) || humanState != HumanState.Normal || targetComp.humanState != HumanState.Normal)
             {   // 취소
                 Heal(interactor, SetInteraction.Cancel);
             }
@@ -238,7 +240,7 @@ public class Human_KJS : MonoBehaviour
             {
                 SelfHeal(SetInteraction.Success);
             }
-            else if (Input.GetMouseButtonUp(0) || humanState != HumanState.Normal)
+            else if ((Input.GetMouseButtonUp(0) && isPlayer) || humanState != HumanState.Normal)
             {
                 SelfHeal(SetInteraction.Cancel);
             }
@@ -376,7 +378,7 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
-    public void SelfHeal(SetInteraction set)
+    void SelfHeal(SetInteraction set)
     {
         if (set == SetInteraction.On)
         {
@@ -683,7 +685,7 @@ public class Human_KJS : MonoBehaviour
         }
     }
 
-    void Medikit(GameObject target = null)
+    public void Medikit(GameObject target = null)
     {
         if (humanState == HumanState.Dead) return;
         // 회복템 사용
