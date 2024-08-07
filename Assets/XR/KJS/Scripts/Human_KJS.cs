@@ -480,12 +480,12 @@ public class Human_KJS : MonoBehaviour
                 RaycastHit hitInfo;
                 if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 3, 1 << LayerMask.NameToLayer("Bot_JSW")))
                 {
-                    ForthSlot(hitInfo.transform.gameObject);
+                    Medikit(hitInfo.transform.gameObject);
                 }
             }
             else
             {
-                ForthSlot(target);
+                Medikit(target);
             }
         }
     }
@@ -678,7 +678,7 @@ public class Human_KJS : MonoBehaviour
             if (collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 // 데미지 적용
-                collider.gameObject.GetComponent<JKYEnemyFSM>().HitEnemy(damage);
+                collider.gameObject.GetComponent<JKYEnemyFSM>().HitEnemy(damage, projectile);
             }
         }
     }

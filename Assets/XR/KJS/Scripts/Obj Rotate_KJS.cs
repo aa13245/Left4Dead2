@@ -82,8 +82,4 @@ public class ObjRotate_KJS : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
     }
-    public void ApplyRecoil(Vector3 recoil)
-    {
-        transform.localPosition -= recoil;
-    }
 }
