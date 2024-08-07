@@ -15,6 +15,7 @@ public class ObjRotate_KJS : MonoBehaviour
     public float shakeMagnitude = 0.1f; // 흔들림 세기
     private float shakeTime = 0f;
     private Vector3 originalPosition;
+    public bool knockedCamOffset;
 
     private Vector3 originalCameraRotation;
     private Vector3 currentCameraRecoil;
@@ -57,8 +58,10 @@ public class ObjRotate_KJS : MonoBehaviour
 
         // 물체를 회전 각도로 셋팅 하자.
         transform.localEulerAngles = new Vector3(-rotX, rotY, Camera.main.transform.localEulerAngles.z);
+        // 기절 높이 오프셋
+        if (knockedCamOffset) Camera.main.transform.Translate(new Vector3(0, -0.7f, 0), Space.World);
 
-    CursorSet();
+        CursorSet();
     }
 
     public void TriggerShake(float duration, float magnitude)

@@ -169,12 +169,12 @@ public class PlayerControler_KJS : MonoBehaviour
         if (on)
         {
             Camera.main.transform.Rotate(new Vector3(0, 0, Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0) - 10));
-            Camera.main.transform.Translate(new Vector3(0, -0.7f, 0), Space.World);
+            GetComponent<ObjRotate_KJS>().knockedCamOffset = true;
         }
         else
         {
             Camera.main.transform.Rotate(new Vector3(0, 0, Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
-            Camera.main.transform.Translate(new Vector3(0, 0.7f, 0), Space.World);
+            GetComponent<ObjRotate_KJS>().knockedCamOffset = false;
         }
     }
     void Move()
