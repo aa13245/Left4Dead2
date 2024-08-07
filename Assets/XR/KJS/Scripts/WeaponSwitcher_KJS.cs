@@ -6,10 +6,12 @@ public class WeaponSwitcher : MonoBehaviour
 {
     public GameObject main;
     public GameObject sub;
+    public GameObject pro;
     public GameObject mediKitPrefab;
 
     private GameObject currentWeapon;
     private Camera playerCamera;
+    private int currentWeaponIndex = -1; // 현재 장착된 무기의 인덱스
 
     Inventory_JSW inventory;
 
@@ -17,9 +19,10 @@ public class WeaponSwitcher : MonoBehaviour
     {
         // 카메라 참조 가져오기
         playerCamera = Camera.main;
-        // 인벤토리 컴퍼넌트 가저오기
+        // 인벤토리 컴포넌트 가져오기
         inventory = GetComponentInParent<Inventory_JSW>();
         currentWeapon = Instantiate(sub, transform.position, Quaternion.identity);
+        currentWeaponIndex = 1; // 숫자 2번에 해당하는 무기 인덱스
 
         // 부모 설정
         currentWeapon.transform.SetParent(playerCamera.transform);
@@ -32,7 +35,6 @@ public class WeaponSwitcher : MonoBehaviour
             UpdateWeaponPosition();
         }
     }
-    
 
     void Update()
     {
@@ -45,6 +47,10 @@ public class WeaponSwitcher : MonoBehaviour
         {
             SwitchWeapon(sub, 1);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SwitchWeapon(pro, 2);
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             SwitchWeapon(mediKitPrefab, 3);
@@ -55,11 +61,20 @@ public class WeaponSwitcher : MonoBehaviour
         {
             UseMediKit();
         }
+
+        // 왼쪽 마우스 클릭 시 현재 장착된 총기가 숫자 3으로 배정된 무기일 때만 프로젝타일 투척
+        if (Input.GetMouseButtonDown(0)) // 0은 왼쪽 마우스 버튼을 의미합니다.
+        {
+            if (currentWeaponIndex == 2) // 현재 장착된 무기가 숫자 3에 해당하는 경우
+            {
+                ThrowProjectile();
+            }
+        }
     }
 
     void SwitchWeapon(GameObject newWeaponPrefab, int num)
     {
-        if (inventory[num] == null) return; 
+        if (inventory[num] == null) return;
         // 현재 총기가 존재하면 제거
         if (currentWeapon != null)
         {
@@ -70,6 +85,7 @@ public class WeaponSwitcher : MonoBehaviour
         if (newWeaponPrefab != null)
         {
             currentWeapon = Instantiate(newWeaponPrefab, transform.position, Quaternion.identity);
+            currentWeaponIndex = num; // 현재 장착된 무기의 인덱스 업데이트
 
             // 부모 설정
             currentWeapon.transform.SetParent(playerCamera.transform);
@@ -96,6 +112,24 @@ public class WeaponSwitcher : MonoBehaviour
         }
     }
 
+    void ThrowProjectile()
+    {
+        if (currentWeapon != null && pro != null)
+        {
+            // 발사 위치 계산
+            Vector3 firePosition = playerCamera.transform.position + playerCamera.transform.forward * 2;
+
+            // 프로젝타일 생성
+            GameObject projectile = Instantiate(pro, firePosition, Quaternion.identity);
+
+            // 즉시 파괴하도록 설정 (0초 후 제거)
+            Destroy(projectile, 0f);
+
+            // 총기 모델 제거
+            Destroy(currentWeapon);
+        }
+    }
+
     void UpdateWeaponPosition()
     {
         if (playerCamera == null) return;
@@ -106,7 +140,7 @@ public class WeaponSwitcher : MonoBehaviour
         Vector3 cameraUp = playerCamera.transform.up;
 
         // 총기의 위치를 카메라 앞쪽과 아래쪽으로 조정
-        Vector3 weaponOffset = cameraForward * 2 + cameraUp *-0.5f + cameraRight * -1.0f;
+        Vector3 weaponOffset = cameraForward * 2 + cameraUp * -0.5f + cameraRight * -1.0f;
 
         // 총기 위치를 업데이트
         currentWeapon.transform.position = playerCamera.transform.position;
@@ -118,3 +152,5 @@ public class WeaponSwitcher : MonoBehaviour
         currentWeapon.transform.Translate(weaponOffset, Space.World);
     }
 }
+
+

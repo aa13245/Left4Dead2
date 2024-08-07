@@ -199,7 +199,7 @@ public class PlayerControler_KJS : MonoBehaviour
 
         if (cc.isGrounded)
         {
-            yVelocity = 0;
+            yVelocity = -1;
             jumpcurrCnt = 0;
         }
 

@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class BombAction_KJS : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-
-    //폭발 이펙트 프리팹 변수
+    // 폭발 이펙트 프리팹 변수
     public GameObject bombEffect;
-    //충돌했을때의 처리
+    // 화염 이펙트 프리팹 변수
+    public GameObject fireEffect;
+
+    // 충돌했을 때의 처리
     private void OnCollisionEnter(Collision collision)
     {
-        //이펙트 프리팹을 생성한다.
+        // 폭발 이펙트 프리팹을 생성한다.
         GameObject eff = Instantiate(bombEffect);
-
-        //이펙트 프리팹의 위치는 수류탄 오브젝트자신의 위치와 동일하다.
+        // 폭발 이펙트의 위치를 수류탄 오브젝트 자신의 위치와 동일하게 설정한다.
         eff.transform.position = transform.position;
 
-        //자기 자신을 제거한다.
+        // 화염 이펙트 프리팹을 생성한다.
+        GameObject fireEff = Instantiate(fireEffect);
+        // 화염 이펙트의 위치를 수류탄 오브젝트 자신의 위치와 동일하게 설정한다.
+        fireEff.transform.position = transform.position;
+
+        // 화염 이펙트의 지속 시간을 10초로 설정한다.
+        Destroy(fireEff, 10f);
+
+        // 자기 자신을 제거한다.
         Destroy(gameObject);
     }
 }
