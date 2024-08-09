@@ -208,6 +208,89 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 0e4426ea82fd65e4a98e7aa5c7fc180e, type: 2}
   m_BuildHeightMesh: 0
+--- !u!1001 &183661733
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.59
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 51.331
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.60517246
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.69868267
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.10882373
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.3657408
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -112.294
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a6ef3363fb102634381cd7052f237d7e,
+        type: 3}
+      propertyPath: m_Name
+      value: juhani_digital_01_the_flare
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a6ef3363fb102634381cd7052f237d7e, type: 3}
 --- !u!1 &329258617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,3 +1771,4 @@ SceneRoots:
   - {fileID: 1779845387}
   - {fileID: 792553691}
   - {fileID: 1677376929}
+  - {fileID: 183661733}
