@@ -10,11 +10,11 @@ public class JKYHammerSpawn : MonoBehaviour
     private void Start()
     {
         // 첫 번째 웨이브: 20초 후에 10명 스폰
-        StartCoroutine(SpawnEnemiesAfterDelay(10, 1));
+        StartCoroutine(SpawnEnemiesAfterDelay(10, 3));
         // 두 번째 웨이브: 30초 후에 25명 스폰
-        StartCoroutine(SpawnEnemiesAfterDelay(30, 1)); // 20초 + 30초 = 50초 후
+        StartCoroutine(SpawnEnemiesAfterDelay(30, 3)); // 20초 + 30초 = 50초 후
         // 세 번째 웨이브: 45초 후에 30명 스폰
-        StartCoroutine(SpawnEnemiesAfterDelay(55, 2)); // 50초 + 45초 = 95초 후
+        StartCoroutine(SpawnEnemiesAfterDelay(55, 3)); // 50초 + 45초 = 95초 후
     }
 
     private IEnumerator SpawnEnemiesAfterDelay(float delay, int numberOfEnemies)

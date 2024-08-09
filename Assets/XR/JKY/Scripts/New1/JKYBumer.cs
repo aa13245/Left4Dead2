@@ -157,7 +157,7 @@ public class JKYBumer : MonoBehaviour
     {
         Vector3 directionToTarget = (target.position - transform.position).normalized;
         StartCoroutine(Vomitto(directionToTarget));
-        print("?");
+        //print("?");
         if (Vector3.Distance(transform.position, target.transform.position) > vomitRange)
         {
             print("설마?");
@@ -170,9 +170,10 @@ public class JKYBumer : MonoBehaviour
     IEnumerator Vomitto(Vector3 directionToTarget)
     {
         animator.SetTrigger("Attack");
-        yield return new WaitForSeconds(1f);
+   
         canVomit = false;
-        print(111);
+        yield return new WaitForSeconds(1f);
+        //print(111);
         // 구토 효과
 
         // 구토 범위 내의 모든 플레이어를 찾기
@@ -180,8 +181,8 @@ public class JKYBumer : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToTarget, out hit, vomitRange, layer))
         {
-            print(hit);
-            print("독생성");
+            //print(hit);
+           // print("독생성");
             if (hit.collider.CompareTag("Player"))
             {
                 //Human_KJS pcr = hit.collider.GetComponent<Human_KJS>();
