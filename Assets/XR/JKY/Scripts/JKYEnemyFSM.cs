@@ -603,27 +603,40 @@ public class JKYEnemyFSM : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);
         allTargets.AddRange(allies);
+        allTargets.AddRange(pipe);
         //allTargets.Remove(target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead);
         float closestDistance = Mathf.Infinity;
         Transform closestTarget = null;
 
         foreach (GameObject target in allTargets)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+            
+            if (target.gameObject.tag == "Pipe") 
             {
-                closestDistance = distanceToTarget;
+                print(target);
                 closestTarget = target.transform;
+                break;
+            }
+            else
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                {
+                    closestDistance = distanceToTarget;
+                    closestTarget = target.transform;
                 
+                }
+
             }
         }
 
         target = closestTarget;
-        //print(target);
+        print(target);
     }
 
 

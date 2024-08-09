@@ -395,20 +395,34 @@ public class JKYEnemySpawn1 : MonoBehaviour
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);
         allTargets.AddRange(allies);
+        allTargets.AddRange(pipe);
 
         float closestDistance = Mathf.Infinity;
         Transform closestTarget = null;
 
         foreach (GameObject target in allTargets)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+
+            if (target.gameObject.tag == "Pipe")
             {
-                closestDistance = distanceToTarget;
+                print(target);
                 closestTarget = target.transform;
+                break;
+            }
+            else
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                {
+                    closestDistance = distanceToTarget;
+                    closestTarget = target.transform;
+
+                }
+
             }
         }
 
