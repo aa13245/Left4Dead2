@@ -22,6 +22,7 @@ public class JKYZombie1 : MonoBehaviour
     private Animator _animator;
     private CharacterController _characterController;
     NavMeshAgent Agent;
+    float currTime = 0;
     void Awake()
     {
         _ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
@@ -48,6 +49,8 @@ public class JKYZombie1 : MonoBehaviour
 
     public void TriggerRagdoll(Vector3 force, Vector3 hitPoint)
     {
+        
+        currTime += Time.deltaTime;
         EnableRagdoll();
 
         Rigidbody hitRigidbody = FindHitRigidbody(hitPoint);
@@ -55,6 +58,11 @@ public class JKYZombie1 : MonoBehaviour
         hitRigidbody.AddForceAtPosition(force, hitPoint, ForceMode.Impulse);
 
         _currentState = ZombieState.Ragdoll;
+
+        if (currTime > 4f)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private Rigidbody FindHitRigidbody(Vector3 hitPoint)
