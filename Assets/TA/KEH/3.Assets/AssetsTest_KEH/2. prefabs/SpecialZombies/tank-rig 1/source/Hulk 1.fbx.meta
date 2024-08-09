@@ -1,0 +1,1200 @@
+fileFormatVersion: 2
+guid: bbe27b9d33cdfb449af209500368db6f
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hulk_01
+    second: {fileID: 2100000, guid: 1d273eebdc99a224ba124b387d76769c, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: "Avatar Rig Configuration mis-match. Inbetween bone rotation
+      in configuration does not match rotation in animation file:\n\t'ValveBiped.Bip01_Spine3'
+      : rotation error = 6.534417 deg\n"
+    animationImportErrors: 
+    animationImportWarnings: "\nClip 'hulk_tank_reference_skeleton|a_HulkMeleeIncapW'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_HulkThrow3N' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_HulkThrow3W' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_HulkThrow4E' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_HulkThrow4N'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_HulkThrow4W' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_HulkThrowE'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_HulkThrowN' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_HulkThrowW'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunE' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_RunN'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunN_2b' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_RunN_3'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunN_4' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunNE' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_RunNW'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunS' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_RunSE'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunSW' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|a_RunW'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|a_RunZero' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Climb36_03_InPlace'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Death' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Death_11ab'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Death_idle' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Death_Running_07'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|deathpose_back' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle' has translation
+      animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_crouch_back'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_crouch_front'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_crouch_left'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_crouch_right'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_front'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_left'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|deathpose_right'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine1'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_L_Clavicle'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_R_Clavicle'
+      has translation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Hulk_RunAttack1_layer'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Hulk_RunAttack2_layer' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|hulk_runMad'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Hulk_StumbleA' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Idle' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Idle_Rage'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Idle_Yell' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Idle_Yell_short'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Jump_Climb115' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Jump_Climb130' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Jump_Climb150'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Jump_Climb166' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Jump_Climb38' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Jump_Climb70'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Jump_Land_gesture' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Ladder_Ascend'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Ladder_Descend' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Ladder_Dismount1'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Melee' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Melee01_layer'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Melee01_Running_Delta' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Melee01_Running_layer'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Rage_at_Enemy_01' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Rage_at_Enemy_02'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Rage_at_Enemy_03' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Rage_at_Enemy_04'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Rage_at_Knockdown_01' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Rage_at_Knockdown_02'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Rage_at_Knockdown_03' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|raw_Hulk_RunAttack1'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0'
+      has translation animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Shoved_Backward' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Shoved_Forward'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Shoved_Leftward' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|Shoved_Rightward'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Victory' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'hulk_tank_reference_skeleton|VictoryB'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Wall_Mount' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Wall_SmashA' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine0' has translation
+      animation that will be discarded.\n\t'ValveBiped.Bip01_Spine3' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'hulk_tank_reference_skeleton|Wall_SmashB' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'ValveBiped.Bip01_Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n"
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human:
+    - boneName: ValveBiped.Bip01_Pelvis
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Thigh
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Thigh
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Calf
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Calf
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Foot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Foot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_Spine0
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_Spine1
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_Neck0
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Clavicle
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Clavicle
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_UpperArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_UpperArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Forearm
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Forearm
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Hand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Hand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Toe
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Toe
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.jiggle_tongue2
+      humanName: LeftEye
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger0
+      humanName: Left Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger01
+      humanName: Left Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger02
+      humanName: Left Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger1
+      humanName: Left Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger11
+      humanName: Left Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger12
+      humanName: Left Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger2
+      humanName: Left Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger21
+      humanName: Left Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger22
+      humanName: Left Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger3
+      humanName: Left Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger31
+      humanName: Left Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger32
+      humanName: Left Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger4
+      humanName: Left Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger41
+      humanName: Left Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_L_Finger42
+      humanName: Left Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger0
+      humanName: Right Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger01
+      humanName: Right Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger02
+      humanName: Right Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger1
+      humanName: Right Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger11
+      humanName: Right Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger12
+      humanName: Right Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger2
+      humanName: Right Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger21
+      humanName: Right Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger22
+      humanName: Right Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger3
+      humanName: Right Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger31
+      humanName: Right Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger32
+      humanName: Right Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger4
+      humanName: Right Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger41
+      humanName: Right Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_R_Finger42
+      humanName: Right Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ValveBiped.Bip01_Spine2
+      humanName: UpperChest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: Hulk 1(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: hulk_tank_reference
+      parentName: Hulk 1(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: hulk_tank_reference_lod1
+      parentName: Hulk 1(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: hulk_tank_reference_lod2
+      parentName: Hulk 1(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: hulk_tank_reference_skeleton
+      parentName: Hulk 1(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: ValveBiped.Bip01_Pelvis
+      parentName: hulk_tank_reference_skeleton
+      position: {x: 0, y: -0.000000038146972, z: 0.38625628}
+      rotation: {x: 0.7071068, y: -0.00000013795673, z: -0.00000013795677, w: 0.7071068}
+      scale: {x: 0.9999998, y: 0.9999997, z: 0.99999964}
+    - name: ValveBiped.Bip01_L_Thigh
+      parentName: ValveBiped.Bip01_Pelvis
+      position: {x: -0.057579778, y: 0.000000014235713, z: 0.000000037290256}
+      rotation: {x: 0.5254198, y: 0.47321722, z: -0.50177056, w: -0.49822283}
+      scale: {x: 1.0000002, y: 1.0000013, z: 1.0000008}
+    - name: ValveBiped.Bip01_L_Calf
+      parentName: ValveBiped.Bip01_L_Thigh
+      position: {x: -0.18152635, y: 0.0000000047683715, z: 0.0000000023841857}
+      rotation: {x: 0.00000047683716, y: -0.0000005662441, z: -0.08193663, w: 0.9966376}
+      scale: {x: 1.0000004, y: 1.0000011, z: 1}
+    - name: ValveBiped.Bip01_L_Foot
+      parentName: ValveBiped.Bip01_L_Calf
+      position: {x: -0.17091548, y: 0, z: 0.00000006437301}
+      rotation: {x: -0.047716316, y: -0.017248768, z: 0.59571195, w: 0.80159396}
+      scale: {x: 1.000001, y: 0.9999999, z: 1.0000001}
+    - name: ValveBiped.Bip01_L_Toe
+      parentName: ValveBiped.Bip01_L_Foot
+      position: {x: -0.06229747, y: 0.000000088214875, z: -0.0000000062584875}
+      rotation: {x: 0.014245262, y: -0.003258688, z: 0.19866678, w: 0.9799582}
+      scale: {x: 0.99999905, y: 1.0000011, z: 0.99999964}
+    - name: ValveBiped.Bip01_L_Toe_end
+      parentName: ValveBiped.Bip01_L_Toe
+      position: {x: -0, y: 0.002280664, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_R_Thigh
+      parentName: ValveBiped.Bip01_Pelvis
+      position: {x: 0.057579815, y: 0.000000018723245, z: -0.0000000010632554}
+      rotation: {x: -0.5017707, y: -0.49822265, z: 0.52541965, w: 0.47321734}
+      scale: {x: 1.0000002, y: 1.0000008, z: 1.0000004}
+    - name: ValveBiped.Bip01_R_Calf
+      parentName: ValveBiped.Bip01_R_Thigh
+      position: {x: -0.18152641, y: 0.00000006213784, z: 0.000000022053719}
+      rotation: {x: 0.000000119209275, y: 0.00000020861623, z: -0.08191975, w: 0.9966389}
+      scale: {x: 1.0000005, y: 1.0000008, z: 1.0000006}
+    - name: ValveBiped.Bip01_R_Foot
+      parentName: ValveBiped.Bip01_R_Calf
+      position: {x: -0.17091556, y: 0.0000000038743018, z: -0.000000029802322}
+      rotation: {x: -0.058296677, y: -0.0251148, z: -0.595418, w: -0.80090463}
+      scale: {x: 1.0000017, y: 1.0000019, z: 1.0000011}
+    - name: ValveBiped.Bip01_R_Toe
+      parentName: ValveBiped.Bip01_R_Foot
+      position: {x: -0.06229754, y: 0.00000001758337, z: -0.000000017881392}
+      rotation: {x: -0.06624327, y: -0.0018312057, z: 0.19868729, w: 0.97782}
+      scale: {x: 1.0000004, y: 1.000001, z: 1.0000004}
+    - name: ValveBiped.Bip01_R_Toe_end
+      parentName: ValveBiped.Bip01_R_Toe
+      position: {x: -0, y: 0.0022806772, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_Spine0
+      parentName: ValveBiped.Bip01_Pelvis
+      position: {x: -6.82121e-15, y: 0.03964347, z: -0.013479682}
+      rotation: {x: 0.47520974, y: -0.5236178, z: -0.4752097, w: 0.5236181}
+      scale: {x: 1.0000004, y: 1, z: 1.000001}
+    - name: ValveBiped.Bip01_Spine1
+      parentName: ValveBiped.Bip01_Spine0
+      position: {x: -0.07507319, y: 0.000000036486888, z: -0.00000003617024}
+      rotation: {x: -0.00000014901161, y: -0.000000059604645, z: -0.07009596, w: 0.99754035}
+      scale: {x: 1.0000001, y: 0.99999976, z: 1.0000004}
+    - name: ValveBiped.Bip01_Spine2
+      parentName: ValveBiped.Bip01_Spine1
+      position: {x: -0.09079736, y: 0.0000000036507843, z: 0.000000009834766}
+      rotation: {x: 0.000000032637285, y: 0.00000008993442, z: -0.08826358, w: 0.99609715}
+      scale: {x: 1.0000017, y: 1.0000001, z: 1.0000019}
+    - name: ValveBiped.Bip01_Spine3
+      parentName: ValveBiped.Bip01_Spine2
+      position: {x: -0.108268246, y: 0.0000000017881393, z: -0.0000000166893}
+      rotation: {x: 0.000000040076287, y: 0.000000052238505, z: -0.30428192, w: 0.9525821}
+      scale: {x: 1.0000014, y: 0.99999976, z: 1.000001}
+    - name: ValveBiped.Bip01_Neck0
+      parentName: ValveBiped.Bip01_Spine3
+      position: {x: -0.08860069, y: 0.00000007599592, z: -0.00000000834465}
+      rotation: {x: 0.9778516, y: 0.20929919, z: 0.000000608901, w: 0.000000372839}
+      scale: {x: 1.0000006, y: 0.9999979, z: 0.99999905}
+    - name: ValveBiped.Bip01_Head
+      parentName: ValveBiped.Bip01_Neck0
+      position: {x: -0.043419417, y: 0.00000003747642, z: -0.000000052452087}
+      rotation: {x: 0.0000007058044, y: 0.0000007369435, z: -0.6702988, w: 0.74209136}
+      scale: {x: 1.0000008, y: 1.0000023, z: 1.0000017}
+    - name: ValveBiped.jiggle_tongue01
+      parentName: ValveBiped.Bip01_Head
+      position: {x: 0.023595916, y: -0.024234554, z: 0.000000013113022}
+      rotation: {x: -0.531606, y: 0.4662553, z: -0.5316072, w: -0.4662562}
+      scale: {x: 1, y: 0.99999917, z: 1.0000005}
+    - name: ValveBiped.jiggle_tongue2
+      parentName: ValveBiped.jiggle_tongue01
+      position: {x: -0.00000010967254, y: -0.0019943325, z: 0.009124955}
+      rotation: {x: 0.5518922, y: -0.0000013858075, z: -0.0000011287625, w: 0.8339155}
+      scale: {x: 1.0000002, y: 0.99999833, z: 1.0000014}
+    - name: ValveBiped.jiggle_tongue2_end
+      parentName: ValveBiped.jiggle_tongue2
+      position: {x: -0, y: 0.002280687, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_L_Clavicle
+      parentName: ValveBiped.Bip01_Spine3
+      position: {x: -0.06900931, y: 0.013638828, z: 0.03754603}
+      rotation: {x: -0.4114004, y: 0.49969405, z: 0.62904227, w: 0.43053627}
+      scale: {x: 0.9999998, y: 0.9999995, z: 1}
+    - name: ValveBiped.Bip01_L_UpperArm
+      parentName: ValveBiped.Bip01_L_Clavicle
+      position: {x: -0.12731756, y: -0.000000038146972, z: 0.000000032186506}
+      rotation: {x: 0.49345225, y: -0.1460119, z: 0.070760496, w: -0.8545048}
+      scale: {x: 0.99999905, y: 0.9999994, z: 1.0000019}
+    - name: ValveBiped.Bip01_L_Forearm
+      parentName: ValveBiped.Bip01_L_UpperArm
+      position: {x: -0.26625127, y: -0.000000023841856, z: -0.000000076293944}
+      rotation: {x: -0.00005498522, y: 0.00029385058, z: -0.024154285, w: -0.9997083}
+      scale: {x: 1.0000019, y: 0.9999997, z: 1.0000008}
+    - name: ValveBiped.Bip01_L_Hand
+      parentName: ValveBiped.Bip01_L_Forearm
+      position: {x: -0.20040782, y: -0.00000018000603, z: -0.00000033736228}
+      rotation: {x: 0.2080533, y: 0.06292498, z: 0.09101572, w: -0.9718387}
+      scale: {x: 0.9999989, y: 1.0000008, z: 1.0000002}
+    - name: ValveBiped.Bip01_L_Finger4
+      parentName: ValveBiped.Bip01_L_Hand
+      position: {x: -0.16821644, y: 0.026967386, z: -0.002032833}
+      rotation: {x: -0.8458453, y: 0.053285573, z: -0.06054932, w: -0.5272951}
+      scale: {x: 0.99999887, y: 1.0000017, z: 1.0000004}
+    - name: ValveBiped.Bip01_L_Finger41
+      parentName: ValveBiped.Bip01_L_Finger4
+      position: {x: -0.020393882, y: 0.000000013113022, z: 0.0000000036880372}
+      rotation: {x: -0.016200673, y: 0.005800296, z: 0.02870233, w: 0.99943995}
+      scale: {x: 0.99999934, y: 1.0000025, z: 1.0000007}
+    - name: ValveBiped.Bip01_L_Finger42
+      parentName: ValveBiped.Bip01_L_Finger41
+      position: {x: -0.015169067, y: -0.0000000047683715, z: -0.000000013113022}
+      rotation: {x: -0.03727005, y: 0.038006376, z: 0.69918245, w: 0.712959}
+      scale: {x: 0.999999, y: 1.0000007, z: 1.0000001}
+    - name: ValveBiped.Bip01_L_Finger42_end
+      parentName: ValveBiped.Bip01_L_Finger42
+      position: {x: -0, y: 0.0022806805, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_L_Finger3
+      parentName: ValveBiped.Bip01_L_Hand
+      position: {x: -0.17176723, y: 0.008403954, z: -0.00044740675}
+      rotation: {x: -0.83444405, y: 0.042637564, z: -0.074223764, w: -0.54440427}
+      scale: {x: 0.9999984, y: 1.0000021, z: 1}
+    - name: ValveBiped.Bip01_L_Finger31
+      parentName: ValveBiped.Bip01_L_Finger3
+      position: {x: -0.023028538, y: 0.000000028610229, z: 0.000000030994414}
+      rotation: {x: -0.008218278, y: 0.00534903, z: 0.03197334, w: 0.99944067}
+      scale: {x: 0.9999993, y: 1.000002, z: 0.9999999}
+    - name: ValveBiped.Bip01_L_Finger32
+      parentName: ValveBiped.Bip01_L_Finger31
+      position: {x: -0.020477468, y: -0.000000007152557, z: 0.000000014305114}
+      rotation: {x: -0.0067121643, y: 0.006810124, z: 0.7017273, w: 0.71238154}
+      scale: {x: 1.0000006, y: 1.0000006, z: 1.0000015}
+    - name: ValveBiped.Bip01_L_Finger32_end
+      parentName: ValveBiped.Bip01_L_Finger32
+      position: {x: -0, y: 0.002280675, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_L_Finger2
+      parentName: ValveBiped.Bip01_L_Hand
+      position: {x: -0.17032681, y: -0.010691004, z: -0.006381855}
+      rotation: {x: -0.84065336, y: 0.04752382, z: -0.076688364, w: -0.5340058}
+      scale: {x: 0.99999905, y: 1.0000014, z: 0.9999998}
+    - name: ValveBiped.Bip01_L_Finger21
+      parentName: ValveBiped.Bip01_L_Finger2
+      position: {x: -0.029072601, y: 0.000000011920928, z: -0.000000009536743}
+      rotation: {x: -0.024233848, y: 0.00333691, z: 0.023596188, w: 0.99942225}
+      scale: {x: 0.9999982, y: 1.0000031, z: 1.0000007}
+    - name: ValveBiped.Bip01_L_Finger22
+      parentName: ValveBiped.Bip01_L_Finger21
+      position: {x: -0.024709081, y: -0.000000011920928, z: 0.000000021457671}
+      rotation: {x: 0.015026687, y: -0.015203293, z: 0.7028769, w: 0.7109902}
+      scale: {x: 1.0000004, y: 1.0000002, z: 1.000001}
+    - name: ValveBiped.Bip01_L_Finger22_end
+      parentName: ValveBiped.Bip01_L_Finger22
+      position: {x: -0, y: 0.002280684, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_L_Finger1
+      parentName: ValveBiped.Bip01_L_Hand
+      position: {x: -0.16797975, y: -0.029570164, z: -0.012648687}
+      rotation: {x: -0.83853483, y: 0.03891216, z: -0.08887133, w: -0.5361409}
+      scale: {x: 0.99999976, y: 1.0000012, z: 1.0000008}
+    - name: ValveBiped.Bip01_L_Finger11
+      parentName: ValveBiped.Bip01_L_Finger1
+      position: {x: -0.022467341, y: -0.0000000023841857, z: -0.000000030994414}
+      rotation: {x: 0.010728853, y: -0.001665847, z: 0.02459095, w: 0.9996386}
+      scale: {x: 0.9999979, y: 1.0000026, z: 0.99999917}
+    - name: ValveBiped.Bip01_L_Finger12
+      parentName: ValveBiped.Bip01_L_Finger11
+      position: {x: -0.019249856, y: 0, z: 0.000000030994414}
+      rotation: {x: 0.029647289, y: -0.03003331, z: 0.7021053, w: 0.71082145}
+      scale: {x: 1, y: 0.9999997, z: 1.0000008}
+    - name: ValveBiped.Bip01_L_Finger12_end
+      parentName: ValveBiped.Bip01_L_Finger12
+      position: {x: -0, y: 0.0022806758, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_L_Finger0
+      parentName: ValveBiped.Bip01_L_Hand
+      position: {x: -0.10924366, y: -0.038741764, z: -0.03676631}
+      rotation: {x: -0.92829627, y: -0.21399432, z: 0.25998318, w: 0.15773836}
+      scale: {x: 0.9999996, y: 1.0000007, z: 1.0000013}
+    - name: ValveBiped.Bip01_L_Finger01
+      parentName: ValveBiped.Bip01_L_Finger0
+      position: {x: -0.031098178, y: -0.0000000011920929, z: 0.000000011920928}
+      rotation: {x: 0.0018867973, y: -0.03600768, z: 0.01784392, w: 0.9991904}
+      scale: {x: 1.0000008, y: 0.99999976, z: 0.99999964}
+    - name: ValveBiped.Bip01_L_Finger02
+      parentName: ValveBiped.Bip01_L_Finger01
+      position: {x: -0.015128962, y: -0.000000044107438, z: -0.000000023841856}
+      rotation: {x: -0.0102413455, y: 0.010252622, z: 0.70704097, w: 0.70702416}
+      scale: {x: 1.0000006, y: 1.000001, z: 1.0000006}
+    - name: ValveBiped.Bip01_L_Finger02_end
+      parentName: ValveBiped.Bip01_L_Finger02
+      position: {x: -0, y: 0.002280684, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_R_Clavicle
+      parentName: ValveBiped.Bip01_Spine3
+      position: {x: -0.06900929, y: 0.013638856, z: -0.0375461}
+      rotation: {x: -0.39525735, y: 0.5225325, z: -0.6102036, w: -0.44540218}
+      scale: {x: 1.0000004, y: 0.99999875, z: 0.99999946}
+    - name: ValveBiped.Bip01_R_UpperArm
+      parentName: ValveBiped.Bip01_R_Clavicle
+      position: {x: -0.12731753, y: 0.00000007152557, z: 0.000000029802322}
+      rotation: {x: -0.52460057, y: 0.14330547, z: 0.07609242, w: -0.83574384}
+      scale: {x: 0.999999, y: 0.99999976, z: 1.0000019}
+    - name: ValveBiped.Bip01_R_Forearm
+      parentName: ValveBiped.Bip01_R_UpperArm
+      position: {x: -0.26625115, y: 0.00000006891787, z: -0.00000005915761}
+      rotation: {x: 0.00005519386, y: -0.00029358247, z: -0.024154497, w: -0.99970824}
+      scale: {x: 1.0000014, y: 0.9999992, z: 1.0000002}
+    - name: ValveBiped.Bip01_R_Hand
+      parentName: ValveBiped.Bip01_R_Forearm
+      position: {x: -0.20040764, y: -0.00000005155802, z: 0.00000014305114}
+      rotation: {x: -0.20602767, y: -0.0631137, z: 0.09086828, w: -0.97227174}
+      scale: {x: 0.9999996, y: 0.99999934, z: 1.000001}
+    - name: ValveBiped.Bip01_R_Finger4
+      parentName: ValveBiped.Bip01_R_Hand
+      position: {x: -0.16821663, y: 0.026958656, z: 0.0021456575}
+      rotation: {x: 0.8447413, y: -0.05316318, z: -0.060657877, w: -0.529062}
+      scale: {x: 1.0000001, y: 1.000003, z: 1.0000014}
+    - name: ValveBiped.Bip01_R_Finger41
+      parentName: ValveBiped.Bip01_R_Finger4
+      position: {x: -0.020393876, y: 0.00000004529953, z: -0.000000018253923}
+      rotation: {x: 0.016201233, y: -0.0057978337, z: 0.028708357, w: 0.9994398}
+      scale: {x: 0.999999, y: 1.0000017, z: 1.0000005}
+    - name: ValveBiped.Bip01_R_Finger42
+      parentName: ValveBiped.Bip01_R_Finger41
+      position: {x: -0.015169061, y: 0.000000026226044, z: -0.000000019073486}
+      rotation: {x: 0.037265006, y: -0.038008682, z: 0.6992129, w: 0.71292925}
+      scale: {x: 0.9999995, y: 1.0000008, z: 1.0000014}
+    - name: ValveBiped.Bip01_R_Finger42_end
+      parentName: ValveBiped.Bip01_R_Finger42
+      position: {x: -0, y: 0.0022806851, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_R_Finger3
+      parentName: ValveBiped.Bip01_R_Hand
+      position: {x: -0.17176743, y: 0.008402009, z: 0.00048253534}
+      rotation: {x: 0.8333035, y: -0.042484667, z: -0.0743097, w: -0.5461487}
+      scale: {x: 0.9999991, y: 1.0000032, z: 1.0000004}
+    - name: ValveBiped.Bip01_R_Finger31
+      parentName: ValveBiped.Bip01_R_Finger3
+      position: {x: -0.02302856, y: 0.000000035762785, z: -0.000000017285346}
+      rotation: {x: 0.008217411, y: -0.0053496724, z: 0.0319674, w: 0.99944085}
+      scale: {x: 0.9999992, y: 1.000001, z: 1.0000012}
+    - name: ValveBiped.Bip01_R_Finger32
+      parentName: ValveBiped.Bip01_R_Finger31
+      position: {x: -0.020477405, y: 0.000000038146972, z: -0.000000007152557}
+      rotation: {x: 0.006711379, y: -0.006829173, z: 0.7017181, w: 0.7123905}
+      scale: {x: 1, y: 1.0000015, z: 1.0000012}
+    - name: ValveBiped.Bip01_R_Finger32_end
+      parentName: ValveBiped.Bip01_R_Finger32
+      position: {x: -0, y: 0.0022806802, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_R_Finger2
+      parentName: ValveBiped.Bip01_R_Hand
+      position: {x: -0.17032707, y: -0.010717626, z: 0.006336982}
+      rotation: {x: 0.839535, y: -0.0473658, z: -0.0767826, w: -0.5357629}
+      scale: {x: 0.9999996, y: 1.000003, z: 1.0000007}
+    - name: ValveBiped.Bip01_R_Finger21
+      parentName: ValveBiped.Bip01_R_Finger2
+      position: {x: -0.029072575, y: -0.000000019073486, z: -0.000000011920928}
+      rotation: {x: 0.024232037, y: -0.0033383728, z: 0.023599349, w: 0.9994222}
+      scale: {x: 0.9999987, y: 1.0000023, z: 1.0000013}
+    - name: ValveBiped.Bip01_R_Finger22
+      parentName: ValveBiped.Bip01_R_Finger21
+      position: {x: -0.024709033, y: 0.000000028610229, z: 0.000000028610229}
+      rotation: {x: -0.0150246145, y: 0.015190016, z: 0.70288473, w: 0.71098286}
+      scale: {x: 1.0000006, y: 1.0000006, z: 1.0000006}
+    - name: ValveBiped.Bip01_R_Finger22_end
+      parentName: ValveBiped.Bip01_R_Finger22
+      position: {x: -0, y: 0.002280684, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_R_Finger1
+      parentName: ValveBiped.Bip01_R_Hand
+      position: {x: -0.16798002, y: -0.02962287, z: 0.012524721}
+      rotation: {x: 0.8374126, y: -0.038729925, z: -0.08894572, w: -0.5378929}
+      scale: {x: 0.9999997, y: 1.000003, z: 1.0000013}
+    - name: ValveBiped.Bip01_R_Finger11
+      parentName: ValveBiped.Bip01_R_Finger1
+      position: {x: -0.022467302, y: -0.000000039339064, z: -0.000000036358834}
+      rotation: {x: -0.010729156, y: 0.0016658481, z: 0.024587197, w: 0.9996388}
+      scale: {x: 0.9999992, y: 1.0000027, z: 1.0000007}
+    - name: ValveBiped.Bip01_R_Finger12
+      parentName: ValveBiped.Bip01_R_Finger11
+      position: {x: -0.01924982, y: 0.000000007152557, z: -0.0000000047683715}
+      rotation: {x: -0.029645557, y: 0.02999717, z: 0.70210963, w: 0.7108188}
+      scale: {x: 1.0000007, y: 1.0000001, z: 1.0000006}
+    - name: ValveBiped.Bip01_R_Finger12_end
+      parentName: ValveBiped.Bip01_R_Finger12
+      position: {x: -0, y: 0.0022806753, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.Bip01_R_Finger0
+      parentName: ValveBiped.Bip01_R_Hand
+      position: {x: -0.109243944, y: -0.038895458, z: 0.036603786}
+      rotation: {x: 0.928624, y: 0.21345049, z: 0.26043028, w: 0.15579644}
+      scale: {x: 0.9999994, y: 1.0000005, z: 1.0000025}
+    - name: ValveBiped.Bip01_R_Finger01
+      parentName: ValveBiped.Bip01_R_Finger0
+      position: {x: -0.03109826, y: -0.000000011920928, z: -0.000000031292437}
+      rotation: {x: -0.0018878552, y: 0.036007367, z: 0.017843682, w: 0.99919045}
+      scale: {x: 1.0000008, y: 1.0000002, z: 0.99999976}
+    - name: ValveBiped.Bip01_R_Finger02
+      parentName: ValveBiped.Bip01_R_Finger01
+      position: {x: -0.015128896, y: 0, z: -0.000000035017727}
+      rotation: {x: 0.0102377115, y: -0.010248774, z: 0.70703804, w: 0.70702726}
+      scale: {x: 0.9999997, y: 1.0000007, z: 1.0000004}
+    - name: ValveBiped.Bip01_R_Finger02_end
+      parentName: ValveBiped.Bip01_R_Finger02
+      position: {x: -0, y: 0.002280684, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ValveBiped.debris_bone
+      parentName: ValveBiped.Bip01_R_Hand
+      position: {x: -0.1296675, y: 0.028546523, z: 0.055613995}
+      rotation: {x: 0.6917156, y: 0.66513413, z: -0.24565183, w: 0.137045}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.000002}
+    - name: ValveBiped.debris_bone_end
+      parentName: ValveBiped.debris_bone
+      position: {x: -0, y: 0.002280674, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: hulk_tank_reference_skeleton
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
