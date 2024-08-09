@@ -5,6 +5,7 @@ using static UnityEditor.Progress;
 
 public class Inventory_JSW : MonoBehaviour
 {
+    Human_KJS human;
     // 시작 기본권총
     public GameObject pistolPrefab;
 
@@ -19,6 +20,16 @@ public class Inventory_JSW : MonoBehaviour
         if (slots[value] != null && slotNum != value)
         {
             slotNum = value;
+            var item = ItemTable_JSW.instance.itemTable[slots[slotNum].kind];
+            if (item is ItemTable_JSW.MainWeapon mainWeapon)
+            {
+                human.MinRecoil = mainWeapon.minRecoil;
+            }
+            else if (item is ItemTable_JSW.SubWeapon subWeapon)
+            {
+                human.MinRecoil = subWeapon.minRecoil;
+            }
+            else human.MinRecoil = 0;
             return true;
         }
         else return false;
@@ -26,7 +37,9 @@ public class Inventory_JSW : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {   // 슬롯 초기화
+    {
+        human = GetComponent<Human_KJS>();
+        // 슬롯 초기화
         slots[0] = null;
         if (pistolPrefab != null)
         {
@@ -116,6 +129,7 @@ public class Inventory_JSW : MonoBehaviour
             {
                 Destroy(slots[slot]);
                 slots[slot] = null;
+                SetSlotNum(1);
             }
             return true;
         }

@@ -4,62 +4,35 @@ using UnityEngine;
 
 public class JKYHammerSpawn : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public GameObject enemyPrefab; // 에너미 프리팹
-    public Transform[] spawnPoints; // 스폰 지점 배열
-    //public int totalSpawnTime = 5; // 총 스폰 시간 (초)
-    public float spawnInterval = 1.0f; // 스폰 간격 (초)
-    //public int enemiesPerWave = 1; // 한 번에 스폰되는 에너미 수
-    public float initialDelay = 1.0f; // 처음 스폰 시작 전 대기 시간 (초)
-    //public float nextWaveDelay = 5.0f; // 다음 턴 스폰 전 대기 시간 (초)
-    private bool isFirstWave = true;
-    bool spawnEnable;
+    public GameObject[] enemyPrefabs; // 에너미 프리팹 배열 (에너미1, 에너미2, 에너미3)
+    public Transform[] spawnPoints; // 스폰 지점 배열 (랜덤 스팟 5군데)
 
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))
+        // 첫 번째 웨이브: 20초 후에 10명 스폰
+        StartCoroutine(SpawnEnemiesAfterDelay(10, 3));
+        // 두 번째 웨이브: 30초 후에 25명 스폰
+        StartCoroutine(SpawnEnemiesAfterDelay(30, 3)); // 20초 + 30초 = 50초 후
+        // 세 번째 웨이브: 45초 후에 30명 스폰
+        StartCoroutine(SpawnEnemiesAfterDelay(55, 3)); // 50초 + 45초 = 95초 후
+    }
+
+    private IEnumerator SpawnEnemiesAfterDelay(float delay, int numberOfEnemies)
+    {
+        yield return new WaitForSeconds(delay);
+        for (int i = 0; i < numberOfEnemies; i++)
         {
-            if (!spawnEnable)
-            {
-                spawnEnable = true;
-                StartCoroutine(SpawnWaves());
-            }
+            SpawnRandomEnemy();
         }
     }
 
-
-    void Start()
+    private void SpawnRandomEnemy()
     {
+        // 랜덤 에너미 선택
+        int enemyIndex = Random.Range(0, enemyPrefabs.Length);
+        // 랜덤 스폰 지점 선택
+        int spawnIndex = Random.Range(0, spawnPoints.Length);
 
-        
+        Instantiate(enemyPrefabs[enemyIndex], spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    IEnumerator SpawnWaves()
-    {
-        yield return new WaitForSeconds(initialDelay);
-
-        while (true)
-        {
-            int spawnIndex = Random.Range(0, spawnPoints.Length); // 랜덤 스폰 지점 선택
-            // 에너미 생성
-            Instantiate(enemyPrefab, spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
-
-            // 다음 생성까지 대기
-            yield return new WaitForSeconds(spawnInterval);
-        }
-    }
-
-    //void spawnenemies()
-    //{
-    //    //for (int i = 0; i < enemiesperwave; i++)
-    //    {
-    //        int spawnindex = random.range(0, spawnpoints.length); // 랜덤 스폰 지점 선택
-    //        instantiate(enemyprefab, spawnpoints[spawnindex].position, spawnpoints[spawnindex].rotation);
-    //    }
-    //}
 }

@@ -85,6 +85,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ab33c521949f2349996e636ab8acbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fov: 150
+  sightRange: 30
+  fireRange: 25
 --- !u!114 &1273530017377696163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +104,9 @@ MonoBehaviour:
   botSight: {fileID: 0}
   inventory: {fileID: 0}
   human: {fileID: 0}
+  botName: "\uC5D8\uB9AC\uC2A4"
   farmingTarget: {fileID: 0}
+  approchingTarget: {fileID: 0}
 --- !u!114 &6877136609863076875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +140,8 @@ MonoBehaviour:
   firePosition: {fileID: 0}
   bulletArray: []
   fireRate: 0.1
+  shakeDuration: 0.1
+  shakeMagnitude: 0.1
   bombFactory: {fileID: 0}
   throwPower: 15
   weapons: []
@@ -142,6 +149,7 @@ MonoBehaviour:
   knockedDownMaxHP: 300
   player: {fileID: 0}
   humanState: 0
+  interactionState: 0
   knockBackVector: {x: 0, y: 0, z: 0}
 --- !u!143 &2457841539202252843
 CharacterController:
