@@ -46,11 +46,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stand_N_Hall_alpha
       objectReference: {fileID: 0}
-    - target: {fileID: 787445598562545376, guid: 6f9491d7c47080745ba25bd66f56332c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5405136081728058252, guid: 6f9491d7c47080745ba25bd66f56332c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -120,11 +115,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2814215568223578346}
     m_Modifications:
-    - target: {fileID: 46902999616559282, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1731993889889905757, guid: ac195c6385bb4b340a28522f8cbd7328,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -175,40 +165,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1910357045342986890, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4040111206484771321, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4132178408180864759, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7000870427264685628, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7497455399524583846, guid: ac195c6385bb4b340a28522f8cbd7328,
         type: 3}
       propertyPath: m_Name
       value: Stage_alpha
-      objectReference: {fileID: 0}
-    - target: {fileID: 7497455399524583846, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7611702599479764555, guid: ac195c6385bb4b340a28522f8cbd7328,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
