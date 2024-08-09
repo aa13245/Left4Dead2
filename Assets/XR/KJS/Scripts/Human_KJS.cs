@@ -582,18 +582,22 @@ public class Human_KJS : MonoBehaviour
                     currTime = 0f;
                     RaycastHit hitInfo;
                     Vector3 dirValue = (isPlayer ? Camera.main.transform.forward : dir);
-                    if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
-                                        RandDir(recoil, dirValue), out hitInfo, itemInfo.maxRange,
-                                        ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
+                    void Fire()
                     {
-                        GameObject bullettEffect = Instantiate(bulletEffectFactory);
-                        Destroy(bullettEffect, 3);
-                        bullettEffect.transform.position = hitInfo.point;
-                        bullettEffect.transform.forward = hitInfo.normal;
-                        // 데미지 입히기
-                        GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
-
+                        if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
+                                            RandDir(recoil, dirValue), out hitInfo, itemInfo.maxRange,
+                                            ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
+                        {
+                            GameObject bullettEffect = Instantiate(bulletEffectFactory);
+                            Destroy(bullettEffect, 3);
+                            bullettEffect.transform.position = hitInfo.point;
+                            bullettEffect.transform.forward = hitInfo.normal;
+                            // 데미지 입히기
+                            GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
+                        }
                     }
+                    if (itemInfo.isShotgun) for (int i = 0; i < itemInfo.gauge; i++) Fire(); // 샷건일 경우 게이지 수 만큼 발사
+                    else Fire();
                     if (isPlayer)
                     {
                         // 크로스헤어 흔들림 적용

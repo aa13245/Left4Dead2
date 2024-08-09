@@ -78,9 +78,10 @@ public class GameManager_KJS : MonoBehaviour
         {
             panels[1].SetActive(true); // 예를 들어, 첫 번째 패널을 기본으로 활성화
         }
-        currentAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text1").GetComponent<Text>();
-        totalAmmoText = GameObject.Find("Canvas").transform.Find("Slot1/Text2").GetComponent<Text>();
-        currentAmmoText2 = GameObject.Find("Canvas").transform.Find("Slot2/Text3").GetComponent<Text>();
+        
+        currentAmmoText = canvas.transform.Find("Slot1/Text1").GetComponent<Text>();
+        totalAmmoText = canvas.transform.Find("Slot1/Text2").GetComponent<Text>();
+        currentAmmoText2 = canvas.transform.Find("Slot2/Text3").GetComponent<Text>();
         // 아군 봇
         bots = new GameObject[3];
         for (int i = 0; i < 3; i++) { bots[i] = GameObject.Find("Bot" + i + 1); }
