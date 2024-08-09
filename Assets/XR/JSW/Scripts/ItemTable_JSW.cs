@@ -26,10 +26,14 @@ using static ItemTable_JSW;
         public bool isSniper;
         public bool isShotgun;
         public int gauge;
+
+        public float minRecoil;
+        public float maxRecoil;
+        public float recoil;
         #region 생성자
         public MainWeapon(int magazineCapacity, int maxAmmoCapacity, float baseDmg, float[] headDmg, float[] bodyDmg,
                       float[] stomachDmg, float[] limbDmg, float maxRange, float fireRate, float reloadSpeed,
-                      bool isSniper, bool isShotgun, int gauge)
+                      bool isSniper, bool isShotgun, int gauge, float minRecoil, float maxRecoil, float recoil)
         {
             this.magazineCapacity = magazineCapacity;
             this.maxAmmoCapacity = maxAmmoCapacity;
@@ -44,6 +48,9 @@ using static ItemTable_JSW;
             this.isSniper = isSniper;
             this.isShotgun = isShotgun;
             this.gauge = gauge;
+            this.minRecoil = minRecoil;
+            this.maxRecoil = maxRecoil;
+            this.recoil = recoil;
         }
         #endregion
     }
@@ -60,9 +67,13 @@ using static ItemTable_JSW;
         public float maxRange;
         public float fireRate;
         public float reloadSpeed;
+
+        public float minRecoil;
+        public float maxRecoil;
+        public float recoil;
         #region 생성자
         public SubWeapon(int magazineCapacity, float baseDmg, float[] headDmg, float[] bodyDmg,
-                      float[] stomachDmg, float[] limbDmg, float maxRange, float fireRate, float reloadSpeed)
+                      float[] stomachDmg, float[] limbDmg, float maxRange, float fireRate, float reloadSpeed, float minRecoil, float maxRecoil, float recoil)
         {
             this.magazineCapacity = magazineCapacity;
             this.baseDmg = baseDmg;
@@ -73,6 +84,9 @@ using static ItemTable_JSW;
             this.maxRange = maxRange;
             this.fireRate = fireRate;
             this.reloadSpeed = reloadSpeed;
+            this.minRecoil = minRecoil;
+            this.maxRecoil = maxRecoil;
+            this.recoil = recoil;
         }
         #endregion
     }
@@ -153,7 +167,10 @@ using static ItemTable_JSW;
             reloadSpeed: 2.3833f,
             isSniper: false,
             isShotgun: false,
-            gauge: 0
+            gauge: 0,
+            minRecoil: 2,
+            maxRecoil: 5,
+            recoil: 3
         );
         itemTable[Items.ak47] = ak47;
         pistol = new SubWeapon(
@@ -165,7 +182,10 @@ using static ItemTable_JSW;
             limbDmg: new float[] { 6.41f, 27 },
             maxRange: 57.14f,
             fireRate: 0.2f,
-            reloadSpeed: 1.6667f
+            reloadSpeed: 1.6667f,
+            minRecoil: 2,
+            maxRecoil: 5,
+            recoil: 2
         );
         itemTable[Items.pistol] = pistol;
         electricGuitar = new MeleeWeapon(

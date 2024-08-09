@@ -83,7 +83,7 @@ public class BotMove : MonoBehaviour
         }
         if (botManager.human.humanState != Human_KJS.HumanState.Normal || botManager.human.interactionState != Human_KJS.InteractionState.None)
         {
-            agent.isStopped = true;
+            if(agent.isOnNavMesh) agent.isStopped = true;
             return;
         }
         if (stun) return;
@@ -92,9 +92,12 @@ public class BotMove : MonoBehaviour
         {   // 타겟을 쫒아가야 함 || 플레이어 거리 멀어짐
             if ((botManager.PriorityTarget != null && (!botManager.TargetVisible || targetDis > botManager.botSight.FireRange)) || targetDis > followDis)
             {
-                agent.isStopped = false;
-                agent.avoidancePriority = UnityEngine.Random.Range(0, 100);
-                agent.SetDestination(player.transform.position);
+                if (agent.isOnNavMesh)
+                {
+                    agent.isStopped = false;
+                    agent.avoidancePriority = UnityEngine.Random.Range(0, 100);
+                    agent.SetDestination(player.transform.position);
+                }
                 ChangeBotMoveState(BotMoveState.Follow);
             }
         }
@@ -102,13 +105,16 @@ public class BotMove : MonoBehaviour
         {   // 타겟을 사격 가능 || 플레이어가 거리 내로 옴
             if ((botManager.PriorityTarget != null && (botManager.TargetVisible && targetDis <= botManager.botSight.FireRange - 1)) || targetDis < followDis - 1)
             {   // 도착
-                agent.isStopped = true;
+                if (agent.isOnNavMesh) agent.isStopped = true;
                 ChangeBotMoveState(BotMoveState.Idle);
             }
             else
             {   // 멀음
-                agent.isStopped = false;
-                agent.SetDestination(player.transform.position);
+                if (agent.isOnNavMesh)
+                {
+                    agent.isStopped = false;
+                    agent.SetDestination(player.transform.position);
+                }
             }
         }
         else if (botMoveState == BotMoveState.Farming)
@@ -120,8 +126,11 @@ public class BotMove : MonoBehaviour
             }
             else
             {
-                agent.SetDestination(botManager.farmingTarget.transform.position);
-                agent.isStopped = false;
+                if (agent.isOnNavMesh)
+                {
+                    agent.SetDestination(botManager.farmingTarget.transform.position);
+                    agent.isStopped = false;
+                }
             }
         }
         else if (botMoveState == BotMoveState.Approching)
@@ -133,8 +142,11 @@ public class BotMove : MonoBehaviour
             }
             else
             {
-                agent.SetDestination(botManager.approchingTarget.transform.position);
-                agent.isStopped = false;
+                if (agent.isOnNavMesh)
+                {
+                    agent.SetDestination(botManager.approchingTarget.transform.position);
+                    agent.isStopped = false;
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ public class BotManager_JSW : MonoBehaviour
     public Human_KJS human;
     Human_KJS[] humans = new Human_KJS[4];
     int myIdx;
+    public string botName;
 
     Slider hpSlider;
     Image hpImage;
@@ -110,7 +111,7 @@ public class BotManager_JSW : MonoBehaviour
                         if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
                         {
                             botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                            human.Interact(approchingTarget, approchingTarget.layer);
+                            if (h.GetComponent<CharacterController>().isGrounded) human.Interact(approchingTarget, approchingTarget.layer);
                             return;
                         }
                         // 멀 때 이동하기
@@ -172,7 +173,7 @@ public class BotManager_JSW : MonoBehaviour
                                 if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
                                 {
                                     botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                                    human.Medikit(h.gameObject);
+                                    if (h.GetComponent<CharacterController>().isGrounded) human.Medikit(h.gameObject);
                                     return;
                                 }
                                 // 멀 때 이동하기
@@ -185,13 +186,13 @@ public class BotManager_JSW : MonoBehaviour
                             else approchingTarget = null;
                         }
                     }
-                }
-                // 자힐
-                if (human.HP < 40)
-                {
-                    inventory.SetSlotNum(3);
-                    human.Medikit();
-                    return;
+                    // 자힐
+                    if (human.HP < 40)
+                    {
+                        inventory.SetSlotNum(3);
+                        human.Medikit();
+                        return;
+                    }
                 }
                 // 장전
                 if ((inventory.SlotNum == 0 || inventory.SlotNum == 1) && inventory[inventory.SlotNum].value1 == 0)

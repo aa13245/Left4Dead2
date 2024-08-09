@@ -39,6 +39,32 @@ public class Human_KJS : MonoBehaviour
 
     private ObjRotate_KJS objRotate;
 
+    float minRecoil = 2;
+    public float MinRecoil
+    {
+        get { return minRecoil; }
+        set 
+        {
+            minRecoil = value;
+            recoil = value;
+        }
+    }
+    float maxRecoil = 5;
+    public float MaxRecoil
+    {
+        get { return maxRecoil; }
+        set { maxRecoil = value; }
+    }
+    float recoil;
+    public float Recoil
+    {
+        get { return recoil; }
+        set
+        {
+            recoil = Mathf.Min(maxRecoil, value);
+        }
+    }
+
     //플레이어 체력 변수
     float hp = 100;
     public float HP
@@ -106,7 +132,7 @@ public class Human_KJS : MonoBehaviour
         if (s == HumanState.Normal)
         {
             HP = 30;
-            TempHP = 28;
+            TempHP = 29;
             if (isPlayer) player.SetKnockedDown(false);
         }
         // 기절
@@ -115,7 +141,9 @@ public class Human_KJS : MonoBehaviour
             HP = knockedDownMaxHP;
             TempHP = knockedDownMaxHP;
             Reload(false);
-            anim.SetTrigger("KnockDown");
+            anim.ResetTrigger("Revive");
+            anim.CrossFade("KnockDown", 0.01f, 0);
+            anim.CrossFade("KnockDown", 0.01f, 1);
             if (isPlayer) player.SetKnockedDown(true);
         }
         // 사망
@@ -157,6 +185,7 @@ public class Human_KJS : MonoBehaviour
         //    //스위치를 끈다!(움직이지 않는다.)
         //    go.SetActive(false);
         //}
+        recoil = minRecoil;
     }
     // Update is called once per frame
     void Update()
@@ -166,6 +195,7 @@ public class Human_KJS : MonoBehaviour
         ReloadUpdate();
         HpUpdate();
         InteractionStateUpdate();
+        RecoilRecovery();
     }
     float interactionTime;
     float interactionTimer;
@@ -268,7 +298,7 @@ public class Human_KJS : MonoBehaviour
                 if (isPlayer)
                 {
                     // 소생 UI On 필요
-                    player.InteractionUIEnable(true);
+                    player.InteractionUIEnable(true, "동료 소생");
                 }
             }
         }
@@ -292,7 +322,7 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 소생 받는 UI On 필요
-                player.InteractionUIEnable(true);
+                player.InteractionUIEnable(true, "소생 중", "구원자: " + who.GetComponent<BotManager_JSW>().botName);
             }
             anim.SetTrigger("Revive");
         }
@@ -305,7 +335,9 @@ public class Human_KJS : MonoBehaviour
             }
             else
             {
-                anim.SetTrigger("KnockDown");
+                anim.ResetTrigger("Revive");
+                anim.CrossFade("KnockDown", 0.01f, 0);
+                anim.CrossFade("KnockDown", 0.01f, 1);
             }
             interactionState = InteractionState.None;
             if (isPlayer)
@@ -331,7 +363,7 @@ public class Human_KJS : MonoBehaviour
                 if (isPlayer)
                 {
                     // 회복 UI On 필요
-                    player.InteractionUIEnable(true);
+                    player.InteractionUIEnable(true, "동료 치료", "대상자: " + target.GetComponent<BotManager_JSW>().botName);
                 }
             }
         }
@@ -340,7 +372,7 @@ public class Human_KJS : MonoBehaviour
             if (set == SetInteraction.Success)
             {
                 // 회복템 제거 필요
-                
+                inventory.Use(3);
             }
             interactionState = InteractionState.None;
             targetComp.GetHeal(gameObject, set);
@@ -361,14 +393,15 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 회복 받는 UI On 필요
-                player.InteractionUIEnable(true);
+                player.InteractionUIEnable(true, "치료 중", "치료자: " + who.GetComponent<BotManager_JSW>().botName);
             }
         }
         else
         {
             if (set == SetInteraction.Success)
             {
-                HP = 80;
+                float nowHp = HP - TempHP;
+                HP = nowHp + (79.8f - (nowHp * 0.7976f));
             }
             interactionState = InteractionState.None;
             if (isPlayer)
@@ -389,7 +422,7 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 자힐 UI ON 필요
-                player.InteractionUIEnable(true);
+                player.InteractionUIEnable(true, "자가 치료");
             }
         }
         else
@@ -398,7 +431,8 @@ public class Human_KJS : MonoBehaviour
             {
                 // 회복템 제거 필요
                 inventory.Use(3);
-                HP = 80;
+                float nowHp = HP - TempHP;
+                HP = nowHp + (79.8f - (nowHp * 0.7976f));
             }
             interactionState = InteractionState.None;
             if (isPlayer)
@@ -447,7 +481,7 @@ public class Human_KJS : MonoBehaviour
     }
     public void MouseClick(Vector3 origin = new Vector3(), Vector3 pos = new Vector3())
     {
-        if (humanState == HumanState.Dead || interactionState != InteractionState.None) return;
+        if (humanState == HumanState.Dead || (interactionState != InteractionState.GetHealing && interactionState != InteractionState.None && interactionState != InteractionState.GetReviving)) return;
         //유저가 Fire(LMB)을 클릭하면
         if (inventory[inventory.SlotNum] == null) return;
         // 주무기
@@ -491,6 +525,12 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
+    Vector3 RandDir(float maxAngle, Vector3 dir)
+    {
+        float randomAngle = UnityEngine.Random.Range(0f, maxAngle);
+        float randomAzimuth = UnityEngine.Random.Range(0f, 360f);
+        return Quaternion.AngleAxis(randomAzimuth, dir) * (Quaternion.AngleAxis(randomAngle, Quaternion.Euler(new Vector3(0, 90, 0)) * dir) * dir);
+    }
     void MainWeapon(Vector3 origin, Vector3 dir)
     {
         #region
@@ -533,8 +573,9 @@ public class Human_KJS : MonoBehaviour
                     // 발사
                     currTime = 0f;
                     RaycastHit hitInfo;
+                    Vector3 dirValue = (isPlayer ? Camera.main.transform.forward : dir);
                     if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
-                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange,
+                                        RandDir(recoil, dirValue), out hitInfo, itemInfo.maxRange,
                                         ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
@@ -546,7 +587,8 @@ public class Human_KJS : MonoBehaviour
                     }
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
-
+                    // 총기 반동 추가
+                    Recoil += itemInfo.recoil;
                     // 흔들림 효과 적용
                     ApplyShakeToCamera();
 
@@ -575,8 +617,9 @@ public class Human_KJS : MonoBehaviour
                 {
                     currTime = 0f;
                     RaycastHit hitInfo;
+                    Vector3 dirValue = (isPlayer ? Camera.main.transform.forward : dir);
                     if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
-                                        isPlayer ? Camera.main.transform.forward : dir, out hitInfo, itemInfo.maxRange,
+                                        RandDir(recoil, dirValue), out hitInfo, itemInfo.maxRange,
                                         ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
@@ -588,6 +631,8 @@ public class Human_KJS : MonoBehaviour
                         // 상하 반동 적용
                     }
                     inventory.Use(inventory.SlotNum);
+                    // 총기 반동 추가
+                    Recoil += itemInfo.recoil;
                 }
             }
             
@@ -597,6 +642,10 @@ public class Human_KJS : MonoBehaviour
         {
 
         }
+    }
+    void RecoilRecovery()
+    {
+        recoil -= (recoil - minRecoil) * Time.deltaTime * 4;
     }
     void ApplyShakeToCamera()
     {
@@ -693,8 +742,8 @@ public class Human_KJS : MonoBehaviour
         {   // 자힐
             if (target == null)
             {
-                // 회복값보다 체력이 낮을 때
-                if (HP < itemInfo.value)
+                // 풀피가 아닐 때
+                if (HP < 99)
                 {
                     // 아이템 사용시간 구현 필요
                     //hp = itemInfo.value;
