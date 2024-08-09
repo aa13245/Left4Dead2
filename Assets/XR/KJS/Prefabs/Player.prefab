@@ -81,6 +81,7 @@ MonoBehaviour:
   useRotY: 1
   shakeDuration: 0.5
   shakeMagnitude: 0.1
+  knockedCamOffset: 0
 --- !u!143 &4708894006654684278
 CharacterController:
   m_ObjectHideFlags: 0
@@ -186,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   main: {fileID: 9029216007560417780}
-  sub: {fileID: 0}
+  sub: {fileID: 1593015366915161198, guid: 464d2b315a1ed6b408948cc2fc04e8f7, type: 3}
   pro: {fileID: 1904000130791149363, guid: 272cd21fa17807949af4be9856073ad9, type: 3}
   mediKitPrefab: {fileID: 3230788743473108125, guid: b0abfd01c52fdc841a3b0c752c090299,
     type: 3}
@@ -380,6 +381,7 @@ MonoBehaviour:
   useRotY: 0
   shakeDuration: 0.5
   shakeMagnitude: 0.1
+  knockedCamOffset: 0
 --- !u!1001 &643764423051907412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1295,6 +1297,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Handgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1593015366915161198, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
