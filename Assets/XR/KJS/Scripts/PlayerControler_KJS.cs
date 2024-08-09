@@ -32,6 +32,9 @@ public class PlayerControler_KJS : MonoBehaviour
     // 상호작용 상태 UI
     GameObject interactionUI;
     Slider interactionSlider;
+    GameObject interactionIcons;
+    Text interactionText1;
+    Text interactionText2;
     //Hit 효과 오브젝트
     public GameObject hitEffect;
     // 플레이어 컴퍼넌트
@@ -57,7 +60,10 @@ public class PlayerControler_KJS : MonoBehaviour
         hpText = canvas.transform.Find("Info0/Text (Legacy)").GetComponent <Text>();
         hitEffect = canvas.transform.Find("Hit").gameObject;
         interactionUI = canvas.transform.Find("InteractionStatus").gameObject;
-        interactionSlider = canvas.transform.Find("InteractionStatus/Slider").GetComponent<Slider>();
+        interactionSlider = interactionUI.transform.Find("Slider").GetComponent<Slider>();
+        interactionIcons = interactionUI.transform.Find("Icons").gameObject;
+        interactionText1 = interactionUI.transform.Find("Text1").GetComponent<Text>();
+        interactionText2 = interactionUI.transform.Find("Text2").GetComponent<Text>();
         velocity = Vector3.zero;
         anim = transform.Find("Ch28_nonPBR").GetComponent<Animator>();
         GetComponent<Human_KJS>().slow = Slow;
@@ -170,12 +176,12 @@ public class PlayerControler_KJS : MonoBehaviour
         if (on)
         {
             Camera.main.transform.Rotate(new Vector3(0, 0, Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0) - 10));
-            Camera.main.transform.Translate(new Vector3(0, -0.7f, 0), Space.World);
+            GetComponent<ObjRotate_KJS>().knockedCamOffset = true;
         }
         else
         {
             Camera.main.transform.Rotate(new Vector3(0, 0, Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
-            Camera.main.transform.Translate(new Vector3(0, 0.7f, 0), Space.World);
+            GetComponent<ObjRotate_KJS>().knockedCamOffset = false;
         }
     }
     void Move()
@@ -205,7 +211,7 @@ public class PlayerControler_KJS : MonoBehaviour
         }
 
         // 만약에 스페이스 바를 누르면
-        if (Input.GetButtonDown("Jump") && cc.isGrounded)
+        if (Input.GetButtonDown("Jump") && cc.isGrounded && human.humanState == Human_KJS.HumanState.Normal && human.interactionState == Human_KJS.InteractionState.None)
         {
             // yVelocity에 jumpPower를 셋팅
             yVelocity = jumPower;
@@ -224,7 +230,7 @@ public class PlayerControler_KJS : MonoBehaviour
         //cc.Move(dir * Time.deltaTime);
 
         // 입력이 있을 시
-        if ((h != 0 || v != 0) && !stun && human.humanState == Human_KJS.HumanState.Normal)
+        if ((h != 0 || v != 0) && !stun && human.humanState == Human_KJS.HumanState.Normal && human.interactionState == Human_KJS.InteractionState.None)
         {   // 가속을 주겠다
             velocity += dir * acceleration * Time.deltaTime;
         }
@@ -385,13 +391,24 @@ public class PlayerControler_KJS : MonoBehaviour
     {
         interactionSlider.value = _value;
     }
-    public void InteractionUIEnable(bool enable)
+    public void InteractionUIEnable(bool enable, string text1 = "", string text2 = "")
     {
         interactionUI.SetActive(enable);
-        if (enable) interactionSlider.value = 0;
+        if (enable)
+        {
+            interactionSlider.value = 0;
+            interactionText1.text = text1;
+            interactionText2.text = text2;
+            if (text1.Contains("치료"))
+            {
+                interactionIcons.transform.GetChild(0).gameObject.SetActive(true);
+                interactionIcons.transform.GetChild(1).gameObject.SetActive(false);
+            }
+            else
+            {
+                interactionIcons.transform.GetChild(0).gameObject.SetActive(false);
+                interactionIcons.transform.GetChild(1).gameObject.SetActive(true);
+            }
+        }
     }
 }
- 
-
-
-
