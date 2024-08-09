@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class JKYEnemyMove1 : MonoBehaviour
 {
@@ -11,11 +12,11 @@ public class JKYEnemyMove1 : MonoBehaviour
     [SerializeField]
     NavMeshAgent Agent;
     [SerializeField]
-    private Animator Animator;
+    public Animator Animator;
     [SerializeField]
-    private EnemyState State;
+    public EnemyState State;
     [SerializeField]
-    private Transform Target;
+    private Transform target;
     [SerializeField]
     private float FieldOfView = 65;
     [SerializeField]
@@ -25,7 +26,7 @@ public class JKYEnemyMove1 : MonoBehaviour
 
     private float InitialSpeed;
     private Vector3 TargetLocation;
-
+    public float attackPower = 3;
     public static NavMeshTriangulation Triangulation;
 
     public enum EnemyState
@@ -34,16 +35,18 @@ public class JKYEnemyMove1 : MonoBehaviour
         Idle,
         Chasing,
         Attacking,
+        Damaged,
         Dead
     }
     private void Awake()
     {
-        print(2432);
+        
         Agent = GetComponent<NavMeshAgent>();
         Attackable = GetComponent<JKYAttackable>();
         Animator = transform.GetComponentInChildren<Animator>();
-        InitialSpeed = Agent.speed;
-
+        //InitialSpeed = Agent.speed;
+        State = EnemyState.Chasing;
+        //Agent.stoppingDistance = 3f;
         if (Triangulation.vertices == null || Triangulation.vertices.Length == 0)
         {
             Triangulation = NavMesh.CalculateTriangulation();
@@ -62,8 +65,9 @@ public class JKYEnemyMove1 : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void Update()
     {
+        FindClosestTarget();
         print(State);
         if (Agent.enabled)
         {
@@ -81,23 +85,26 @@ public class JKYEnemyMove1 : MonoBehaviour
                 case EnemyState.Attacking:
                     DoAttack();
                     break;
+                case EnemyState.Damaged:
+                    //DoDamaged();
+                    break;
             }
         }
     }
 
     private void DoIdleMovement()
     {
-        Vector3 direction = (Target.transform.position - transform.position).normalized;
+        Vector3 direction = (target.transform.position - transform.position).normalized;
         print(00);
-        if (Vector3.Distance(transform.position, Target.position) < LineOfSightDistance)
+        if (Vector3.Distance(transform.position, target.position) < LineOfSightDistance)
             //&& Vector3.Dot(transform.forward, direction) >= Mathf.Cos(FieldOfView))
         {
-            print(111);
+            
             GetAggressive();
         }
         else
         {
-            print(222);
+            
             Agent.speed = InitialSpeed * IdleSpeedModifier;
             Animator.SetBool("HasTarget", false);
 
@@ -114,10 +121,11 @@ public class JKYEnemyMove1 : MonoBehaviour
 
     private void DoTargetMovement()
     {
+        Agent.stoppingDistance = 2;
         Animator.SetBool("HasTarget", true);
-        if (Vector3.Distance(Target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 2)
+        if (Vector3.Distance(target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 1)
         {
-            Agent.SetDestination(Target.position);
+            Agent.SetDestination(target.position);
         }
         else
         {
@@ -127,16 +135,155 @@ public class JKYEnemyMove1 : MonoBehaviour
 
     private void DoAttack()
     {
-        if (Vector3.Distance(Target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 2)
+        print(Agent.stoppingDistance);
+        print(Agent.radius);
+        //if (Vector3.Distance(target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 1)
+        //{
+        //    Animator.SetBool("IsAttacking", false);
+        //    State = EnemyState.Chasing;
+        //}
+        //else
+        //{
+        //    Quaternion lookRotation = Quaternion.LookRotation((target.position - transform.position).normalized);
+        //    transform.rotation = Quaternion.Euler(0, lookRotation.eulerAngles.y, 0);
+        //    Animator.SetBool("IsAttacking", true);
+        //    target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+        //}
+        if (IsDelayComplete(damageDelay))
         {
-            Animator.SetBool("IsAttacking", false);
-            State = EnemyState.Chasing;
-        }
-        else
-        {
-            Quaternion lookRotation = Quaternion.LookRotation((Target.position - transform.position).normalized);
-            transform.rotation = Quaternion.Euler(0, lookRotation.eulerAngles.y, 0);
-            Animator.SetBool("IsAttacking", true);
+            // 나의 행동을 결정하자.
+            // 만약에 Player와 거리가 attakRange보다 작으면
+            //float dist = Vector3.Distance(player.transform.position, transform.position);
+            if (Vector3.Distance(target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 1)
+            {
+                // 런
+                Animator.SetBool("IsAttacking", false);
+                State = EnemyState.Chasing;
+                currTime = 0;
+                
+            }
+            // 그렇지 않고 인지범위보다 작으면
+
+            // 그렇지 않고 인지범위보다 크면
+            else
+            {
+                Quaternion lookRotation = Quaternion.LookRotation((target.position - transform.position).normalized);
+                transform.rotation = Quaternion.Euler(0, lookRotation.eulerAngles.y, 0);
+                Animator.SetBool("IsAttacking", true);
+                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                currTime = 0;
+            }
+            
         }
     }
+
+    bool isDamageMotion = false;
+
+    public float damageDelay = 1;
+    public void DoDamaged()
+    {
+        print("여기들와?");
+        if(isDamageMotion == false)
+        {
+
+            Animator.SetTrigger("Damage");
+            isDamageMotion = true;
+        }
+        //StartCoroutine(damage());
+        if (IsDelayComplete(1.3f))
+        {
+            // 나의 행동을 결정하자.
+            // 만약에 Player와 거리가 attakRange보다 작으면
+            //float dist = Vector3.Distance(target.transform.position, transform.position);
+            if (Vector3.Distance(target.position, transform.position) < (Agent.stoppingDistance + Agent.radius) * 1)
+            {
+                // 공격상태로 전환
+                State = EnemyState.Attacking;
+                
+            }
+            // 그렇지 않고 인지범위보다 작으면
+
+            else
+            {
+                // 대기상태로 전환
+                State = EnemyState.Chasing;
+                
+            }
+
+            isDamageMotion = false;
+
+        }
+    //private IEnumerator damage()
+    //{
+    //    Animator.SetBool("Damaged", true);
+    //    yield return new WaitForSeconds(1.5f);
+
+    //    if (Vector3.Distance(target.position, transform.position) <= (Agent.stoppingDistance + Agent.radius) * 1)
+    //    {
+    //        // 공격상태로 전환
+    //        //Animator.SetBool("Damaged", false);
+
+    //        State = EnemyState.Attacking;
+
+
+    //    }
+    //    // 그렇지 않고 인지범위보다 크면
+    //    else
+    //    {
+    //        //Animator.SetBool("Damaged", false);
+    //        // 대기상태로 전환
+    //        State = EnemyState.Chasing;
+    //    }
+
+
+    }
+    public float currTime;
+    bool IsDelayComplete(float delayTime)
+    {
+        // 시간을 증가 시키자.
+        currTime += Time.deltaTime;
+        //만약에 시간이 delayTime보다 커지면
+        if (currTime >= delayTime)
+        {
+            //// 현재시간 초기화
+            currTime = 0;
+            // true반환
+            return true;
+
+        }
+        // 그렇지 않으면
+
+        // false 반환
+        return false;
+    }
+
+
+    void FindClosestTarget()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
+        GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
+        List<GameObject> allTargets = new List<GameObject>();
+        allTargets.AddRange(players);
+        allTargets.AddRange(allies);
+
+        float closestDistance = Mathf.Infinity;
+        Transform closestTarget = null;
+
+        foreach (GameObject target in allTargets)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+            {
+                closestDistance = distanceToTarget;
+                closestTarget = target.transform;
+            }
+        }
+
+        target = closestTarget;
+        //print(target);
+    }
+
+
 }

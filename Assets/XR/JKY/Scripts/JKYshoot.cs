@@ -24,12 +24,12 @@ public class JKYshoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetMouseButtonDown(0))
         {
             _timeMouseButtonDown = Time.time;
         }
 
-        if (Input.GetKeyUp(KeyCode.Alpha1))
+        if (Input.GetMouseButtonUp(0))
         {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
 
