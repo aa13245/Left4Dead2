@@ -41,8 +41,10 @@ public class Human_KJS : MonoBehaviour
     private float currTime;
 
     private GameObject currentWeapon;
-
     private ObjRotate_KJS objRotate;
+
+    public AudioSource [] fireSound;
+    
 
     float minRecoil = 2;
     public float MinRecoil
@@ -591,20 +593,25 @@ public class Human_KJS : MonoBehaviour
                         // 데미지 입히기
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
 
+                    }
+                    if (isPlayer)
+                    {
                         // 크로스헤어 흔들림 적용
                         FindObjectOfType<Crosshair_KJS>().TriggerCrosshairShake(0.05f, 5f); // 크로스헤어에 진동 적용
+                        // 흔들림 효과 적용
+                        ApplyShakeToCamera();
                     }
+                    
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
+
                     // 총기 반동 추가
                     Recoil += itemInfo.recoil;
-                    // 흔들림 효과 적용
-                    ApplyShakeToCamera();
-
                     //Fire 총 애니 이름 설정
                     string fireName = "Fire";
                     //총 쏘는 애니메이션 실행
                     anim2.CrossFade(fireName, 0.01f, 0, 0);
+                   
 
                 }
 
@@ -645,9 +652,12 @@ public class Human_KJS : MonoBehaviour
                         // 데미지 입히기
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
 
+                    }
+                   
+                    if (isPlayer)
+                    {
                         // 서브 웨폰 발사 시 화면 흔들림 효과 적용 (진동 크기 감소)
                         FindObjectOfType<ObjRotate_KJS>().TriggerShake(0.1f, 0.05f); // 작은 진동 크기 적용
-
                         // 크로스헤어 흔들림 적용
                         FindObjectOfType<Crosshair_KJS>().TriggerCrosshairShake(0.05f, 5f); // 크로스헤어에 진동 적용
                     }
@@ -722,18 +732,6 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
-
-    //if (humanState == HumanState.Dead) return;
-    //수류탄 오브젝트를 생성한 후 수류탄의 생성위치를 발사 위치로 한다.
-    //GameObject bomb = Instantiate(bombFactory);
-    //bomb.transform.position = firePosition.transform.position;
-
-    //수류탄 오브젝트의 Rigidbody component를 가져온다.
-    //Rigidbody rb = bomb.GetComponent<Rigidbody>();
-
-    //카메라의 정면 방향으로 수류탄에 물리적인 힘을 가한다.
-    //rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
-
     // 수류탄 처리 코루틴
     private IEnumerator HandleProjectile(GameObject projectile, float damage, float range, float duration)
     {
