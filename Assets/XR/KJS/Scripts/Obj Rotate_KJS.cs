@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjRotate_KJS : MonoBehaviour
 {
-    public float rotSpeed = 200;
+    public float rotSpeed = 200f;
     float rotY;
     float rotX;
     public bool useRotX;
@@ -16,12 +16,12 @@ public class ObjRotate_KJS : MonoBehaviour
     private float shakeTime = 0f;
     private Vector3 originalPosition;
 
-    private Vector3 originalCameraRotation;
-    private Vector3 currentCameraRecoil;
+    private Camera mainCamera;
 
     void Start()
     {
         originalPosition = transform.localPosition;
+        mainCamera = Camera.main;
     }
 
     void Update()
@@ -58,7 +58,7 @@ public class ObjRotate_KJS : MonoBehaviour
         // 물체를 회전 각도로 셋팅 하자.
         transform.localEulerAngles = new Vector3(-rotX, rotY, Camera.main.transform.localEulerAngles.z);
 
-    CursorSet();
+        CursorSet();
     }
 
     public void TriggerShake(float duration, float magnitude)
@@ -66,7 +66,6 @@ public class ObjRotate_KJS : MonoBehaviour
         shakeDuration = duration;
         shakeMagnitude = magnitude;
         shakeTime = duration;
-
     }
 
     void CursorSet()

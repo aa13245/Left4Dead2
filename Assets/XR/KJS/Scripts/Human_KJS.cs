@@ -12,6 +12,11 @@ public class Human_KJS : MonoBehaviour
     public bool isPlayer;
     CharacterController cc;
     Animator anim;
+    public Animator anim2;
+    public Animator arAnim;
+    public Animator hGAnim;
+    
+    public bool reloading;
     public GameObject bulletFactory;
     //총알 효과 주소
     public GameObject bulletEffectFactory;
@@ -145,6 +150,7 @@ public class Human_KJS : MonoBehaviour
         inventory = GetComponent<Inventory_JSW>();
         hp = maxHP;
         objRotate = Camera.main.GetComponent<ObjRotate_KJS>();
+        //anim2 = transform.Find("FPSModel").GetComponent<Animator>();
         ////배열을 이용해서 공간을 확보해라
         //bulletArray = new GameObject[40];
         ////배열을 채우자
@@ -541,6 +547,9 @@ public class Human_KJS : MonoBehaviour
                         bullettEffect.transform.forward = hitInfo.normal;
                         // 데미지 입히기
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
+
+                        // 크로스헤어 흔들림 적용
+                        FindObjectOfType<Crosshair_KJS>().TriggerCrosshairShake(0.05f, 5f); // 크로스헤어에 진동 적용
                     }
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
@@ -548,7 +557,12 @@ public class Human_KJS : MonoBehaviour
                     // 흔들림 효과 적용
                     ApplyShakeToCamera();
 
-            }
+                    //Fire 총 애니 이름 설정
+                    string fireName = "Fire";
+                    //총 쏘는 애니메이션 실행
+                    anim2.CrossFade(fireName, 0.01f, 0, 0);
+
+                }
 
             }
 
@@ -559,6 +573,7 @@ public class Human_KJS : MonoBehaviour
     {
         if (humanState == HumanState.Dead) return;
         if (isReloaing) { return; }
+
         // 권총이냐
         if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon itemInfo)
         {
@@ -566,8 +581,8 @@ public class Human_KJS : MonoBehaviour
             {
                 // 장탄 확인
                 if (inventory[inventory.SlotNum].value1 == 0)
-                {   // 총알이 없을 때
-
+                {
+                    // 총알이 없을 때
                 }
                 else
                 {
@@ -581,14 +596,25 @@ public class Human_KJS : MonoBehaviour
                         Destroy(bullettEffect, 3);
                         bullettEffect.transform.position = hitInfo.point;
                         bullettEffect.transform.forward = hitInfo.normal;
+
                         // 데미지 입히기
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
-                        // 상하 반동 적용
+
+                        // 서브 웨폰 발사 시 화면 흔들림 효과 적용 (진동 크기 감소)
+                        FindObjectOfType<ObjRotate_KJS>().TriggerShake(0.1f, 0.05f); // 작은 진동 크기 적용
+
+                        // 크로스헤어 흔들림 적용
+                        FindObjectOfType<Crosshair_KJS>().TriggerCrosshairShake(0.05f, 5f); // 크로스헤어에 진동 적용
                     }
                     inventory.Use(inventory.SlotNum);
+
+                    // Fire 총 애니 이름 설정
+                    string fireName = "Fire";
+                    // 총 쏘는 애니메이션 실행
+                    hGAnim.CrossFade(fireName, 0.01f, 0, 0);
                 }
             }
-            
+
         }
         // 근접무기냐
         else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MeleeWeapon itemInfo2)
@@ -800,12 +826,18 @@ public class Human_KJS : MonoBehaviour
                     reloadTimer = 0;
                     isReloaing = true;
                     reloadTime = mainWeapon.reloadSpeed;
+
+                    anim2.SetTrigger("AR_Reload");
+                    arAnim.SetTrigger("AR_Reload");
+                 
                 }
                 else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon subWeapon)
                 {   // 장전 On
                     reloadTimer = 0;
                     isReloaing = true;
                     reloadTime = subWeapon.reloadSpeed;
+
+                    hGAnim.SetTrigger("HG_Reload");
                 }
             }
         }
@@ -856,4 +888,41 @@ public class Human_KJS : MonoBehaviour
     {
         knockBackVector -= knockBackVector * 1 * Time.deltaTime;
     }
+    void ChangeAnimatorController(RuntimeAnimatorController controller)
+    {
+        if (anim2.runtimeAnimatorController == controller) return;
+
+        RuntimeAnimatorController previousController = anim2.runtimeAnimatorController;
+
+        // 애니메이터 교체
+        anim2.runtimeAnimatorController = controller;
+
+        // 현재 애니메이션 상태 유지
+        AnimatorStateInfo currentAnimatorStateInfo = anim2.GetCurrentAnimatorStateInfo(0);
+        anim2.Play(currentAnimatorStateInfo.fullPathHash, 0, currentAnimatorStateInfo.normalizedTime);
+
+        // 트리거, 파라미터, 그리고 상태 복구
+        AnimatorControllerParameter[] parameters = anim2.parameters;
+        for (int i = 0; i < parameters.Length; i++)
+        {
+            AnimatorControllerParameter param = parameters[i];
+            switch (param.type)
+            {
+                case AnimatorControllerParameterType.Bool:
+                    anim2.SetBool(param.name, anim2.GetBool(param.name));
+                    break;
+                case AnimatorControllerParameterType.Float:
+                    anim2.SetFloat(param.name, anim2.GetFloat(param.name));
+                    break;
+                case AnimatorControllerParameterType.Int:
+                    anim2.SetInteger(param.name, anim2.GetInteger(param.name));
+                    break;
+                case AnimatorControllerParameterType.Trigger:
+                    if (anim2.GetBool(param.name))
+                        anim2.SetTrigger(param.name);
+                    break;
+            }
+        }
+    }
 }
+

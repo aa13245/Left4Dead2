@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,8 +41,7 @@ public class PlayerControler_KJS : MonoBehaviour
 
     // Start is called before the first frame update
 
-    //애니메이터 변수
-    Animator anim;
+    public Animator anim;
 
     void Start()
     {
@@ -59,10 +59,11 @@ public class PlayerControler_KJS : MonoBehaviour
         interactionUI = canvas.transform.Find("InteractionStatus").gameObject;
         interactionSlider = canvas.transform.Find("InteractionStatus/Slider").GetComponent<Slider>();
         velocity = Vector3.zero;
-        anim = GetComponentInChildren<Animator>();
+        anim = transform.Find("Ch28_nonPBR").GetComponent<Animator>();
         GetComponent<Human_KJS>().slow = Slow;
         GetComponent<Human_KJS>().stun = Stun;
     }
+
 
     // Update is called once per frame
     void Update()
@@ -240,6 +241,8 @@ public class PlayerControler_KJS : MonoBehaviour
         Vector3 moveVector = Quaternion.Euler(Vector3.down * transform.eulerAngles.y) * velocity;
         anim.SetFloat("MoveZ", moveVector.z);
         anim.SetFloat("MoveX", moveVector.x);
+
+        velocity.y = 0;
 
         // 움직임
         cc.Move(((!stun && human.humanState == Human_KJS.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
