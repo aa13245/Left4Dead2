@@ -44,7 +44,7 @@ public class Human_KJS : MonoBehaviour
     private ObjRotate_KJS objRotate;
 
     public AudioSource [] fireSound;
-    
+    WaistAngle waistAngle;
 
     float minRecoil = 2;
     public float MinRecoil
@@ -181,19 +181,20 @@ public class Human_KJS : MonoBehaviour
         hp = maxHP;
         objRotate = Camera.main.GetComponent<ObjRotate_KJS>();
         //anim2 = transform.Find("FPSModel").GetComponent<Animator>();
-        ////배열을 이용해서 공간을 확보해라
-        //bulletArray = new GameObject[40];
-        ////배열을 채우자
-        //for (int i = 0; i < 40; i++)
-        //{
-        //    //총알을 배송받는다.
-        //    GameObject go = Instantiate(bulletFactory);
-        //    //배송받은 총알을 채워 넣는다
-        //    bulletArray[i] = go;
-        //    //스위치를 끈다!(움직이지 않는다.)
-        //    go.SetActive(false);
-        //}
+        //배열을 이용해서 공간을 확보해라
+        bulletArray = new GameObject[40];
+        //배열을 채우자
+        for (int i = 0; i < 40; i++)
+        {
+            //총알을 배송받는다.
+            GameObject go = Instantiate(bulletFactory);
+            //배송받은 총알을 채워 넣는다
+            bulletArray[i] = go;
+            //스위치를 끈다!(움직이지 않는다.)
+            go.SetActive(false);
+        }
         recoil = minRecoil;
+        waistAngle = GetComponentInChildren<WaistAngle>();
     }
     // Update is called once per frame
     void Update()
@@ -539,10 +540,8 @@ public class Human_KJS : MonoBehaviour
         float randomAzimuth = UnityEngine.Random.Range(0f, 360f);
         return Quaternion.AngleAxis(randomAzimuth, dir) * (Quaternion.AngleAxis(randomAngle, Quaternion.Euler(new Vector3(0, 90, 0)) * dir) * dir);
     }
-    void MainWeapon(Vector3 origin, Vector3 dir)
+    void Bullet(Vector3 origin = new Vector3(), Vector3 dir = new Vector3())
     {
-        #region
-        /* 
         //비활성화 되어잇는 총알을 찾아라(반복문)
         for (int i = 0; i < 40; i++)
         {
@@ -551,19 +550,20 @@ public class Human_KJS : MonoBehaviour
             {
                 {
                     //파이어 포지션의 위치에 옮겨놔라
-                    bulletArray[i].transform.position = firePosition.transform.position;
+                    bulletArray[i].transform.position = origin + dir.normalized * 0.5f;  // firePosition.transform.position;
                     // bullet의 각도를 카메라 방향으로 바꾸자
-                    bulletArray[i].transform.up = Camera.main.transform.forward;
+                    bulletArray[i].transform.up = dir;
                     //활성화 시켜라(스위치를 켜라)
                     bulletArray[i].SetActive(true);
+                    bulletArray[i].GetComponent<BulletMove_KJS>().timer = 0;
                     //반복문을 종료해라
                     break;
                 }
             }
-
         }
-        */
-        #endregion
+    }
+    void MainWeapon(Vector3 origin, Vector3 dir)
+    {
         if (humanState == HumanState.Dead) return;
         if (isReloaing) { return; }
         // 아이템 정보
@@ -584,9 +584,10 @@ public class Human_KJS : MonoBehaviour
                     Vector3 dirValue = (isPlayer ? Camera.main.transform.forward : dir);
                     void Fire()
                     {
+                        Vector3 randDir = RandDir(recoil, dirValue);
                         if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
-                                            RandDir(recoil, dirValue), out hitInfo, itemInfo.maxRange,
-                                            ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
+                                            randDir, out hitInfo, itemInfo.maxRange,
+                                            ~((1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW")) | (1 << LayerMask.NameToLayer("Ignore Raycast")))))
                         {
                             GameObject bullettEffect = Instantiate(bulletEffectFactory);
                             Destroy(bullettEffect, 3);
@@ -595,6 +596,7 @@ public class Human_KJS : MonoBehaviour
                             // 데미지 입히기
                             GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
                         }
+                        Bullet(isPlayer ? Camera.main.transform.position : origin, randDir);
                     }
                     if (itemInfo.isShotgun) for (int i = 0; i < itemInfo.gauge; i++) Fire(); // 샷건일 경우 게이지 수 만큼 발사
                     else Fire();
@@ -614,8 +616,8 @@ public class Human_KJS : MonoBehaviour
                     //Fire 총 애니 이름 설정
                     string fireName = "Fire";
                     //총 쏘는 애니메이션 실행
-                    anim2.CrossFade(fireName, 0.01f, 0, 0);
-                   
+                    if (isPlayer) anim2.CrossFade(fireName, 0.01f, 0, 0);
+                    if (waistAngle != null) waistAngle.CharRecoilSet(0.2f);
 
                 }
 
@@ -644,9 +646,10 @@ public class Human_KJS : MonoBehaviour
                     currTime = 0f;
                     RaycastHit hitInfo;
                     Vector3 dirValue = (isPlayer ? Camera.main.transform.forward : dir);
+                    Vector3 randDir = RandDir(recoil, dirValue);
                     if (Physics.Raycast(isPlayer ? Camera.main.transform.position : origin,
-                                        RandDir(recoil, dirValue), out hitInfo, itemInfo.maxRange,
-                                        ~(1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW"))))
+                                        randDir, out hitInfo, itemInfo.maxRange,
+                                        ~((1 << LayerMask.NameToLayer(isPlayer ? "Player_KJS" : "Bot_JSW")) | (1 << LayerMask.NameToLayer("Ignore Raycast")))))
                     {
                         GameObject bullettEffect = Instantiate(bulletEffectFactory);
                         Destroy(bullettEffect, 3);
@@ -655,9 +658,9 @@ public class Human_KJS : MonoBehaviour
 
                         // 데미지 입히기
                         GiveDamage(TopObj(hitInfo.transform.gameObject), itemInfo.baseDmg);
-
                     }
-                   
+                    Bullet(isPlayer ? Camera.main.transform.position : origin, randDir);
+
                     if (isPlayer)
                     {
                         // 서브 웨폰 발사 시 화면 흔들림 효과 적용 (진동 크기 감소)
@@ -670,9 +673,10 @@ public class Human_KJS : MonoBehaviour
                     // Fire 총 애니 이름 설정
                     string fireName = "Fire";
                     // 총 쏘는 애니메이션 실행
-                    hGAnim.CrossFade(fireName, 0.01f, 0, 0);
+                    if (isPlayer) hGAnim.CrossFade(fireName, 0.01f, 0, 0);
                     // 총기 반동 추가
                     Recoil += itemInfo.recoil;
+                    if (waistAngle != null) waistAngle.CharRecoilSet(0.2f);
                 }
             }
 
@@ -880,9 +884,9 @@ public class Human_KJS : MonoBehaviour
                     isReloaing = true;
                     reloadTime = mainWeapon.reloadSpeed;
 
-                    anim2.SetTrigger("AR_Reload");
-                    arAnim.SetTrigger("AR_Reload");
-                 
+                    if (isPlayer) anim2.SetTrigger("AR_Reload");
+                    if (isPlayer) arAnim.SetTrigger("AR_Reload");
+                    anim.CrossFade("Reloaing_Main", 0.01f, 1);
                 }
                 else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon subWeapon)
                 {   // 장전 On
@@ -890,7 +894,8 @@ public class Human_KJS : MonoBehaviour
                     isReloaing = true;
                     reloadTime = subWeapon.reloadSpeed;
 
-                    hGAnim.SetTrigger("HG_Reload");
+                    if (isPlayer) hGAnim.SetTrigger("HG_Reload");
+                    anim.CrossFade("Reloaing_Sub", 0.01f, 1);
                 }
             }
         }
@@ -899,6 +904,8 @@ public class Human_KJS : MonoBehaviour
             if (isReloaing)
             {   // 장전 Off
                 isReloaing = false;
+                anim.ResetTrigger("Reloaing_Main");
+                anim.ResetTrigger("Reloaing_Sub");
             }
         }
     }
@@ -977,5 +984,6 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
+    
 }
 

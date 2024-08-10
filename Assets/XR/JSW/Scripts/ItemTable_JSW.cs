@@ -145,6 +145,7 @@ using static ItemTable_JSW;
     }
     // 아이템 테이블
     public Dictionary<Items, object> itemTable = new Dictionary<Items, object> { };
+    public GameObject[] itemObjs;
     public MainWeapon ak47, spas;
     public SubWeapon pistol;
     public MeleeWeapon electricGuitar, crowbar;

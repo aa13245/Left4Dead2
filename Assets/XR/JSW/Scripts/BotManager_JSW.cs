@@ -258,7 +258,7 @@ public class BotManager_JSW : MonoBehaviour
             if (priorityTarget != null) target = priorityTarget;
             else if (botSight.Target != null) target = botSight.Target;
             if (target == null) return;
-            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human_KJS.HumanState.KnockedDown ? 0.8f : 1.6f);
+            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human_KJS.HumanState.KnockedDown ? 0.8f : 1.4f);
             Vector3 dir = target.transform.position + Vector3.up - origin;
             human.MouseClick(origin, dir);
         }

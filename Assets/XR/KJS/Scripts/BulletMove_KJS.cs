@@ -6,20 +6,14 @@ using UnityEngine;
 
 public class BulletMove_KJS : MonoBehaviour
 {
-    public float speed = 10;
+    public float speed = 100;
     //총알 효과 주소
-    public GameObject bulletEffectFactory;
     public Rigidbody rb;
+    public float timer;
 
     // 적이 다른 물체와 충돌했으니까
     private void OnCollisionEnter(Collision collision)
     {
-        //총알 효과 공장에서 총알 효과를 하나 만들어야한다.
-        GameObject bulletEffect = Instantiate(bulletEffectFactory);
-
-        //총알 이펙트의효과를 총돌한 자리에 발생시킨다
-        bulletEffect.transform.position = transform.position;
-
         //gameobject를 비활성화 시킨다.
         gameObject .SetActive (false);
 
@@ -38,5 +32,12 @@ public class BulletMove_KJS : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.up * speed * Time.deltaTime);
+        timer += Time.deltaTime;
+        if (timer > 1)
+        {
+            gameObject.SetActive(false);
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 }
