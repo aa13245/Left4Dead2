@@ -365,6 +365,8 @@ public class JKYEnemySpawn1 : MonoBehaviour
 
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 

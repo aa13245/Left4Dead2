@@ -163,11 +163,11 @@ public class JKYEnemyFSM : MonoBehaviour
                         //print(hit.transform.gameObject.name + "/" + target.name);
                         //if (hit.transform == target)
                         {
+                            anim.SetTrigger("IdleToMove");
                             m_State = EnemyState.Move;
                             print("상태전환 : Idle -> Move");
 
                             // 이동 애니메이션으로 전환하기
-                            anim.SetTrigger("IdleToMove");
                         }
                         
                     }
@@ -569,9 +569,11 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             m_State = EnemyState.Die;
             print("상태전환 Any state -> Die");
-
+            smith.isStopped = true;
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 

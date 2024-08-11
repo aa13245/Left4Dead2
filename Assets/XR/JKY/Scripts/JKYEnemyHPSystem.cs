@@ -8,6 +8,7 @@ using static Human_KJS;
 public class JKYEnemyHPSystem : MonoBehaviour
 {
     public Action<float, GameObject> getDamage;
+    public bool isDead;
 
     public void GetDamage(float value, GameObject attacker)
     {
@@ -23,7 +24,7 @@ public class JKYEnemyHPSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+       
     }
 
     //public void GetDamage(float value, GameObject attacker)

@@ -58,11 +58,11 @@ public class JKYAttackable : MonoBehaviour
         int randomTrigger = Random.Range(1, 3);
         if (randomTrigger == 1)
         {
-            move1.Animator.SetTrigger("LDamaged");
+            move1.Animator.SetTrigger("LDamage");
         }
         else if (randomTrigger == 2)
         {
-            move1.Animator.SetTrigger("RDamaged");
+            move1.Animator.SetTrigger("RDamage");
         }
     }
     public void HitEnemy(float hitPower, GameObject attacker)

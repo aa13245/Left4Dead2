@@ -129,6 +129,7 @@ public class JKYEnemyMove1 : MonoBehaviour
         }
         else
         {
+            currTime = damageDelay;
             State = EnemyState.Attacking;
         }
     }
