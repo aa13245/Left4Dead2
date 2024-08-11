@@ -578,6 +578,8 @@ public class JKYEnemyFSM1 : MonoBehaviour
 
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 

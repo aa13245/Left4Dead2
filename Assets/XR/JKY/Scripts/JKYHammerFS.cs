@@ -307,11 +307,11 @@ public class JKYHammerFS : MonoBehaviour
             smith.isStopped = true;
             smith.ResetPath();
 
+            currentTime = attackDelay;
             m_State = EnemyState.Attack;
             print("상태전환 Move -> attack");
 
             // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
-            currentTime = attackDelay;
             anim.SetTrigger("MoveToAttackDelay");
         }
 
@@ -371,6 +371,7 @@ public class JKYHammerFS : MonoBehaviour
     GameObject rock;
     void Throw()
     {
+
         StartCoroutine(PrepareAndThrowRock());
         ResetThrowCooldown();
         m_State = EnemyState.Move;
@@ -378,11 +379,13 @@ public class JKYHammerFS : MonoBehaviour
     }
     IEnumerator PrepareAndThrowRock()
     {
+        anim.SetTrigger("Throw");
         // 돌을 에너미 위에 생성
-        rock = Instantiate(rockPrefab, transform.position + Vector3.up* 2f   , Quaternion.identity);
+        yield return new WaitForSeconds(1f); // 2초 기다림
+        rock = Instantiate(rockPrefab, transform.position + Vector3.up* 4.5f   , Quaternion.identity);
         print("위에 돌생성");
         smith.isStopped = true;
-        yield return new WaitForSeconds(1.0f); // 2초 기다림
+        yield return new WaitForSeconds(1f); // 2초 기다림
         smith.isStopped = false;
         // 거리 계산
         float dist = Vector3.Distance(transform.position, target.transform.position);
@@ -465,81 +468,7 @@ public class JKYHammerFS : MonoBehaviour
     float movingTime = 0;
     bool isMovingUp = false;
     float ey;
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("climb"))
-        {
-            isClimbing = true;
-            cy = collision.transform.position.y;
-            cly = collision.transform.localScale.y / 2;
-        }
-    }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(collision.gameObject.layer == LayerMask.NameToLayer("climb"))
-    //    {
-    //        ey = gameObject.transform.position.y;
-    //        isMoving = false;
-    //        print("부딪혓다");
-    //        isMovingUp = true;
-    //        cc.Move((climbTarget - transform.position) * climbSpeed * Time.deltaTime);
-    //        if (gameObject.transform.position.y > collision.transform.position.y + collision.transform.localScale.y/2 + ey)
-    //        {
-    //            print("끝까지 올라왔다");
-    //            movingTime += Time.deltaTime;
-    //            isMovingUp = false;
-    //            isMoving = true;
-    //            //cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
 
-    //            if (movingTime > 2f)
-    //            {
-    //                print("좀만 앞으로가");
-    //                isMoving = false;
-    //                movingTime = 0;
-    //                smith.enabled = true;
-    //                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-    //                smith.destination = player.position;
-    //            }
-    //        }
-
-    //    }
-    //}
-    //void DetectWall()
-    //{
-    //    RaycastHit hit;
-    //    if (Physics.Raycast(transform.position, transform.forward, out hit, detectionDistance, climb))
-    //    {
-    //        if (hit.collider != null)
-    //        {
-    //            print(222);
-    //            isClimbing = true;
-    //            rb.useGravity = false; // 벽을 탈 때 중력을 제거합니다.
-    //        }
-    //    }
-    //    else
-    //    {
-    //        isClimbing = false;
-    //        rb.useGravity = true; // 벽을 타지 않을 때 중력을 다시 활성화합니다.
-    //    }
-
-    //}
-
-    //void ClimbWall()
-    //{
-    //    print("올라간다");
-    //    //cc.Move((climbTarget- transform.position) * climbSpeed * Time.deltaTime);
-    //    cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
-
-    //    //// 벽을 다 올라갔는지 체크
-    //    //if (Vector3.Distance(transform.position, climbTarget) < 0.1f)
-    //    //{
-    //    //    isClimbing = false;
-    //    //    smith.enabled = true;
-    //    //    smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-    //    //    smith.destination = player.position;
-    //    //}
-    //}
-    //여기 바꿧다!!!!!!!!!!!!!!!!!!!!!!!!!1
     public float rotationSpeed = 15f;
     void Attack()
     {
@@ -554,21 +483,27 @@ public class JKYHammerFS : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > attackDelay)
             {
+                anim.SetTrigger("StartAttack");
+                if (currentTime > 3f)
+                {
+                    target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject);
+                    //target.GetComponent<Human_KJS>().isKnockedBack = true;
+                    target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                    print("공격");
+                    currentTime = 0;
+
+                }
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 //target.GetComponent<Human_KJS>().tankerSkill1();
                 Vector3 knockbackDirection = (target.transform.position - gameObject.transform.position).normalized;
-                target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject);
-                //target.GetComponent<Human_KJS>().isKnockedBack = true;
-                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
-                print("공격");
-                currentTime = 0;
 
-                anim.SetTrigger("StartAttack");
 
             }
         }
         else
         {
+            smith.isStopped = false;
+
             m_State = EnemyState.Move;
             print("상태전환 : attack ->move");
             currentTime = 0;
@@ -578,11 +513,7 @@ public class JKYHammerFS : MonoBehaviour
         }
     }
 
-    //public void AttackAction()
-    //{
-    //    //print("attackaction");
-    //    player.GetComponent<PlayerControler_KJS>().DamageAction();
-    //}
+
     void Damaged()
     {
         // 피격 상태를 처리하기 위한 코루틴\
@@ -624,11 +555,14 @@ public class JKYHammerFS : MonoBehaviour
 
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 
     void Die()
     {
+        anim.SetTrigger("Die");
         // 진행중인 피격 코루틴을 중지한다.
         StopAllCoroutines();
         // 죽음상태를 처리하기 위한 코루틴을 실행한다.
@@ -656,6 +590,7 @@ public class JKYHammerFS : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        //GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);

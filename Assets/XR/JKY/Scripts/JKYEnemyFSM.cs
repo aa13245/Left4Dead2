@@ -163,11 +163,11 @@ public class JKYEnemyFSM : MonoBehaviour
                         //print(hit.transform.gameObject.name + "/" + target.name);
                         //if (hit.transform == target)
                         {
+                            anim.SetTrigger("IdleToMove");
                             m_State = EnemyState.Move;
                             print("상태전환 : Idle -> Move");
 
                             // 이동 애니메이션으로 전환하기
-                            anim.SetTrigger("IdleToMove");
                         }
                         
                     }
@@ -569,9 +569,11 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             m_State = EnemyState.Die;
             print("상태전환 Any state -> Die");
-
+            smith.isStopped = true;
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 
@@ -603,27 +605,40 @@ public class JKYEnemyFSM : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);
         allTargets.AddRange(allies);
+        allTargets.AddRange(pipe);
         //allTargets.Remove(target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead);
         float closestDistance = Mathf.Infinity;
         Transform closestTarget = null;
 
         foreach (GameObject target in allTargets)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+            
+            if (target.gameObject.tag == "Pipe") 
             {
-                closestDistance = distanceToTarget;
+                print(target);
                 closestTarget = target.transform;
+                break;
+            }
+            else
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                {
+                    closestDistance = distanceToTarget;
+                    closestTarget = target.transform;
                 
+                }
+
             }
         }
 
         target = closestTarget;
-        //print(target);
+        print(target);
     }
 
 

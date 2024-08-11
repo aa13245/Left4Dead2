@@ -22,6 +22,7 @@ public class JKYZombie1 : MonoBehaviour
     private Animator _animator;
     private CharacterController _characterController;
     NavMeshAgent Agent;
+    public float hp = 1;
     float currTime = 0;
     void Awake()
     {
@@ -143,5 +144,32 @@ public class JKYZombie1 : MonoBehaviour
 
         target = closestTarget;
         //print(target);
+    }
+
+    public void HitEnemy(float hitPower, GameObject attacker)
+    {
+        //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
+        //if ( == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
+        //{
+        //    return;
+        //}
+        //플레이어 공격력만큼 에너미의 체력을 감소시킨다.
+        hp -= hitPower;
+
+        // 에너미의 체력이 0보다 크면 피격 상태로 전환
+        if (hp < 0)
+        {
+            //m_State = ZombieState.Die;
+            print("상태 전환 Any State -> Dead");
+
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
+        }
+
+    }
+
+    void Die()
+    {
+
     }
 }
