@@ -30,10 +30,13 @@ public class Inventory_JSW : MonoBehaviour
                 human.MinRecoil = subWeapon.minRecoil;
             }
             else human.MinRecoil = 0;
+            ChangeHand();
             return true;
         }
         else return false;
     }
+    public GameObject hand;
+    GameObject handItem;
 
     // Start is called before the first frame update
     void Start()
@@ -49,8 +52,20 @@ public class Inventory_JSW : MonoBehaviour
         }
         slots[2] = null;
         slots[3] = null;
+        ChangeHand();
     }
-
+    // 손 아이템 오브젝트 생성
+    void ChangeHand()
+    {
+        Destroy(handItem);
+        if (ItemTable_JSW.instance.itemObjs[(int)slots[slotNum].kind] != null && hand != null)
+        {
+            handItem = Instantiate(ItemTable_JSW.instance.itemObjs[(int)slots[slotNum].kind]);
+            handItem.transform.parent = hand.transform;
+            handItem.transform.localPosition = Vector3.zero;
+            handItem.transform.localEulerAngles = Vector3.zero;
+        }
+    }
     // 아이템 줍기
     public bool PickUp(GameObject itemObj)
     {   // 아이템 레이어 체크
