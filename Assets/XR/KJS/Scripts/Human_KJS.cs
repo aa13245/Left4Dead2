@@ -849,6 +849,11 @@ public class Human_KJS : MonoBehaviour
                 {
                     Revie(hitInfo.transform.gameObject, SetInteraction.On);
                 }
+                // 오브젝트와 상호작용
+                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("InteractObj"))
+                {
+                    TopObj(hitInfo.transform.gameObject).GetComponent<InteractObj_JSW>().Interact();
+                }
             }
 
         }
@@ -873,7 +878,7 @@ public class Human_KJS : MonoBehaviour
     float reloadTimer;
     public void Reload(bool on)
     {
-        if (humanState == HumanState.Dead || interactionState != InteractionState.None) return;
+        if (humanState == HumanState.Dead || (interactionState != InteractionState.None && interactionState != InteractionState.GetHealing && interactionState != InteractionState.GetReviving)) return;
         if (on)
         {
             if (!isReloaing && inventory.CheckReloadEnable(inventory.SlotNum))
