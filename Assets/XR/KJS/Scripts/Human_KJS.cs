@@ -27,6 +27,9 @@ public class Human_KJS : MonoBehaviour
     //미사일을 담을 수 있는 배열
     public GameObject[] bulletArray;
 
+    public float muzzleFlashInterval = 0.1f;  // 머즐 플래시 간격
+    private float nextMuzzleFlashTime = 0f;   // 다음 머즐 플래시 생성 가능 시간
+
     public float fireRate = 0.1f;
 
     public float shakeDuration = 0.1f;
@@ -43,10 +46,26 @@ public class Human_KJS : MonoBehaviour
     private GameObject currentWeapon;
     private ObjRotate_KJS objRotate;
 
-    public AudioSource [] fireSound;
-    
+    public AudioClip[] fireSounds;
+    AudioSource audioSource;
+
 
     float minRecoil = 2;
+
+    void PlayFireSound(int soundIndex)
+    {
+        if (soundIndex < 0 || soundIndex >= fireSounds.Length)
+        {
+            Debug.LogWarning("잘못된 사운드 인덱스입니다.");
+            return;
+        }
+
+        if (fireSounds[soundIndex] != null)
+        {
+            audioSource.PlayOneShot(fireSounds[soundIndex]);
+        }
+    }
+
     public float MinRecoil
     {
         get { return minRecoil; }
@@ -102,6 +121,7 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
+
     //최대 체력 변수
     public float maxHP = 100;
     public float knockedDownMaxHP = 300;
@@ -194,6 +214,7 @@ public class Human_KJS : MonoBehaviour
         //    go.SetActive(false);
         //}
         recoil = minRecoil;
+        audioSource = GetComponent<AudioSource>();
     }
     // Update is called once per frame
     void Update()
@@ -381,6 +402,7 @@ public class Human_KJS : MonoBehaviour
             {
                 // 회복템 제거 필요
                 inventory.Use(3);
+                //
             }
             interactionState = InteractionState.None;
             targetComp.GetHeal(gameObject, set);
@@ -439,6 +461,7 @@ public class Human_KJS : MonoBehaviour
             {
                 // 회복템 제거 필요
                 inventory.Use(3);
+                //
                 float nowHp = HP - TempHP;
                 HP = nowHp + (79.8f - (nowHp * 0.7976f));
             }
@@ -600,8 +623,17 @@ public class Human_KJS : MonoBehaviour
                         FindObjectOfType<Crosshair_KJS>().TriggerCrosshairShake(0.05f, 5f); // 크로스헤어에 진동 적용
                         // 흔들림 효과 적용
                         ApplyShakeToCamera();
+                      
+                            if (objRotate != null)
+                            {
+                                objRotate.CreateMuzzleFlash();
+                            }
+                            nextMuzzleFlashTime = Time.time + muzzleFlashInterval;
+                        
                     }
                     
+                  
+
                     // 장탄 -
                     inventory.Use(inventory.SlotNum);
 
@@ -611,7 +643,10 @@ public class Human_KJS : MonoBehaviour
                     string fireName = "Fire";
                     //총 쏘는 애니메이션 실행
                     anim2.CrossFade(fireName, 0.01f, 0, 0);
-                   
+
+                    // 사운드 재생
+                    PlayFireSound(0); // 첫 번째 사운드를 재생
+
 
                 }
 
@@ -660,6 +695,10 @@ public class Human_KJS : MonoBehaviour
                         FindObjectOfType<ObjRotate_KJS>().TriggerShake(0.1f, 0.05f); // 작은 진동 크기 적용
                         // 크로스헤어 흔들림 적용
                         FindObjectOfType<Crosshair_KJS>().TriggerCrosshairShake(0.05f, 5f); // 크로스헤어에 진동 적용
+                        if (objRotate != null)
+                        {
+                            objRotate.CreateMuzzleFlash();
+                        }
                     }
                     inventory.Use(inventory.SlotNum);
 
@@ -669,6 +708,9 @@ public class Human_KJS : MonoBehaviour
                     hGAnim.CrossFade(fireName, 0.01f, 0, 0);
                     // 총기 반동 추가
                     Recoil += itemInfo.recoil;
+
+                    // 사운드 재생
+                    PlayFireSound(1); // 첫 번째 사운드를 재생
                 }
             }
 
@@ -701,8 +743,7 @@ public class Human_KJS : MonoBehaviour
             // 장탄 확인
             if (inventory[inventory.SlotNum].value1 <= 0)
             {
-                Debug.Log("No projectiles left.");
-                return;
+               
             }
             else
             {
@@ -719,41 +760,15 @@ public class Human_KJS : MonoBehaviour
                 float range = itemInfo.range;
                 float duration = itemInfo.time;
 
-                // 수류탄의 스크립트에서 처리
-                StartCoroutine(HandleProjectile(projectile, damage, range, duration));
-
-                // 장탄 수 감소
-                inventory[inventory.SlotNum].value1--;
-                if (inventory[inventory.SlotNum].value1 <= 0)
+                // BombAction_KJS 스크립트 가져오기
+                BombAction_KJS bombScript = projectile.GetComponent<BombAction_KJS>();
+                if (bombScript != null)
                 {
-                    // 장탄이 0이 되면 아이템 사용 불가 처리
-                    inventory.Use(inventory.SlotNum);
+                    // BombAction_KJS에 데미지, 범위, 지속 시간 전달
+                    bombScript.Initialize(damage, range, duration);
                 }
-            }
-        }
-    }
-    // 수류탄 처리 코루틴
-    private IEnumerator HandleProjectile(GameObject projectile, float damage, float range, float duration)
-    {
-        // 수류탄의 시작 시간
-        float startTime = Time.time;
-
-        while (Time.time - startTime < duration)
-        {
-            yield return null;
-        }
-
-        // 수류탄이 지속 시간 후 제거
-        Destroy(projectile);
-
-        // 수류탄이 충돌한 위치에서 데미지 처리
-        Collider[] colliders = Physics.OverlapSphere(projectile.transform.position, range);
-        foreach (var collider in colliders)
-        {
-            if (collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-            {
-                // 데미지 적용
-                collider.gameObject.GetComponent<JKYEnemyFSM>().HitEnemy(damage, projectile);
+                    inventory.Use(2); // 투척 아이템 사용 및 슬롯 비우기
+                
             }
         }
     }
@@ -878,7 +893,9 @@ public class Human_KJS : MonoBehaviour
 
                     anim2.SetTrigger("AR_Reload");
                     arAnim.SetTrigger("AR_Reload");
-                 
+
+                    PlayFireSound(2); // 3 번째 사운드를 재생
+
                 }
                 else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon subWeapon)
                 {   // 장전 On
@@ -887,6 +904,8 @@ public class Human_KJS : MonoBehaviour
                     reloadTime = subWeapon.reloadSpeed;
 
                     hGAnim.SetTrigger("HG_Reload");
+
+                    PlayFireSound(3); // 4 번째 사운드를 재생
                 }
             }
         }

@@ -14,41 +14,33 @@ public class PlayerControler_KJS : MonoBehaviour
     private Vector3 velocity;
 
     public float jumPower = 3;
-
     float gravity = -9.81f;
-
     float yVelocity;
-
     public int jumpMaxcnt = 2;
-
     int jumpcurrCnt;
 
-    //hp 슬라이더 변수
+    // UI 관련 변수
     Slider hpSlider;
     Image hpImage;
     Slider tempHpSlider;
     Image tempHpImage;
     Text hpText;
-    // 상호작용 상태 UI
     GameObject interactionUI;
     Slider interactionSlider;
     GameObject interactionIcons;
     Text interactionText1;
     Text interactionText2;
-    //Hit 효과 오브젝트
     public GameObject hitEffect;
-    // 플레이어 컴퍼넌트
     public Human_KJS human;
-    // 인벤토리 컴포넌트
     public Inventory_JSW inventory;
-
-    // Start is called before the first frame update
-
     public Animator anim;
+
+    // 새로운 변수 추가: 현재 슬롯 번호를 추적
+    private int currentSlotNum = 0;
 
     void Start()
     {
-        //피격 이벤트 오브젝트에서 파티클 시스템 컴포넌트 가져오기
+        // 기존 초기화 코드
         cc = GetComponent<CharacterController>();
         human = GetComponent<Human_KJS>();
         inventory = GetComponent<Inventory_JSW>();
@@ -57,7 +49,7 @@ public class PlayerControler_KJS : MonoBehaviour
         hpImage = canvas.transform.Find("Info0/HPbar/Fill Area/Fill").GetComponent<Image>();
         tempHpSlider = canvas.transform.Find("Info0/TempHPbar").GetComponent<Slider>();
         tempHpImage = canvas.transform.Find("Info0/TempHPbar/Fill Area/Fill").GetComponent<Image>();
-        hpText = canvas.transform.Find("Info0/Text (Legacy)").GetComponent <Text>();
+        hpText = canvas.transform.Find("Info0/Text (Legacy)").GetComponent<Text>();
         hitEffect = canvas.transform.Find("Hit").gameObject;
         interactionUI = canvas.transform.Find("InteractionStatus").gameObject;
         interactionSlider = interactionUI.transform.Find("Slider").GetComponent<Slider>();
@@ -71,27 +63,37 @@ public class PlayerControler_KJS : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+
     void Update()
     {
         Move();
+        HandleInput();
+        Swap(); // 슬롯 변경 코드 호출
+        HpUiUpdate();
+        CamRecovery();
+    }
+
+    void HandleInput()
+    {
+
         // 클릭을 연속으로 받아야 하는 상황 - 자동 소총을 들고 있는 상황
         if (inventory.SlotNum == 0 &&
             ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon itemInfo &&
             itemInfo.isSniper == false && itemInfo.isShotgun == false)
         {
+
             if (Input.GetButton("Fire1"))
             {
                 human.MouseClick();
-                //SlotUIChange();
+                
             }
         }
         // 한번만 받아야 하는 상황
         else if (Input.GetButtonDown("Fire1"))
         {
-           
+            
             human.MouseClick();
-            //SlotUIChange();
+            
 
         }
         // 마우스 우클릭
@@ -102,23 +104,70 @@ public class PlayerControler_KJS : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             human.Interact();
-            //SlotUIChange();
         }
-        //if (Input.GetKeyDown(KeyCode.G)) human.Drop();
-        Swap();
         if (Input.GetKeyDown(KeyCode.R))
         {
             human.Reload(true);
-            //Reload();
-            //SlotUIChange();
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            human.Drop();
+        }
+    }
+
+    void Swap()
+    {
+        // 숫자키 입력에 따른 슬롯 변경
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            ChangeSlot(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            ChangeSlot(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ChangeSlot(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            ChangeSlot(3);
         }
 
-        HpUiUpdate();
-        CamRecovery();
+        // 마우스 휠 입력에 따른 슬롯 변경
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f) // 휠을 위로 스크롤
+        {
+            ChangeSlot((currentSlotNum + 1) % 4);
+        }
+        else if (scroll < 0f) // 휠을 아래로 스크롤
+        {
+            ChangeSlot((currentSlotNum - 1 + 4) % 4);
+        }
     }
+
+    void ChangeSlot(int newSlotNum)
+    {
+        if (currentSlotNum != newSlotNum)
+        {
+            currentSlotNum = newSlotNum;
+            if (human.ChangeSlotNum(currentSlotNum))
+            {
+                SlotUIChange();
+            }
+        }
+    }
+
+    public void SlotUIChange()
+    {
+        // 현재 슬롯과 UI를 동기화
+        int slotNum = inventory.SlotNum;
+    }
+
     void HpUiUpdate()
     {
-        //현재 플레이어 hp를 hp슬라이더의 value에 반영한다.
+        // 현재 플레이어 hp를 hp슬라이더의 value에 반영
         hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
         tempHpSlider.value = human.HP / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
         hpText.text = ((int)human.HP).ToString();
@@ -141,12 +190,12 @@ public class PlayerControler_KJS : MonoBehaviour
             tempHpImage.color = c;
         }
     }
-    // 맞았을 때 감속
+
     public void Slow()
     {
         velocity = Vector3.zero;
     }
-    // 탱크 돌 스턴
+
     bool stun;
     public void Stun()
     {
@@ -155,15 +204,16 @@ public class PlayerControler_KJS : MonoBehaviour
             StartCoroutine(StunWait());
         }
     }
+
     IEnumerator StunWait()
     {
         stun = true;
         Slow();
-        // 카메라 회전
         Camera.main.transform.Rotate(new Vector3(0, 0, -10));
         yield return new WaitForSeconds(1);
         stun = false;
     }
+
     void CamRecovery()
     {
         if (human.humanState == Human_KJS.HumanState.Normal)
@@ -171,6 +221,7 @@ public class PlayerControler_KJS : MonoBehaviour
             Camera.main.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 3 * Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
         }
     }
+
     public void SetKnockedDown(bool on)
     {
         if (on)
@@ -184,9 +235,9 @@ public class PlayerControler_KJS : MonoBehaviour
             GetComponent<ObjRotate_KJS>().knockedCamOffset = false;
         }
     }
+
     void Move()
     {
-        //게임 상태가 '게임 중' 상태일때만 조작할 수 있게한다.
         if (GameManager_KJS.gm.gState != GameManager_KJS.GameState.Run)
         {
             return;
@@ -198,11 +249,7 @@ public class PlayerControler_KJS : MonoBehaviour
         Vector3 dirH = transform.right * h;
         Vector3 dirV = transform.forward * v;
         Vector3 dir = dirH + dirV;
-        
         dir.Normalize();
-
-        //이동 블렌딩 트리를 호출하고 벡터의 크기 값을 넘겨준다
-        //anim.SetFloat("MoveMotion", dir.magnitude);
 
         if (cc.isGrounded)
         {
@@ -210,36 +257,24 @@ public class PlayerControler_KJS : MonoBehaviour
             jumpcurrCnt = 0;
         }
 
-        // 만약에 스페이스 바를 누르면
         if (Input.GetButtonDown("Jump") && cc.isGrounded && human.humanState == Human_KJS.HumanState.Normal && human.interactionState == Human_KJS.InteractionState.None)
         {
-            // yVelocity에 jumpPower를 셋팅
             yVelocity = jumPower;
-            // 현재 점프횟수를 증가 시키자
             jumpcurrCnt++;
         }
 
-        // yVelocity를 중력값을 이용해서 감소시킨다.
-        // v = v0 + at;
         yVelocity += gravity * Time.deltaTime;
-
-        // dir.y값에 yVelocity를 셋팅
         dir.y = yVelocity;
 
-        // 이동 적용
-        //cc.Move(dir * Time.deltaTime);
-
-        // 입력이 있을 시
         if ((h != 0 || v != 0) && !stun && human.humanState == Human_KJS.HumanState.Normal && human.interactionState == Human_KJS.InteractionState.None)
-        {   // 가속을 주겠다
+        {
             velocity += dir * acceleration * Time.deltaTime;
         }
         else
         {
-            // 감속
             velocity = Vector3.Lerp(velocity, Vector3.zero, deceleration * Time.deltaTime);
         }
-        // 속력을 최고속력으로 제한함
+
         if (velocity.magnitude > moveSpeed)
         {
             velocity = velocity.normalized * moveSpeed;
@@ -250,43 +285,16 @@ public class PlayerControler_KJS : MonoBehaviour
 
         velocity.y = 0;
 
-        // 움직임
         cc.Move(((!stun && human.humanState == Human_KJS.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
     }
-    void Swap()
-    {
-        //각 무기들에 배당된 숫자키
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (human.ChangeSlotNum(0)) SlotUIChange();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (human.ChangeSlotNum(1)) SlotUIChange();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (human.ChangeSlotNum(2)) SlotUIChange();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            if (human.ChangeSlotNum(3)) SlotUIChange();
-        }
-    }
-    public void SlotUIChange()
-    {
-        // 현재 슬롯과 ui를 동기화
-        int slotNum = inventory.SlotNum;
 
-    }
     void Reload()
     {
-        int currentSlot = inventory.SlotNum; // 현재 선택된 슬롯
-        Item_JSW currentItem = inventory[currentSlot]; // 현재 슬롯의 아이템
+        int currentSlot = inventory.SlotNum;
+        Item_JSW currentItem = inventory[currentSlot];
 
         if (currentItem != null)
         {
-            // 아이템의 종류를 확인하여 `ItemTable_JSW`에서 정보를 가져옴
             ItemTable_JSW.Items itemKind = currentItem.kind;
             if (ItemTable_JSW.instance.itemTable.TryGetValue(itemKind, out var itemObject))
             {
@@ -306,7 +314,6 @@ public class PlayerControler_KJS : MonoBehaviour
                     return;
                 }
 
-                // 재장전 애니메이션이나 효과를 여기에 추가할 수 있습니다.
                 StartCoroutine(ReloadCoroutine(reloadSpeed));
             }
             else
@@ -322,62 +329,48 @@ public class PlayerControler_KJS : MonoBehaviour
 
     IEnumerator ReloadCoroutine(float reloadTime)
     {
-        // 재장전 애니메이션이나 효과를 여기에 추가할 수 있습니다.
         Debug.Log("재장전 중... 속도: " + reloadTime + "초");
 
-        // 실제 재장전 처리 시간
         yield return new WaitForSeconds(reloadTime);
 
-        // 재장전 완료 후 처리
-        // 예를 들어, 총알 수를 다시 채우거나 상태를 업데이트합니다.
         Debug.Log("재장전 완료.");
 
-        // 실제 재장전 후 처리 코드 추가
-        // 예: 총알 수를 다시 채우기
-        if (inventory.SlotNum == 0) // 주무기 슬롯을 가정
+        if (inventory.SlotNum == 0)
         {
             Item_JSW item = inventory[0];
             if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
             {
                 if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
                 {
-                    // 총알 수를 최대값으로 리셋
                     item.value1 = mainWeapon.magazineCapacity;
                 }
             }
         }
-        else if (inventory.SlotNum == 1) // 보조무기 슬롯을 가정
+        else if (inventory.SlotNum == 1)
         {
             Item_JSW item = inventory[1];
             if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
             {
                 if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
                 {
-                    // 총알 수를 최대값으로 리셋
                     item.value1 = subWeapon.magazineCapacity;
                 }
             }
         }
     }
-    //플레이어의 피격 함수
+
     public void DamageAction()
     {
-        //만일 플레이어의 체력이 0보다 크면 피격 효과를 출력한다.
-        if(human.HP > 0)
+        if (human.HP > 0)
         {
-            //피격 이펙트 코루틴을 시작한다.
             StartCoroutine(PlayHitEffect());
         }
     }
+
     IEnumerator PlayHitEffect()
     {
-        //피격 UI를 활성화 한다.
         hitEffect.SetActive(true);
-
-        //0.3초간 대기한다.
         yield return new WaitForSeconds(0.3f);
-
-        //피격 UI를 비활성화한다.
         hitEffect.SetActive(false);
     }
     void SwitchPanel(int index)
@@ -387,10 +380,12 @@ public class PlayerControler_KJS : MonoBehaviour
             GameManager_KJS.gm.SwitchPanel(index);
         }
     }
+
     public void InteractionSliderUpdate(float _value)
     {
         interactionSlider.value = _value;
     }
+
     public void InteractionUIEnable(bool enable, string text1 = "", string text2 = "")
     {
         interactionUI.SetActive(enable);

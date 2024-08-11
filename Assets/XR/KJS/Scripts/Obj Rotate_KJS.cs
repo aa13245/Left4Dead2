@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjRotate_KJS : MonoBehaviour
 {
+    public GameObject muzzleFlashPrefab;
+    public Vector3 muzzleFlashScale = new Vector3(1f, 1f, 1f);  // 머즐 플래시의 크기 조정
     public float rotSpeed = 200f;
     float rotY;
     float rotX;
@@ -82,6 +84,20 @@ public class ObjRotate_KJS : MonoBehaviour
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+
+    public void CreateMuzzleFlash()
+    {
+        if (muzzleFlashPrefab != null && Camera.main != null)
+        {
+            // 머즐 플래시를 카메라 위치에 생성
+            GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, Camera.main.transform.position, Camera.main.transform.rotation);
+
+            // 머즐 플래시의 크기 조정
+            muzzleFlash.transform.localScale = muzzleFlashScale;
+
+            Destroy(muzzleFlash, 0.1f);  // 0.1초 후에 머즐 플래시를 삭제
         }
     }
 }
