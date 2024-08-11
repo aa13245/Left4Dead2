@@ -145,12 +145,12 @@ public class LevelDesign : MonoBehaviour
         if (spawnCooltime <= 0)
         {   // 일반 좀비
             Spawn(ZomKind.Normal);
-            spawnCooltime = 4;
+            spawnCooltime = 5;
         }
         if (specialZomCool <= 0)
         {   // 특수 좀비
             Spawn(ZomKind.Special);
-            specialZomCool = 10;
+            specialZomCool = 20;
         }
     }
     void Spawn(ZomKind kind)
