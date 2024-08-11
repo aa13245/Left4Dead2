@@ -77,6 +77,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22419fe16556e34c87c6ed1e197cb6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  muzzleFlashPrefab: {fileID: 0}
+  muzzleFlashScale: {x: 1, y: 1, z: 1}
   rotSpeed: 200
   useRotX: 0
   useRotY: 1
@@ -162,6 +164,7 @@ MonoBehaviour:
   destroyTime: 1.5
   firePosition: {fileID: 5207415221581109435}
   bulletArray: []
+  muzzleFlashInterval: 0.1
   fireRate: 0.1
   shakeDuration: 0.1
   shakeMagnitude: 0.1
@@ -192,11 +195,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511fe7ecc18f32e479d3e0bd6c7065b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fpsModel1: {fileID: 1840458884445059145}
+  fpsModel2: {fileID: 33883262869926051}
   pro: {fileID: 1904000130791149363, guid: 272cd21fa17807949af4be9856073ad9, type: 3}
   mediKitPrefab: {fileID: 3230788743473108125, guid: b0abfd01c52fdc841a3b0c752c090299,
     type: 3}
-  fpsModel1: {fileID: 1840458884445059145}
-  fpsModel2: {fileID: 33883262869926051}
 --- !u!82 &5846350933695805558
 AudioSource:
   m_ObjectHideFlags: 0
@@ -476,6 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22419fe16556e34c87c6ed1e197cb6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  muzzleFlashPrefab: {fileID: 100006, guid: 30b4cc2728d8cec499fad63ba93785a4, type: 3}
+  muzzleFlashScale: {x: 1, y: 1, z: 1}
   rotSpeed: 200
   useRotX: 1
   useRotY: 0
@@ -1230,6 +1235,35 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 366576717096258345, guid: a01823052e3db5f42adcaed2c938b678,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -7995183704312644566, guid: d41be534312c2e84b8e4f4eb15eaeb13,
+        type: 3}
+    - target: {fileID: 366576717096258345, guid: a01823052e3db5f42adcaed2c938b678,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: -5858793032334596052, guid: d41be534312c2e84b8e4f4eb15eaeb13,
+        type: 3}
+    - target: {fileID: 366576717096258345, guid: a01823052e3db5f42adcaed2c938b678,
+        type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2d8b454c96dd40341a2b2ea298ad1576, type: 2}
+    - target: {fileID: 366576717096258345, guid: a01823052e3db5f42adcaed2c938b678,
+        type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 7706119513324409581, guid: 75c270edd7a1e1949a2b1c1b58ed4250,
+        type: 3}
+    - target: {fileID: 366576717096258345, guid: a01823052e3db5f42adcaed2c938b678,
+        type: 3}
+      propertyPath: m_Materials.Array.data[5]
+      value: 
+      objectReference: {fileID: -8091620322544414813, guid: 9f2ae28161a6faf4aadcf2ca7dcb78d7,
+        type: 3}
     - target: {fileID: 377595680446977351, guid: a01823052e3db5f42adcaed2c938b678,
         type: 3}
       propertyPath: m_Layer
@@ -1380,6 +1414,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3618783513274849179, guid: a01823052e3db5f42adcaed2c938b678,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ef4deb7b6cac3794694ab402e74b3e7e, type: 2}
     - target: {fileID: 3846591794495519969, guid: a01823052e3db5f42adcaed2c938b678,
         type: 3}
       propertyPath: m_Layer
