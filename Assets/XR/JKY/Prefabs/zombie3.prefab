@@ -2158,7 +2158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c140f2f3541fd904b9a42d7775af2900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Life>k__BackingField: 100
+  <Life>k__BackingField: 50
   RagdollEnabler: {fileID: 0}
   FadeOutDelay: 2
   _maximumForce: 0
@@ -2199,6 +2199,6 @@ MonoBehaviour:
   FieldOfView: 65
   LineOfSightDistance: 7
   IdleSpeedModifier: 0.25
-  attackPower: 3
+  attackPower: 2
   damageDelay: 1
   currTime: 0

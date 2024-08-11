@@ -1037,6 +1037,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7cc5231aa10b43488b97f1991dffa62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
 --- !u!143 &1036984583565925826
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1075,7 +1076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c140f2f3541fd904b9a42d7775af2900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Life>k__BackingField: 100
+  <Life>k__BackingField: 50
   RagdollEnabler: {fileID: 0}
   FadeOutDelay: 10
   _maximumForce: 0
@@ -1134,10 +1135,11 @@ MonoBehaviour:
   Agent: {fileID: 0}
   Animator: {fileID: 0}
   State: 0
-  Target: {fileID: 0}
+  target: {fileID: 0}
   FieldOfView: 65
   LineOfSightDistance: 7
   IdleSpeedModifier: 0.25
+  attackPower: 2
   damageDelay: 1
   currTime: 0
 --- !u!114 &7888557497295543868

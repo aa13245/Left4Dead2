@@ -8,8 +8,8 @@ public class LevelDesign : MonoBehaviour
     GameObject specialZomStartSpawnPoints;
     GameObject raidSpawnPoints;
 
-    public GameObject startSpawnZombie;
-    public GameObject raidZombie;
+    public GameObject[] startSpawnZombie;
+    public GameObject[] raidZombie;
     public GameObject[] specialZombies;
     public GameObject tank;
 
@@ -35,14 +35,14 @@ public class LevelDesign : MonoBehaviour
         zomStartSpawnPoints = GameObject.Find("ZombieStartSpawnPoints");
         for (int i = 0; i < zomStartSpawnPoints.transform.childCount; i++)
         {
-            Instantiate(startSpawnZombie, zomStartSpawnPoints.transform.GetChild(i).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
+            Instantiate(startSpawnZombie[Random.Range(0, startSpawnZombie.Length)], zomStartSpawnPoints.transform.GetChild(i).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
         }
         // 시작 특수좀비 스폰
         specialZomStartSpawnPoints = GameObject.Find("SpecialZomStartSpawnPoints");
-        for (int i = 0;i < specialZomStartSpawnPoints.transform.childCount; i++)
-        {
-            Instantiate(specialZombies[Random.Range(0, specialZombies.Length)], zomStartSpawnPoints.transform.GetChild(i).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
-        }
+        //for (int i = 0;i < specialZomStartSpawnPoints.transform.childCount; i++)
+        //{
+        //    Instantiate(specialZombies[Random.Range(0, specialZombies.Length)], zomStartSpawnPoints.transform.GetChild(i).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
+        //}
         // 레이드 스폰 위치
         raidSpawnPoints = GameObject.Find("RaidSpawnPoints");
 
@@ -159,7 +159,7 @@ public class LevelDesign : MonoBehaviour
         {
             for (int i = 0; i < raidSpawnPoints.transform.childCount; i++)
             {
-                Instantiate(raidZombie, raidSpawnPoints.transform.GetChild(i).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
+                Instantiate(raidZombie[Random.Range(0, raidZombie.Length)], raidSpawnPoints.transform.GetChild(i).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
             }
         }
         else if (kind == ZomKind.Special)

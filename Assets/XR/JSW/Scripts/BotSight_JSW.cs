@@ -138,7 +138,11 @@ public class BotSight_JSW : MonoBehaviour
             {
                 topObj = topObj.transform.parent.gameObject;
             }
-            if (topObj == _object) return true;
+            if (topObj == _object)
+            {
+                if (isZombie && _object.GetComponent<JKYEnemyHPSystem>().isDead) return false;
+                return true;
+            }
             else return false;
         }
         else return false;

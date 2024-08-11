@@ -171,9 +171,9 @@ using static ItemTable_JSW;
             isSniper: false,
             isShotgun: false,
             gauge: 0,
-            minRecoil: 2,
-            maxRecoil: 5,
-            recoil: 3
+            minRecoil: 4,
+            maxRecoil: 10,
+            recoil: 5
         );
         itemTable[Items.ak47] = ak47;
         spas = new MainWeapon(
@@ -190,9 +190,9 @@ using static ItemTable_JSW;
             isSniper: false,
             isShotgun: true,
             gauge: 8,
-            minRecoil: 5,
-            maxRecoil: 8,
-            recoil: 3
+            minRecoil: 10,
+            maxRecoil: 15,
+            recoil: 8
         );
         itemTable[Items.spas] = spas;
         pistol = new SubWeapon(
@@ -205,9 +205,9 @@ using static ItemTable_JSW;
             maxRange: 57.14f,
             fireRate: 0.2f,
             reloadSpeed: 1.6667f,
-            minRecoil: 2,
-            maxRecoil: 5,
-            recoil: 2
+            minRecoil: 3,
+            maxRecoil: 8,
+            recoil: 5
         );
         itemTable[Items.pistol] = pistol;
         electricGuitar = new MeleeWeapon(

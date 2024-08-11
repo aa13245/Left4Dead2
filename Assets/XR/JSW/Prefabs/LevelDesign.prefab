@@ -4971,12 +4971,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4cb311f290fe449b1c09788a5e3e29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startSpawnZombie: {fileID: 6117518169804835236, guid: 977c90ae4b2674444b9b558d039a45c1,
-    type: 3}
-  raidZombie: {fileID: 4713825769694432486, guid: 5235b5715cf0fb945a672835bb3573f6,
-    type: 3}
-  specialZombies:
+  startSpawnZombie:
   - {fileID: 6117518169804835236, guid: 977c90ae4b2674444b9b558d039a45c1, type: 3}
+  raidZombie:
+  - {fileID: 4457177794738909795, guid: 2c37bf3373238414a845308bc2aa3c1f, type: 3}
+  - {fileID: 7626263685706064983, guid: 2a7d5810b31c61942bcae04e65d0d3f2, type: 3}
+  specialZombies:
+  - {fileID: 4919561835316941134, guid: 4874d1156e2fce94884c46ca0f773df4, type: 3}
   tank: {fileID: 1209130252975101918, guid: c34ad65d5e1a2d8469d82ec881c6ccfe, type: 3}
   lights: {fileID: 4512218351231610655}
   stage: {fileID: 0}
@@ -6525,4 +6526,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f862276f3dbeebd4c9ccbda438d0c621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEnable: 0
   isArrived: 0
