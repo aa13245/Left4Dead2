@@ -798,6 +798,7 @@ public class Human_KJS : MonoBehaviour
         if (target.layer == LayerMask.NameToLayer("Enemy"))
         {
             target.GetComponent<JKYEnemyHPSystem>().GetDamage(dmg, gameObject);
+            print(11212);
         }
         // 아군 공격
         else if (target.layer == LayerMask.NameToLayer(isPlayer ? "Bot_JSW" : "Player_KJS"))

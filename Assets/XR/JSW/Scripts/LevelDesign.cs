@@ -19,6 +19,9 @@ public class LevelDesign : MonoBehaviour
     public GameObject stage;
     bool isStarted;
 
+    public Helicopter_JSW helicopter;
+    public Transform botDest;
+
     private void Awake()
     {
         transform.DetachChildren();
@@ -26,6 +29,8 @@ public class LevelDesign : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        helicopter = GameObject.Find("Helicopter").GetComponent<Helicopter_JSW>();
+        botDest = GameObject.Find("BotDest").transform;
         // 시작 좀비 스폰
         zomStartSpawnPoints = GameObject.Find("ZombieStartSpawnPoints");
         for (int i = 0; i < zomStartSpawnPoints.transform.childCount; i++)
@@ -103,10 +108,10 @@ public class LevelDesign : MonoBehaviour
         }
 
         // 레이드 2
-        if (timer > 70 && timer < 100)
+        if (timer > 100 && timer < 130)
         {
             SpawnInterval();
-            if (timer > 90 && tankCounter == 1)
+            if (timer > 120 && tankCounter == 1)
             {
                 tankCounter++;
                 Spawn(ZomKind.Tank);
@@ -114,15 +119,19 @@ public class LevelDesign : MonoBehaviour
         }
 
         // 무한 레이드
-        if (timer > 130)
+        if (timer > 190)
         {
             SpawnInterval();
-            if (timer > 90 && tankCounter == 2)
+            if (timer > 200 && tankCounter == 2)
             {
                 tankCounter++;
                 Spawn(ZomKind.Tank);
             }
+            if (timer > 210 && !helicopter.isEnable){
+                helicopter.HelicopterEnable();
+            }
         }
+
     }
 
     enum ZomKind
