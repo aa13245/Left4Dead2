@@ -22,6 +22,8 @@ public class GameManager_KJS : MonoBehaviour
     Text totalAmmoText;
     Text currentAmmoText2;
 
+    // 현재 활성화된 패널 인덱스
+    private int currentPanelIndex = 0;
 
     // Start is called before the first frame update
 
@@ -121,6 +123,18 @@ public class GameManager_KJS : MonoBehaviour
                 }
             }
         }
+        // 마우스 휠 입력에 따른 패널 전환
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f) // 휠을 위로 스크롤
+        {
+            // 다음 패널로 이동
+            ChangePanel((currentPanelIndex + 1) % panels.Length);
+        }
+        else if (scroll < 0f) // 휠을 아래로 스크롤
+        {
+            // 이전 패널로 이동
+            ChangePanel((currentPanelIndex - 1 + panels.Length) % panels.Length);
+        }
         // 총알 정보 업데이트
         UpdateAmmoUI();
     }
@@ -151,6 +165,35 @@ public class GameManager_KJS : MonoBehaviour
         {
             panels[i]?.SetActive(i == index);
         }
+    }
+    private void ChangePanel(int newIndex)
+    {
+        if (newIndex < 0 || newIndex >= panels.Length)
+        {
+            Debug.LogError("Invalid panel index.");
+            return;
+        }
+
+        // 현재 패널 비활성화
+        panels[currentPanelIndex]?.SetActive(false);
+
+        // 비어 있지 않은 패널을 찾기
+        int startIndex = newIndex;
+        do
+        {
+            if (IsSlotNotEmpty(newIndex))
+            {
+                // 새 패널 활성화
+                panels[newIndex]?.SetActive(true);
+                // 활성화된 패널 인덱스 업데이트
+                currentPanelIndex = newIndex;
+                return;
+            }
+
+            // 인덱스 업데이트 (다음 패널로)
+            newIndex = (newIndex + 1) % panels.Length;
+
+        } while (newIndex != startIndex); // 모든 패널을 순회했으면 원래 시작 인덱스로 돌아옴
     }
 
     private void ChangePlayerSlot(int slotIndex)
