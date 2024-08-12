@@ -111,7 +111,7 @@ public class BotManager_JSW : MonoBehaviour
                         if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
                         {
                             botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                            if (h.GetComponent<CharacterController>().isGrounded) human.Interact(approchingTarget, approchingTarget.layer);
+                            human.Interact(approchingTarget, approchingTarget.layer);
                             return;
                         }
                         // 멀 때 이동하기
@@ -173,7 +173,7 @@ public class BotManager_JSW : MonoBehaviour
                                 if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
                                 {
                                     botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                                    if (h.GetComponent<CharacterController>().isGrounded) human.Medikit(h.gameObject);
+                                    human.Medikit(h.gameObject);
                                     return;
                                 }
                                 // 멀 때 이동하기
@@ -249,7 +249,7 @@ public class BotManager_JSW : MonoBehaviour
         // 공격
         if (botSight.FireEnable)
         {   // 총을 안들고 있을 때
-            if (inventory.SlotNum != 0 && inventory.SlotNum != 1)
+            if (inventory.SlotNum != 0)
             {   // 주무기가 있으면 들기
                 if (inventory[0] != null && (inventory[0].value1 != 0 || inventory[0].value2 != 0)) inventory.SetSlotNum(0);
                 else inventory.SetSlotNum(1);
@@ -258,7 +258,7 @@ public class BotManager_JSW : MonoBehaviour
             if (priorityTarget != null) target = priorityTarget;
             else if (botSight.Target != null) target = botSight.Target;
             if (target == null) return;
-            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human_KJS.HumanState.KnockedDown ? 0.8f : 1.6f);
+            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human_KJS.HumanState.KnockedDown ? 0.8f : 1.4f);
             Vector3 dir = target.transform.position + Vector3.up - origin;
             human.MouseClick(origin, dir);
         }

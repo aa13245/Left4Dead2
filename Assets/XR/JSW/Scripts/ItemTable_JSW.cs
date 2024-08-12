@@ -139,11 +139,14 @@ using static ItemTable_JSW;
         crowbar,
         pipeBomb,
         molotov,
-        medikit
+        medikit,
+        spas,
+
     }
     // 아이템 테이블
     public Dictionary<Items, object> itemTable = new Dictionary<Items, object> { };
-    public MainWeapon ak47;
+    public GameObject[] itemObjs;
+    public MainWeapon ak47, spas;
     public SubWeapon pistol;
     public MeleeWeapon electricGuitar, crowbar;
     public Projectile pipeBomb, molotov;
@@ -168,11 +171,30 @@ using static ItemTable_JSW;
             isSniper: false,
             isShotgun: false,
             gauge: 0,
-            minRecoil: 2,
-            maxRecoil: 5,
-            recoil: 3
+            minRecoil: 4,
+            maxRecoil: 10,
+            recoil: 5
         );
         itemTable[Items.ak47] = ak47;
+        spas = new MainWeapon(
+            magazineCapacity: 10,
+            maxAmmoCapacity: 90,
+            baseDmg: 28,
+            headDmg: new float[] { 13.177f, 112 },
+            bodyDmg: new float[] { 3.294f, 28 },
+            stomachDmg: new float[] { 4.118f, 35 },
+            limbDmg: new float[] { 2.471f, 21 },
+            maxRange: 57.14f,
+            fireRate: 0.2666f,
+            reloadSpeed: 3.8f,
+            isSniper: false,
+            isShotgun: true,
+            gauge: 8,
+            minRecoil: 10,
+            maxRecoil: 15,
+            recoil: 8
+        );
+        itemTable[Items.spas] = spas;
         pistol = new SubWeapon(
             magazineCapacity: 15,
             baseDmg: 36,
@@ -183,9 +205,9 @@ using static ItemTable_JSW;
             maxRange: 57.14f,
             fireRate: 0.2f,
             reloadSpeed: 1.6667f,
-            minRecoil: 2,
-            maxRecoil: 5,
-            recoil: 2
+            minRecoil: 3,
+            maxRecoil: 8,
+            recoil: 5
         );
         itemTable[Items.pistol] = pistol;
         electricGuitar = new MeleeWeapon(

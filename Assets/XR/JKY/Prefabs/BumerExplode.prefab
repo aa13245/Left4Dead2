@@ -119,10 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0412eebd8258c4ea1e67966fff8588, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackPower: 40
+  attackPower: 5
   layer:
     serializedVersion: 2
     m_Bits: 131328
+  explosionRadius: 20
 --- !u!1001 &7405617828527301358
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -126,7 +126,7 @@ public class BotSight_JSW : MonoBehaviour
     public bool SightCheck(GameObject _object, float _fov = -1, bool isZombie = false)
     {
         if (_fov < 0) _fov = fov;
-        Vector3 offset = transform.forward + Vector3.up * 1.6f;
+        Vector3 offset = transform.forward + Vector3.up * 1.4f;
         Vector3 dir = (_object.transform.position + (isZombie ? Vector3.up : Vector3.zero) - (transform.position + offset)).normalized;
         float angle = Vector3.Angle(transform.forward, dir);
         RaycastHit hitInfo;
@@ -138,7 +138,11 @@ public class BotSight_JSW : MonoBehaviour
             {
                 topObj = topObj.transform.parent.gameObject;
             }
-            if (topObj == _object) return true;
+            if (topObj == _object)
+            {
+                if (isZombie && _object.GetComponent<JKYEnemyHPSystem>().isDead) return false;
+                return true;
+            }
             else return false;
         }
         else return false;
