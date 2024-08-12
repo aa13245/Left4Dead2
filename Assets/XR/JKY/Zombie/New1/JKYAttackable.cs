@@ -67,11 +67,12 @@ public class JKYAttackable : MonoBehaviour
     }
     public void HitEnemy(float hitPower, GameObject attacker)
     {
-
+        move1.Agent.isStopped = true;
         TriggerRandomDamage();
         //move1.State = JKYEnemyMove1.EnemyState.Damaged;
         print(Life);
         Life -= hitPower;
+        move1.Agent.isStopped = false;
         OnTakeDamage?.Invoke();
         if (Life <= 0 && RagdollEnabler != null)
         {

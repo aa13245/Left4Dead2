@@ -32,6 +32,10 @@ public class JKYBumerAttack : MonoBehaviour
                 currTime = 0;
 
             }
+            if(currTime > 9f)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

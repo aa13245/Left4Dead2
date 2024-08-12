@@ -10,7 +10,7 @@ public class JKYEnemyMove1 : MonoBehaviour
     [SerializeField]
     private JKYAttackable Attackable;
     [SerializeField]
-    NavMeshAgent Agent;
+    public NavMeshAgent Agent;
     [SerializeField]
     public Animator Animator;
     [SerializeField]
