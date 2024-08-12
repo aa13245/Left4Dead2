@@ -85,7 +85,7 @@ public class JKYAttackable : MonoBehaviour
 
     private IEnumerator FadeOut()
     {
-        cc.enabled = false;
+        //cc.enabled = false;
         yield return new WaitForSeconds(FadeOutDelay);
 
         if (RagdollEnabler != null)
