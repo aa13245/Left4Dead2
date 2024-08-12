@@ -49,6 +49,7 @@ public class Human_KJS : MonoBehaviour
     public AudioClip[] fireSounds;
     AudioSource audioSource;
     WaistAngle waistAngle;
+    JKYshoot shoot;
 
     float minRecoil = 2;
 
@@ -216,6 +217,7 @@ public class Human_KJS : MonoBehaviour
         recoil = minRecoil;
         audioSource = GetComponent<AudioSource>();
         waistAngle = GetComponentInChildren<WaistAngle>();
+        shoot = GetComponent<JKYshoot>();
     }
     // Update is called once per frame
     void Update()
@@ -814,7 +816,7 @@ public class Human_KJS : MonoBehaviour
         if (target.layer == LayerMask.NameToLayer("Enemy"))
         {
             target.GetComponent<JKYEnemyHPSystem>().GetDamage(dmg, gameObject);
-            print(11212);
+            //shoot.ShootRagdoll(target);
         }
         // 아군 공격
         else if (target.layer == LayerMask.NameToLayer(isPlayer ? "Bot_JSW" : "Player_KJS"))

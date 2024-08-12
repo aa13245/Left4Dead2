@@ -29,7 +29,7 @@ public class JKYZombie1 : MonoBehaviour
         _ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
-
+        GetComponent<JKYEnemyHPSystem>().getDamage = HitEnemy;
         DisableRagdoll();
     }
 
