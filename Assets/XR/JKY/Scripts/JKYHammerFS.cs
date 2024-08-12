@@ -381,7 +381,7 @@ public class JKYHammerFS : MonoBehaviour
     {
         anim.SetTrigger("Throw");
         // 돌을 에너미 위에 생성
-        yield return new WaitForSeconds(1f); // 2초 기다림
+        yield return new WaitForSeconds(0.7f); // 2초 기다림
         rock = Instantiate(rockPrefab, transform.position + Vector3.up* 4.5f   , Quaternion.identity);
         print("위에 돌생성");
         smith.isStopped = true;
@@ -390,7 +390,7 @@ public class JKYHammerFS : MonoBehaviour
         // 거리 계산
         float dist = Vector3.Distance(transform.position, target.transform.position);
         // 돌을 플레이어에게 던짐
-        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 2)).normalized;
+        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 0)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
         rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
@@ -577,7 +577,7 @@ public class JKYHammerFS : MonoBehaviour
         cc.enabled = false;
 
         // 2초 동안 기다린 후에 자기 자신을 제거한다.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         print("소멸");
         Destroy(gameObject);
         //rockPrefab.SetActive(false);

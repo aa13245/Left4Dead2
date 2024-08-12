@@ -14,7 +14,7 @@ public class JKYshoot : MonoBehaviour
 
     private float _timeMouseButtonDown;
 
-    private Camera _camera;
+    public Camera _camera;
 
     void Awake()
     {
