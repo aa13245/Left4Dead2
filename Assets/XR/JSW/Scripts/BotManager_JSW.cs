@@ -173,6 +173,8 @@ public class BotManager_JSW : MonoBehaviour
                                 if (Vector3.Distance(transform.position, approchingTarget.transform.position) < 3f)
                                 {
                                     botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
+                                    inventory.SetSlotNum(3);
+                                    print(123123);
                                     human.Medikit(h.gameObject);
                                     return;
                                 }
@@ -189,7 +191,7 @@ public class BotManager_JSW : MonoBehaviour
                     // 자힐
                     if (human.HP < 40)
                     {
-                        inventory.SetSlotNum(3);
+                        
                         human.Medikit();
                         return;
                     }
@@ -247,7 +249,7 @@ public class BotManager_JSW : MonoBehaviour
             }
         }
         // 공격
-        if (botSight.FireEnable)
+        if (botSight.FireEnable && human.interactionState != Human_KJS.InteractionState.Reviving && human.interactionState != Human_KJS.InteractionState.SelfHealing && human.interactionState != Human_KJS.InteractionState.Healing)
         {   // 총을 안들고 있을 때
             if (inventory.SlotNum != 0)
             {   // 주무기가 있으면 들기
