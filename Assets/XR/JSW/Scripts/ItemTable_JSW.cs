@@ -141,12 +141,12 @@ using static ItemTable_JSW;
         molotov,
         medikit,
         spas,
-
+        m4a1
     }
     // 아이템 테이블
     public Dictionary<Items, object> itemTable = new Dictionary<Items, object> { };
     public GameObject[] itemObjs;
-    public MainWeapon ak47, spas;
+    public MainWeapon ak47, spas, m4a1;
     public SubWeapon pistol;
     public MeleeWeapon electricGuitar, crowbar;
     public Projectile pipeBomb, molotov;
@@ -176,6 +176,25 @@ using static ItemTable_JSW;
             recoil: 5
         );
         itemTable[Items.ak47] = ak47;
+        m4a1 = new MainWeapon(
+            magazineCapacity: 50,
+            maxAmmoCapacity: 360,
+            baseDmg: 33,
+            headDmg: new float[] { 120.47f, 132 },
+            bodyDmg: new float[] { 30.12f, 33 },
+            stomachDmg: new float[] { 37.65f, 41.25f },
+            limbDmg: new float[] { 22.59f, 24.75f },
+            maxRange: 57.14f,
+            fireRate: 0.0875f,
+            reloadSpeed: 2.25f,
+            isSniper: false,
+            isShotgun: false,
+            gauge: 0,
+            minRecoil: 2.5f,
+            maxRecoil: 7,
+            recoil: 3
+        );
+        itemTable[Items.m4a1] = m4a1;
         spas = new MainWeapon(
             magazineCapacity: 10,
             maxAmmoCapacity: 90,

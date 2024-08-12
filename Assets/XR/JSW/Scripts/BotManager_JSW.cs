@@ -219,11 +219,11 @@ public class BotManager_JSW : MonoBehaviour
                     {   // 주무기 탐지
                         farmingTarget = botSight.ItemDetect(0);
                     }
-                    // 투척류가 없을 때
-                    if (farmingTarget == null && inventory[2] == null)
-                    {
-                        farmingTarget = botSight.ItemDetect(2);
-                    }
+                    //// 투척류가 없을 때
+                    //if (farmingTarget == null && inventory[2] == null)
+                    //{
+                    //    farmingTarget = botSight.ItemDetect(2);
+                    //}
                     // 회복템이 없을 때
                     if (farmingTarget == null && inventory[3] == null)
                     {

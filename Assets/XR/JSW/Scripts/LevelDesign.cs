@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class LevelDesign : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class LevelDesign : MonoBehaviour
     bool isLightOn;
     public GameObject lights;
     bool isMusicOn;
-    public GameObject stage;
+    public VisualEffect[] fireWorks;
     bool isStarted;
 
     public Helicopter_JSW helicopter;
@@ -47,7 +48,6 @@ public class LevelDesign : MonoBehaviour
         raidSpawnPoints = GameObject.Find("RaidSpawnPoints");
 
         if (lights != null) lights.SetActive(false);
-        if (stage != null) stage.SetActive(false);
     }
 
     // Update is called once per frame
@@ -70,15 +70,22 @@ public class LevelDesign : MonoBehaviour
         if (!isMusicOn && isLightOn)
         {
             isMusicOn = true;
-            if (stage != null)
-            {
-                stage.SetActive (true);
-                // 음악, 폭죽
-            }
+            // 음악, 폭죽
+            FireWork(true);
             RaidStart();
             return true;
         }
         return false;
+    }
+    bool isFireWorkOn;
+    void FireWork(bool on)
+    {
+        if (isFireWorkOn == on) return;
+        isFireWorkOn = on;
+        for (int i = 0; i < fireWorks.Length; i++)
+        {
+            fireWorks[i].enabled = on;
+        }
     }
     // 레이드 시작
     void RaidStart()
@@ -95,7 +102,7 @@ public class LevelDesign : MonoBehaviour
         timer += Time.deltaTime;
         if (spawnCooltime > 0) spawnCooltime -= Time.deltaTime;
         if (specialZomCool > 0) specialZomCool -= Time.deltaTime;
-
+        if (timer > 10) FireWork(false);
         // 레이드 1
         if (timer > 10 && timer < 40)
         {
