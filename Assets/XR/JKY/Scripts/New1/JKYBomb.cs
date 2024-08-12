@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class JKYBomb : MonoBehaviour
 {
     public float radius;
-    public float power;
+    public float power = 100f;
     // Start is called before the first frame update
     void Start()
     {

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3948657098541668068}
   - component: {fileID: 2987091385058805403}
   - component: {fileID: -5849235698809892756}
+  - component: {fileID: -2331289469007351298}
   m_Layer: 19
   m_Name: Bomb
   m_TagString: Pipe
@@ -247,6 +248,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2331289469007351298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2739914139579394558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df837eb42a31f747a3735cf99a1f07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bomb: {fileID: 2739914139579394558}
+  force: 500
+  explosionDelay: 2
+  vfx: []
 --- !u!1001 &9021073682593920220
 PrefabInstance:
   m_ObjectHideFlags: 0

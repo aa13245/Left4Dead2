@@ -51,8 +51,9 @@ public class BombAction_KJS : MonoBehaviour
         {
             if (collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
+
                 // 적에게 데미지를 적용
-                collider.gameObject.GetComponent<JKYEnemyFSM>()?.HitEnemy(damage, gameObject);
+                collider.gameObject.GetComponent<JKYEnemyHPSystem>()?.GetDamage(damage, gameObject);
             }
         }
         if(bombSound != null)
