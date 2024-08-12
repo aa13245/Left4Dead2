@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2434097240114426631}
   - component: {fileID: 6431983302798080453}
   - component: {fileID: 4677831679550681969}
-  - component: {fileID: 1465430776419895576}
   m_Layer: 7
   m_Name: default
   m_TagString: Untagged
@@ -84,28 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1465430776419895576
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3358221836414760607}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: 14cb99b3392b38347bb7fc81e6aa3660, type: 3}
 --- !u!1 &4575852298896469340
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +94,7 @@ GameObject:
   - component: {fileID: 3917500472302486296}
   - component: {fileID: 4733871196951218594}
   - component: {fileID: 1923567800057588213}
+  - component: {fileID: 8257547493661831876}
   m_Layer: 7
   m_Name: PipeBomb
   m_TagString: Untagged
@@ -182,3 +160,26 @@ MonoBehaviour:
   kind: 5
   value1: 1
   value2: 0
+--- !u!136 &8257547493661831876
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4575852298896469340}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.023
+  m_Height: 0.24
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.1, z: 0}
