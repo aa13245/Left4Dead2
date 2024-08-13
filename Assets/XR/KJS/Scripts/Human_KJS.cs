@@ -50,7 +50,7 @@ public class Human_KJS : MonoBehaviour
     AudioSource audioSource;
     WaistAngle waistAngle;
     JKYshoot shoot;
-
+    public bool isEntered;
     float minRecoil = 2;
 
     void PlayFireSound(int soundIndex)

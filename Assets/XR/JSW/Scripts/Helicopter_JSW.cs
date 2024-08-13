@@ -10,12 +10,17 @@ public class Helicopter_JSW : MonoBehaviour
 
     float duration = 15; // 이동시간
     float elapsedTime;
+    Human_KJS[] humans = new Human_KJS[4];
+    EndingScene_JSW ending;
     // Start is called before the first frame update
     void Start()
     {
         startPos = transform.position;
         controlPos = GameObject.Find("HeliCtrl").transform.position;
         endPos = GameObject.Find("HeliDest").transform.position;
+        humans[0] = GameObject.Find("Player").GetComponent<Human_KJS>();
+        for (int i = 1; i < 4; i++) humans[i] = GameObject.Find("Bot" + i).GetComponent<Human_KJS>();
+        ending = GameObject.Find("EndingScene").GetComponent<EndingScene_JSW>();
     }
 
     // Update is called once per frame
@@ -30,9 +35,10 @@ public class Helicopter_JSW : MonoBehaviour
         Vector3 newPosition = CalculateQuadraticBezierPoint(t, startPos, controlPos, endPos);
 
         // 오브젝트 위치 업데이트
-        transform.position = newPosition;
-        if (elapsedTime > 5) Rot();
+        if (!isArrived) transform.position = newPosition;
+        if (elapsedTime > 5 && !isArrived) Rot();
         if (isEnable && !isArrived && elapsedTime >= duration) isArrived = true;
+        if (isArrived) EnterCheck();
     }
 
     // 2차 베지어 곡선 계산 함수
@@ -60,5 +66,14 @@ public class Helicopter_JSW : MonoBehaviour
     public void HelicopterEnable()
     {
         isEnable = true;
+    }
+    void EnterCheck()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (!humans[i].isEntered && humans[i].humanState == Human_KJS.HumanState.Normal) return;
+        }
+        
+        ending.StartScene(new bool[] { !humans[0].isEntered, humans[1].isEntered, humans[2].isEntered , humans[3].isEntered });
     }
 }

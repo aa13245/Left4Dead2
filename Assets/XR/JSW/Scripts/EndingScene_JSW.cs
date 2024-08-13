@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EndingScene_JSW : MonoBehaviour
 {
+    bool sceneEnable;
+
+    GameObject camObj;
     Camera cam;
     Vector3 camMovePos;
     Vector3 camLookPos;
@@ -19,10 +23,16 @@ public class EndingScene_JSW : MonoBehaviour
     GameObject helicopter;
     Vector3 heliLookPos;
 
+    Canvas canvas;
+    GameObject EndingCanvas;
+    Image fadeOut;
+    GameObject[] humans = new GameObject[4];
+
     // Start is called before the first frame update
     void Start()
     {
-        cam = transform.Find("Cam").GetComponent<Camera>();
+        camObj = transform.Find("Cam").gameObject;
+        cam = camObj.GetComponent<Camera>();
         camMovePos = (transform.Find("CamMovePos").transform.position - cam.transform.position).normalized;
         camLookPos = (cam.transform.Find("CamLookPos").transform.position - cam.transform.position).normalized;
         heliStartPos = GameObject.Find("HeliDest").transform.position;
@@ -30,8 +40,11 @@ public class EndingScene_JSW : MonoBehaviour
         heliDestPos = transform.Find("EndingHeliDest").position;
         helicopter = GameObject.Find("Helicopter");
         heliLookPos = helicopter.transform.Find("AnglePos").localPosition.normalized;
-        helicopter.transform.position = heliStartPos;
-        helicopter.transform.eulerAngles = Vector3.zero;
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        EndingCanvas = transform.Find("EndingCanvas").gameObject;
+        fadeOut = EndingCanvas.transform.Find("FadeOut").GetComponent<Image>();
+        humans[0] = GameObject.Find("Player");
+        for (int i = 1; i < 4; i++) humans[i] = GameObject.Find("Bot" + i);
     }
 
     // Update is called once per frame
@@ -42,6 +55,8 @@ public class EndingScene_JSW : MonoBehaviour
     float pitch;
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P)) StartScene(new bool[] {true,false,false,false});
+        if (!sceneEnable) return;
         t += Time.deltaTime;
         if (t < 12)
         {
@@ -86,5 +101,33 @@ public class EndingScene_JSW : MonoBehaviour
         p += tt * p2; // t^2 * P2
 
         return p;
+    }
+    bool isStarted;
+    public void StartScene(bool[] isDead)
+    {
+        if (isStarted) return;
+        StartCoroutine(Fade(isDead));
+    }
+    IEnumerator Fade(bool[] isDead)
+    {
+        while(fadeOut.color.a < 1)
+        {
+            fadeOut.color = new Color(0, 0, 0, fadeOut.color.a + Time.deltaTime * 3);
+            yield return null;
+        }
+        humans[0].SetActive(false);
+        for (int i = 1; i < 4; i++) humans[i].SetActive(!isDead[i]);
+        camObj.SetActive(true);
+        canvas.enabled = false;
+        yield return new WaitForSeconds(0.5f);
+        helicopter.transform.position = heliStartPos;
+        helicopter.transform.eulerAngles = Vector3.zero;
+        sceneEnable = true;
+        while (fadeOut.color.a > 0)
+        {
+            fadeOut.color = new Color(0, 0, 0, fadeOut.color.a - Time.deltaTime);
+            yield return null;
+        }
+        yield return null;
     }
 }

@@ -182,7 +182,6 @@ public class BotManager_JSW : MonoBehaviour
                                 else
                                 {
                                     botMove.ChangeBotMoveState(BotMove.BotMoveState.Approching);
-                                    return;
                                 }
                             }
                             else approchingTarget = null;
