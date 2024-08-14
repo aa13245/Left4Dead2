@@ -122,6 +122,9 @@ MonoBehaviour:
   attackPower: 1
   currTime: 0
   damageInterval: 5
+  player: {fileID: 0}
+  mat: {fileID: 2100000, guid: be6696e602b70ee4f91d31c2a0a12d3e, type: 2}
+  full: {fileID: -4364619484522388234, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
 --- !u!1001 &1590177144721787419
 PrefabInstance:
   m_ObjectHideFlags: 0

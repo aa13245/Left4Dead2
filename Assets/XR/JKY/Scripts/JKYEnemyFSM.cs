@@ -78,7 +78,8 @@ public class JKYEnemyFSM : MonoBehaviour
     private Vector3 climbTarget;
     private bool isMoving = false;
 
-
+    public AudioSource audio;
+    public AudioClip[] sounds;
 
     // 에너미 시야각
     public float lookRadius = 8f; // 시야반경
@@ -90,6 +91,7 @@ public class JKYEnemyFSM : MonoBehaviour
     //private Transform enemy;
     void Start()
     {
+        audio = GetComponent<AudioSource>();
         // 최초상태 대기
         m_State = EnemyState.Idle;
         player = GameObject.Find("Player").transform;
@@ -182,6 +184,8 @@ public class JKYEnemyFSM : MonoBehaviour
     Vector3 climbReadyPo;
     public Transform testTr;
     public float extraRotationSpeed = 0.3f;
+    private bool isAudioPlaying = false;
+
     void Move()
     {
 
@@ -200,7 +204,10 @@ public class JKYEnemyFSM : MonoBehaviour
             //smith.ResetPath();
             // 내비게이션으로 접근하는 최소 거리를 공격 가능 거리로 설정한다.
             smith.stoppingDistance = attackDistance;
-
+            if (!isAudioPlaying)
+            {
+                PlayRunningSound();
+            }
             //내비게이션의 목적지를 플레이어의 위치로 설정한다.
 
 
@@ -216,6 +223,7 @@ public class JKYEnemyFSM : MonoBehaviour
             {
                 smith.SetDestination(target.position);
                 //y값
+                //audio.PlayOneShot(sounds[1]);
 
 
                 if (checkForClimbingShortcut())
@@ -226,6 +234,7 @@ public class JKYEnemyFSM : MonoBehaviour
                     // smith.SetDestination(target.position);
                         print("durldhkTsl");
                         smith.ResetPath();
+
                         smith.SetDestination(target.position);
                     }
                 }
@@ -261,7 +270,7 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             smith.isStopped = true;
             smith.ResetPath();
-
+            StopRunningSound();
             m_State = EnemyState.Attack;
             print("상태전환 Move -> attack");
 
@@ -273,7 +282,24 @@ public class JKYEnemyFSM : MonoBehaviour
         // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
     }
-
+    private void PlayRunningSound()
+    {
+        if (audio != null && sounds != null)
+        {
+            audio.clip = sounds[1];
+            audio.loop = true;
+            audio.Play();
+            isAudioPlaying = true;
+        }
+    }
+    private void StopRunningSound()
+    {
+        if (audio != null)
+        {
+            audio.Stop();
+            isAudioPlaying = false;
+        }
+    }
     private void OnDrawGizmos()
     {
         if (transform != null)
@@ -345,7 +371,7 @@ public class JKYEnemyFSM : MonoBehaviour
             }
             else
             {
-                print(111);
+               // print(111);
                 
             }
         }
@@ -508,6 +534,8 @@ public class JKYEnemyFSM : MonoBehaviour
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                //audio.PlayOneShot(sounds[0]);
+
                 print("공격");
                 currentTime = 0;
 

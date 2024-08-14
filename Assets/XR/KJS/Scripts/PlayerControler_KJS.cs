@@ -40,6 +40,8 @@ public class PlayerControler_KJS : MonoBehaviour
 
     void Start()
     {
+        colorScale = mat.GetFloat("_ColorScale");
+
         // 기존 초기화 코드
         cc = GetComponent<CharacterController>();
         human = GetComponent<Human_KJS>();
@@ -405,5 +407,81 @@ public class PlayerControler_KJS : MonoBehaviour
                 interactionIcons.transform.GetChild(1).gameObject.SetActive(true);
             }
         }
+    }
+
+
+    [SerializeField] FullScreenPassRendererFeature full;
+    public Material mat;
+    public float lerpDuration = 15f; // Lerp의 지속 시간
+    private float lerpTime = 0f;    // Lerp 시간 계산
+    private float startValue = 1f;  // 시작 색상 비율
+    private float endValue = -0.2f; // 종료 색상 비율
+    private float elapsedTime;
+    bool check = false;
+    float colorScale;
+    public void BumerAttack()
+    {
+        //print("emfd");
+        StartCoroutine(Bumer());
+    }
+    IEnumerator Bumer()
+    {
+        float elapsedTime = 0f;
+        yield return new WaitForSeconds(0.1f);
+        mat.SetFloat("_ColorScale", 1f);
+        //colorScale = 1f;
+        full.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+        while (elapsedTime < lerpDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float lerpProgress = elapsedTime / lerpDuration;
+
+            // Lerp 계산
+            float lerpedValue = Mathf.Lerp(startValue, endValue, lerpProgress);
+
+            // Material의 속성 업데이트
+            if (mat != null)
+            {
+                mat.SetFloat("_ColorScale", lerpedValue);
+            }
+
+            // 다음 프레임까지 대기
+            yield return null;
+        }
+        // 마지막 값으로 설정 (Lerp 종료 시)
+        if (mat != null)
+        {
+            mat.SetFloat("_ColorScale", endValue);
+            full.SetActive(false);
+        }
+
+
+
+        //lerpTime += Time.deltaTime / lerpDuration;
+
+        //float lerpedValue = Mathf.Lerp(startValue, endValue, lerpTime);
+
+        //// Material의 속성 업데이트
+        //if (mat != null)
+        //{
+        //    mat.SetFloat("_ColorScale", lerpedValue);
+        //}
+
+
+
+        //if (colorScale < -0.2f)
+        //{
+        //    // Lerp 완료 시, 시간과 색상 비율 초기화
+        //    if (lerpTime >= 1f)
+        //    {
+        //        lerpTime = 1f;
+        //        full.SetActive(false);
+        //        enabled = false;  // 스크립트 비활성화 (옵션)
+        //        mat.SetFloat("_ColorScale", 1f);
+
+        //    }
+        //}
     }
 }

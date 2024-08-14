@@ -101,6 +101,12 @@ public class JKYHammerFS : MonoBehaviour
     // 더가까운 플레이어찾기
     private Transform target;
     //private Transform enemy;
+
+    //public Transform player;            // 플레이어의 Transform
+    public Transform tank;              // 탱크의 Transform
+    public CameraShake cameraShake;     // CameraShake 스크립트 참조
+    public float maxShakeDistance = 20f; // 최대 흔들림이 발생하는 거리
+    public float minShakeDistance = 2f;  // 흔들림이 시작되는 최소 거리
     void Start()
     {
         // 최초상태 대기
@@ -274,7 +280,24 @@ public class JKYHammerFS : MonoBehaviour
                     {
                         print("돌진할꺼야");
                         m_State = EnemyState.Run;
-                        
+                        ////ㅇ ㅕ 기 고침!!!!!!!!!!!!!!
+
+
+                        ////player = GameObject.FindGameObjectsWithTag("Player");
+                        //float distance = Vector3.Distance(target.position, tank.position);
+
+                        //if (distance < maxShakeDistance)
+                        //{
+                        //    float intensity = Mathf.Lerp(cameraShake.maxShakeMagnitude, 0f, distance / maxShakeDistance);
+
+                        //    // 탱크가 플레이어에게 다가올 때 흔들림 효과 적용
+                        //    cameraShake.ShakeCamera(intensity);
+                        //}
+                        //else
+                        //{
+                        //    // 거리가 멀어지면 흔들림을 멈추고 카메라 위치를 원래대로 리셋
+                        //    cameraShake.ResetCameraPosition();
+                        //}
                     }
                 }
                 smith.SetDestination(target.position);
@@ -377,15 +400,24 @@ public class JKYHammerFS : MonoBehaviour
         m_State = EnemyState.Move;
 
     }
+    float rocktime;
     IEnumerator PrepareAndThrowRock()
     {
-        anim.SetTrigger("Throw");
-        // 돌을 에너미 위에 생성
-        yield return new WaitForSeconds(0.7f); // 2초 기다림
-        rock = Instantiate(rockPrefab, transform.position + Vector3.up* 4.5f   , Quaternion.identity);
-        print("위에 돌생성");
         smith.isStopped = true;
-        yield return new WaitForSeconds(1f); // 2초 기다림
+        anim.SetTrigger("Throw");
+        rock = Instantiate(rockPrefab, transform.position + Vector3.up * 3f, Quaternion.identity);
+        while(rocktime < 0.7f)
+        {
+            rocktime += Time.deltaTime;
+            rock.transform.Translate(Vector3.up * 2f * Time.deltaTime);
+            yield return null;
+        }
+        rocktime = 0;
+        // 돌을 에너미 위에 생성
+        //yield return new WaitForSeconds(0.3f); // 2초 기다림
+        //rock = Instantiate(rockPrefab, transform.position + Vector3.up* 4.5f   , Quaternion.identity);
+        print("위에 돌생성");
+        yield return new WaitForSeconds(0.7f); // 2초 기다림
         smith.isStopped = false;
         // 거리 계산
         float dist = Vector3.Distance(transform.position, target.transform.position);

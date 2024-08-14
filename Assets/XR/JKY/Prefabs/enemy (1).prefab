@@ -185,6 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7cc5231aa10b43488b97f1991dffa62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
 --- !u!114 &6137383602705501207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,6 +213,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   detectionRange: 15
+  audio: {fileID: 0}
+  sounds:
+  - {fileID: 8300000, guid: 9847cc8d8d4bb9d4496de9c33c8e2ef1, type: 3}
+  - {fileID: 8300000, guid: 505bdd526517029439e6811582bfc121, type: 3}
   lookRadius: 8
   fieldOfView: 120
   testTr: {fileID: 0}

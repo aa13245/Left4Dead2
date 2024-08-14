@@ -1032,6 +1032,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: enemy (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6117518169804835236, guid: 977c90ae4b2674444b9b558d039a45c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8224243824810971053, guid: 977c90ae4b2674444b9b558d039a45c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6017,7 +6022,7 @@ PrefabInstance:
     - target: {fileID: 4457177794738909795, guid: 2c37bf3373238414a845308bc2aa3c1f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6949318033934807715, guid: 2c37bf3373238414a845308bc2aa3c1f,
         type: 3}
@@ -9144,7 +9149,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c1244e7b7ad25f34fbc888e8a86dd903,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1082271958561512970, guid: c1244e7b7ad25f34fbc888e8a86dd903,
         type: 3}
@@ -14028,6 +14033,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: enemy (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6117518169804835236, guid: 977c90ae4b2674444b9b558d039a45c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8224243824810971053, guid: 977c90ae4b2674444b9b558d039a45c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14314,6 +14324,10 @@ MonoBehaviour:
   knockbackDistance: 7
   rockPrefab: {fileID: 1922619696119781738, guid: d2260882509eb884ab3b9d23842cf3bf,
     type: 3}
+  tank: {fileID: 0}
+  cameraShake: {fileID: 0}
+  maxShakeDistance: 20
+  minShakeDistance: 2
   extraRotationSpeed: 0.3
   detectionAngle: 70
   angleStep: 1
@@ -20853,6 +20867,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: zombie3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626263685706064983, guid: 2a7d5810b31c61942bcae04e65d0d3f2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
