@@ -218,22 +218,22 @@ public class GameManager_KJS : MonoBehaviour
         //주무기 슬롯의 총알 정보 업데이트
         if (player.inventory[0] != null && ItemTable_JSW.instance.itemTable[player.inventory[0].kind] is ItemTable_JSW.MainWeapon mainWeapon)
          {
-         currentAmmoText.text = $"Ammo: {player.inventory[0].value1}/{mainWeapon.magazineCapacity}";
-         totalAmmoText.text = $"Total Ammo: {player.inventory[0].value2}";
+         currentAmmoText.text = $"{player.inventory[0].value1}";
+         totalAmmoText.text = $"{player.inventory[0].value2}";
          }
         else
          {
-          currentAmmoText.text = "Ammo: N/A";
-         totalAmmoText.text = "Total Ammo: N/A";
+          currentAmmoText.text = "N/A";
+         totalAmmoText.text = "N/A";
         }
 
         if (player.inventory[1] != null && ItemTable_JSW.instance.itemTable[player.inventory[1].kind] is ItemTable_JSW.SubWeapon subWeapon)
         {
-            currentAmmoText2.text = $"Ammo: {player.inventory[1].value1}/{subWeapon.magazineCapacity}";
+            currentAmmoText2.text = $"{player.inventory[1].value1}";
         }
         else
         {
-            currentAmmoText2.text = "Ammo: N/A";
+            currentAmmoText2.text = "N/A";
         }
             
     }
