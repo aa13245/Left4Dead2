@@ -65,6 +65,9 @@ MonoBehaviour:
   human: {fileID: 0}
   inventory: {fileID: 0}
   anim: {fileID: 7666167578600085579}
+  full: {fileID: 0}
+  mat: {fileID: 2100000, guid: be6696e602b70ee4f91d31c2a0a12d3e, type: 2}
+  lerpDuration: 15
 --- !u!114 &6689908045244367711
 MonoBehaviour:
   m_ObjectHideFlags: 0
