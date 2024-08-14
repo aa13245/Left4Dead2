@@ -152,7 +152,7 @@ public class EndingScene_JSW : MonoBehaviour
         }
         else
         {
-            text.text = "생존자들이 탈출했습니다!\n\n\n\n\n\n\n\n\n\n\n\n\n";
+            text.text = "생존자들이 탈출했습니다!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         }
         text.text += "생존자\n\n플레이어 로셸 역할" + (isDead[0] ? " (고)\n" : "\n");
         text.text += humans[1].GetComponent<BotManager_JSW>().botName + " 본인 역할" + (isDead[1] ? " (고)\n" : "\n");

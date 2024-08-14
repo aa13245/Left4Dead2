@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class LevelDesign : MonoBehaviour
@@ -22,6 +23,15 @@ public class LevelDesign : MonoBehaviour
 
     public Helicopter_JSW helicopter;
     public Transform botDest;
+    GameObject ping;
+    public GameObject[] pingPos;
+
+    // BGM
+    public AudioSource concertAudio;
+    public AudioClip[] music;
+    AudioSource audioSource;
+    public AudioClip bgm_horde;
+
 
     private void Awake()
     {
@@ -30,6 +40,7 @@ public class LevelDesign : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         helicopter = GameObject.Find("Helicopter").GetComponent<Helicopter_JSW>();
         botDest = GameObject.Find("BotDest").transform;
         // 시작 좀비 스폰
@@ -48,18 +59,23 @@ public class LevelDesign : MonoBehaviour
         raidSpawnPoints = GameObject.Find("RaidSpawnPoints");
 
         if (lights != null) lights.SetActive(false);
+        ping = GameObject.Find("PingCanvas").transform.GetChild(0).gameObject;
+        //StartCoroutine(Message());
     }
 
     // Update is called once per frame
     void Update()
     {
         RaidUpdate();
+        pingPosUpdate();
     }
     public bool LightOn()
     {
         if (!isLightOn)
         {
             isLightOn = true;
+            pingLvl = 2;
+            ping.transform.GetChild(0).GetComponent<Text>().text = "록 콘서트를 시작하여 헬기에 신호를 보내십시오.";
             if (lights != null) lights.SetActive (true);
             return true;
         }
@@ -70,12 +86,42 @@ public class LevelDesign : MonoBehaviour
         if (!isMusicOn && isLightOn)
         {
             isMusicOn = true;
+            pingLvl = 3;
+            ping.SetActive(false);
+            StartCoroutine(Message());
             // 음악, 폭죽
             FireWork(true);
             RaidStart();
             return true;
         }
         return false;
+    }
+    public GameObject msgObj;
+    public Text icon;
+    public Text mainText;
+    IEnumerator Message()
+    {
+        concertAudio.clip = music[0];
+        concertAudio.Play();
+        msgObj.SetActive(true);
+        while (msgObj.GetComponent<RectTransform>().anchoredPosition.y > -185)
+        {   // 내려옴
+            msgObj.GetComponent<RectTransform>().anchoredPosition += Vector2.down * Time.deltaTime * 1000;
+            icon.color += new Color(0, 0, 0, Time.deltaTime * 3);
+            mainText.color += new Color(0, 0, 0, Time.deltaTime * 3);
+            yield return null;
+        }
+        yield return new WaitForSeconds(5);
+        audioSource.PlayOneShot(bgm_horde, 0.5f);
+        yield return new WaitForSeconds(2);
+        // 사라짐
+        while (icon.color.a > 0)
+        {
+            icon.color -= new Color(0, 0, 0, Time.deltaTime * 3);
+            mainText.color -= new Color(0, 0, 0, Time.deltaTime * 3);
+            yield return null;
+        }
+        msgObj.SetActive(false);
     }
     bool isFireWorkOn;
     void FireWork(bool on)
@@ -178,5 +224,20 @@ public class LevelDesign : MonoBehaviour
             Instantiate(tank, raidSpawnPoints.transform.GetChild(Random.Range(0, raidSpawnPoints.transform.childCount)).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
         }
         
+    }
+    int pingLvl;
+    void pingPosUpdate()
+    {
+        if (pingLvl == 1) ping.transform.position = Camera.main.WorldToScreenPoint(pingPos[0].transform.position);
+        else if (pingLvl == 2) ping.transform.position = Camera.main.WorldToScreenPoint(pingPos[1].transform.position);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer != LayerMask.NameToLayer("Player_KJS")) return;
+        if (pingLvl == 0)
+        {
+            pingLvl = 1;
+            ping.SetActive(true);
+        }
     }
 }
