@@ -12,7 +12,7 @@ public class JKYAttackable : MonoBehaviour
     } = 100;
     [SerializeField]
     private JKYRagdollEnabler RagdollEnabler;
-    private JKYEnemyMove1 move1;
+    private JKYEnemyMove move1;
     [SerializeField]
     private float FadeOutDelay = 2f;
 
@@ -38,7 +38,7 @@ public class JKYAttackable : MonoBehaviour
     {
         //CharacterController cc = GetComponentInParent<CharacterController>();
         RagdollEnabler = GetComponent<JKYRagdollEnabler>();
-        move1 = GetComponent<JKYEnemyMove1>();
+        move1 = GetComponent<JKYEnemyMove>();
        
         if (RagdollEnabler != null)
         {
