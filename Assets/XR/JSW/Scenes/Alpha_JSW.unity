@@ -516,7 +516,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 773061242}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd1525a9b1c0c174a9c0fdb2e13dbb5b, type: 3}
   m_Name: 
@@ -807,6 +807,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -4364619484522388234, guid: c40be3174f62c4acf8c1216858c64956,
         type: 2}
+    - target: {fileID: 4002518499012202388, guid: 0dcd9f679fd1e5a49b129ccd326ec94f,
+        type: 3}
+      propertyPath: lerpDuration
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5159480021993355730, guid: 0dcd9f679fd1e5a49b129ccd326ec94f,
         type: 3}
       propertyPath: m_Name

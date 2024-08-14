@@ -518,7 +518,7 @@ public class JKYHammerFS : MonoBehaviour
                 anim.SetTrigger("StartAttack");
                 if (currentTime > 3f)
                 {
-                    target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject);
+                    target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject, true);
                     //target.GetComponent<Human_KJS>().isKnockedBack = true;
                     target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
                     print("공격");

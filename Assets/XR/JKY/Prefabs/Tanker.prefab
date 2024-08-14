@@ -525,7 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   findDistance: 70
-  attackDistance: 5
+  attackDistance: 4
   moveSpeed: 3
   attackPower: 3
   weaponPower: 5
@@ -547,6 +547,10 @@ MonoBehaviour:
   knockbackDistance: 7
   rockPrefab: {fileID: 1922619696119781738, guid: d2260882509eb884ab3b9d23842cf3bf,
     type: 3}
+  tank: {fileID: 0}
+  cameraShake: {fileID: 0}
+  maxShakeDistance: 20
+  minShakeDistance: 2
   extraRotationSpeed: 1
   detectionAngle: 70
   angleStep: 1

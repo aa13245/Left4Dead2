@@ -29,10 +29,25 @@ public class JKYBumerAttack : MonoBehaviour
     {
         
     }
-    private void OnTriggerStay(Collider other)
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if(other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))// || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
+    //    {
+    //        // PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
+    //        // qw.BumerAttack();
+    //        PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
+    //        qw.BumerAttack();
+    //    }
+    //}
+    private void OnCollisionEnter(Collision collision)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))// || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
+
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))// || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
         {
+            print("들어왔다>?");
             // PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
             // qw.BumerAttack();
             PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
@@ -40,6 +55,5 @@ public class JKYBumerAttack : MonoBehaviour
         }
     }
 
-    
 
 }

@@ -24,23 +24,23 @@ public class TestTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if(Input.GetKeyDown(KeyCode.Z))
         {
             mat.SetFloat("_ColorScale", 1f);
             //colorScale = 1f;
             full.SetActive(true);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             full.SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             //StartCoroutine(Asd());
             check = true;
 
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (Input.GetKeyDown(KeyCode.V))
         {
             PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
             qw.BumerAttack();

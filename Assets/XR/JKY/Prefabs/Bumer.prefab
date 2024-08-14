@@ -488,17 +488,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c1244e7b7ad25f34fbc888e8a86dd903,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -33.91
+      value: -32.66
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c1244e7b7ad25f34fbc888e8a86dd903,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: -0.018210936
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c1244e7b7ad25f34fbc888e8a86dd903,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 35.6
+      value: -4.35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c1244e7b7ad25f34fbc888e8a86dd903,
         type: 3}
@@ -1317,10 +1317,11 @@ MonoBehaviour:
   explosionDelay: 2
   explosionEffect: {fileID: 1330389467405727979, guid: f602cb63d43109c4bbc7d78cba30ee87,
     type: 3}
+  player: {fileID: 0}
   explosionDamage: 5
-  vomitRange: 40
-  vomitCooldown: 9
-  vomitEffect: {fileID: 484206938325575490, guid: 140edd8e031f7fd40badd00354c3bedb,
+  vomitRange: 13
+  vomitCooldown: 7
+  vomitEffect: {fileID: 2176443599614163098, guid: cfda67c6ce8fba146a1f0f37d4435fb0,
     type: 3}
   vomitDamage: 2
   vomitAngle: 180
@@ -1329,7 +1330,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 33554432
   hp: 0
-  maxhp: 120
+  maxhp: 500
   _currentState: 0
   currTime: 0
 --- !u!114 &4419275957531853415
@@ -1347,6 +1348,8 @@ MonoBehaviour:
   attackPower: 7
   currTime: 0
   damageInterval: 2
+  player: {fileID: 0}
+  mat: {fileID: 0}
   full: {fileID: -4364619484522388234, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
 --- !u!95 &986199028942744359
 Animator:

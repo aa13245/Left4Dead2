@@ -961,13 +961,23 @@ public class Human_KJS : MonoBehaviour
         stun();
     }
     float knockBackPow = 30;
+    float boomerKnockBackPow = 9;
     public Vector3 knockBackVector = Vector3.zero;
-    public void ApplyKnockBack(GameObject zombie)
+    public void ApplyKnockBack(GameObject zombie, bool tank)
     {
         if (humanState == HumanState.Dead) return;
-        Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
-        dir.Normalize();
-        knockBackVector = dir * knockBackPow;
+        if (tank)
+        {   // 탱크 넉백
+            Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
+            dir.Normalize();
+            knockBackVector = dir * knockBackPow;
+        }
+        else
+        {   // 부머 넉백
+            Vector3 dir = transform.position - zombie.transform.position;
+            dir.Normalize();
+            knockBackVector = dir * boomerKnockBackPow;
+        }
     }
     void KnockBackUpdate()
     {

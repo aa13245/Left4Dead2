@@ -2473,7 +2473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c140f2f3541fd904b9a42d7775af2900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Life>k__BackingField: 50
+  <Life>k__BackingField: 100
   RagdollEnabler: {fileID: 0}
   FadeOutDelay: 2
   _maximumForce: 0
@@ -2569,7 +2569,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 15
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -2619,7 +2619,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.06944445
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
