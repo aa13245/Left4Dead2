@@ -26,6 +26,7 @@ public class Helicopter_JSW : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.O)) HelicopterEnable();
         if (!isEnable) return;
         // t 값 업데이트 (0에서 1 사이)
         elapsedTime += Time.deltaTime;
@@ -65,7 +66,11 @@ public class Helicopter_JSW : MonoBehaviour
     public bool isArrived;
     public void HelicopterEnable()
     {
-        isEnable = true;
+        if (!isEnable)
+        {
+            isEnable = true;
+            GetComponent<AudioSource>().Play();
+        }
     }
     void EnterCheck()
     {
@@ -74,6 +79,6 @@ public class Helicopter_JSW : MonoBehaviour
             if (!humans[i].isEntered && humans[i].humanState == Human_KJS.HumanState.Normal) return;
         }
         
-        ending.StartScene(new bool[] { !humans[0].isEntered, humans[1].isEntered, humans[2].isEntered , humans[3].isEntered });
+        ending.StartScene(new bool[] { !humans[0].isEntered, !humans[1].isEntered, !humans[2].isEntered , !humans[3].isEntered });
     }
 }
