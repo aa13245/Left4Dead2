@@ -23,14 +23,18 @@ public class LevelDesign : MonoBehaviour
 
     public Helicopter_JSW helicopter;
     public Transform botDest;
-    GameObject ping;
+    GameObject canvas;
     public GameObject[] pingPos;
 
     // BGM
     public AudioSource concertAudio;
     public AudioClip[] music;
-    AudioSource audioSource;
+    public AudioSource audioSource;
+    public AudioSource audioSource2;
     public AudioClip bgm_horde;
+    public AudioClip bgm_arrived;
+    public AudioClip bgm_ending;
+    public GameObject listener;
 
 
     private void Awake()
@@ -40,7 +44,6 @@ public class LevelDesign : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
         helicopter = GameObject.Find("Helicopter").GetComponent<Helicopter_JSW>();
         botDest = GameObject.Find("BotDest").transform;
         // 시작 좀비 스폰
@@ -59,13 +62,40 @@ public class LevelDesign : MonoBehaviour
         raidSpawnPoints = GameObject.Find("RaidSpawnPoints");
 
         if (lights != null) lights.SetActive(false);
-        ping = GameObject.Find("PingCanvas").transform.GetChild(0).gameObject;
-        //StartCoroutine(Message());
+        canvas = GameObject.Find("PingCanvas").transform.GetChild(0).gameObject;
+        StartCoroutine(GameStart());
     }
-
+    IEnumerator GameStart()
+    {
+        AudioSource radio = GameObject.Find("Radio").GetComponent<AudioSource>();
+        Image scriptUI = GameObject.Find("PingCanvas").transform.Find("ScriptUI").GetComponent<Image>();
+        Text script = scriptUI.transform.GetChild(0).GetComponent<Text>();
+        yield return new WaitForSeconds(2);
+        audioSource.Play();
+        while (audioSource2.volume > 0)
+        {
+            audioSource2.volume -= Time.deltaTime * 0.1f;
+            yield return null;
+        }
+        radio.Play();
+        scriptUI.transform.gameObject.SetActive(true);
+        audioSource2.Stop();
+        yield return new WaitForSeconds(10);
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= Time.deltaTime * 0.02f;
+            scriptUI.color = new Color(scriptUI.color.r, scriptUI.color.g, scriptUI.color.b, scriptUI.color.a - Time.deltaTime * 0.5f);
+            script.color = new Color(script.color.r, script.color.g, script.color.b, script.color.a - Time.deltaTime * 1);
+            yield return null;
+        }
+        audioSource.Stop();
+        audioSource.volume = 0.3f;
+        audioSource2.volume = 0.3f;
+    }
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.O) && !helicopter.isEnable) StartCoroutine(Helicopter());
         RaidUpdate();
         pingPosUpdate();
     }
@@ -75,7 +105,7 @@ public class LevelDesign : MonoBehaviour
         {
             isLightOn = true;
             pingLvl = 2;
-            ping.transform.GetChild(0).GetComponent<Text>().text = "록 콘서트를 시작하여 헬기에 신호를 보내십시오.";
+            canvas.transform.GetChild(0).GetComponent<Text>().text = "록 콘서트를 시작하여 헬기에 신호를 보내십시오.";
             if (lights != null) lights.SetActive (true);
             return true;
         }
@@ -87,8 +117,9 @@ public class LevelDesign : MonoBehaviour
         {
             isMusicOn = true;
             pingLvl = 3;
-            ping.SetActive(false);
+            canvas.SetActive(false);
             StartCoroutine(Message());
+            StartCoroutine(RaidCoroutine());
             // 음악, 폭죽
             FireWork(true);
             RaidStart();
@@ -112,7 +143,7 @@ public class LevelDesign : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(5);
-        audioSource.PlayOneShot(bgm_horde, 0.5f);
+        audioSource.PlayOneShot(bgm_horde);
         yield return new WaitForSeconds(2);
         // 사라짐
         while (icon.color.a > 0)
@@ -170,7 +201,6 @@ public class LevelDesign : MonoBehaviour
                 Spawn(ZomKind.Tank);
             }
         }
-
         // 무한 레이드
         if (timer > 190)
         {
@@ -181,10 +211,39 @@ public class LevelDesign : MonoBehaviour
                 Spawn(ZomKind.Tank);
             }
             if (timer > 210 && !helicopter.isEnable){
-                helicopter.HelicopterEnable();
+                StartCoroutine(Helicopter());
             }
         }
-
+    }
+    IEnumerator RaidCoroutine()
+    {
+        yield return new WaitForSeconds(100);
+        audioSource.PlayOneShot(bgm_horde);
+        yield return new WaitForSeconds(190);
+        audioSource.PlayOneShot(bgm_horde);
+    }
+    IEnumerator Helicopter()
+    {
+        while(concertAudio.volume > 0)
+        {
+            concertAudio.volume -= Time.deltaTime * 0.1f;
+            yield return null;
+        }
+        helicopter.HelicopterEnable();
+        audioSource.clip = bgm_arrived;
+        audioSource.Play();
+    }
+    public IEnumerator EndingSound()
+    {
+        FireWork(true);
+        yield return new WaitForSeconds(7);
+        audioSource2.PlayOneShot(bgm_ending, 2);
+        while(audioSource.volume > 0)
+        {
+            audioSource.volume -= Time.deltaTime * 0.08f;
+            listener.transform.Translate(Vector3.up * Time.deltaTime * 40);
+            yield return null;
+        }
     }
 
     enum ZomKind
@@ -228,8 +287,8 @@ public class LevelDesign : MonoBehaviour
     int pingLvl;
     void pingPosUpdate()
     {
-        if (pingLvl == 1) ping.transform.position = Camera.main.WorldToScreenPoint(pingPos[0].transform.position);
-        else if (pingLvl == 2) ping.transform.position = Camera.main.WorldToScreenPoint(pingPos[1].transform.position);
+        if (pingLvl == 1) canvas.transform.position = Camera.main.WorldToScreenPoint(pingPos[0].transform.position);
+        else if (pingLvl == 2) canvas.transform.position = Camera.main.WorldToScreenPoint(pingPos[1].transform.position);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -237,7 +296,7 @@ public class LevelDesign : MonoBehaviour
         if (pingLvl == 0)
         {
             pingLvl = 1;
-            ping.SetActive(true);
+            canvas.SetActive(true);
         }
     }
 }

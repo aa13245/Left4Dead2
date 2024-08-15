@@ -57,7 +57,7 @@ public class GameManager_KJS : MonoBehaviour
         gameLabel = canvas.transform.Find("Label_GameState").gameObject;
         gameText = gameLabel.GetComponent<Text>();
         //상태 텍스트의 내용을 'Ready...'로 한다.
-        gameText.text = "Ready...";
+        gameText.text = "";
         //상태 텍스트의 색상을 빨간색으로 한다.
         gameText.color = new Color32(255, 0, 0, 255);
         //게임 준비 > 게임 중 상태로 전환하기
@@ -91,13 +91,13 @@ public class GameManager_KJS : MonoBehaviour
     IEnumerator ReadyToStart()
     {
         //2초간 대기한다.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0);
 
         //상태 텍스트의 내용을 'Go!'로 한다.
-        gameText.text = "Go!";
+        gameText.text = "";
 
         //0.5초간 대기한다.
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.01f);
 
         //상태 텍스트를 비활성화 한다.
         gameLabel.SetActive(false);

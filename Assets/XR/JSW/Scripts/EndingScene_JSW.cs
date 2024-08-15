@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class EndingScene_JSW : MonoBehaviour
 {
     bool sceneEnable;
-
+    LevelDesign levelDesign;
     GameObject camObj;
     Camera cam;
     Vector3 camMovePos;
@@ -33,6 +33,7 @@ public class EndingScene_JSW : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        levelDesign = GameObject.Find("LevelDesign").GetComponent<LevelDesign>();
         camObj = transform.Find("Cam").gameObject;
         cam = camObj.GetComponent<Camera>();
         camMovePos = (transform.Find("CamMovePos").transform.position - cam.transform.position).normalized;
@@ -115,7 +116,7 @@ public class EndingScene_JSW : MonoBehaviour
     }
     float creditSpeed;
     IEnumerator Scene(bool[] isDead)
-    {
+    {   // 페이드 아웃
         while(fadeOut.color.a < 1)
         {
             fadeOut.color = new Color(0, 0, 0, fadeOut.color.a + Time.deltaTime * 3);
@@ -126,15 +127,19 @@ public class EndingScene_JSW : MonoBehaviour
         camObj.SetActive(true);
         canvas.enabled = false;
         yield return new WaitForSeconds(0.5f);
+        // 헬기 출발
+        StartCoroutine(levelDesign.EndingSound());
         helicopter.transform.position = heliStartPos;
         helicopter.transform.eulerAngles = Vector3.zero;
         sceneEnable = true;
+        // 페이드 온
         while (fadeOut.color.a > 0)
         {
             fadeOut.color = new Color(0, 0, 0, fadeOut.color.a - Time.deltaTime);
             yield return null;
         }
         yield return new WaitForSeconds(13.5f);
+        // 페이드 아웃
         while (fadeOut.color.a < 1)
         {
             fadeOut.color = new Color(0, 0, 0, fadeOut.color.a + Time.deltaTime * 3);
@@ -182,7 +187,7 @@ public class EndingScene_JSW : MonoBehaviour
             logo.color = new Color(255, 255, 255, logo.color.a + Time.deltaTime * (1 - logo.color.a) * 0.5f);
             yield return null;
         }
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(12);
         while (logo.color.a > 0)
         {
             logo.color = new Color(255, 255, 255, logo.color.a - Time.deltaTime * 0.2f);

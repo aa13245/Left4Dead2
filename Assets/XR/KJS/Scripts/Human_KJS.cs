@@ -47,6 +47,9 @@ public class Human_KJS : MonoBehaviour
     private ObjRotate_KJS objRotate;
 
     public AudioClip[] fireSounds;
+    public AudioClip footSound;
+    float footSoundTimer;
+    public float speed;
     AudioSource audioSource;
     WaistAngle waistAngle;
     JKYshoot shoot;
@@ -228,10 +231,23 @@ public class Human_KJS : MonoBehaviour
         HpUpdate();
         InteractionStateUpdate();
         RecoilRecovery();
+        FootSound();
     }
     float interactionTime;
     float interactionTimer;
     GameObject interactor;
+    void FootSound()
+    {
+        if (speed > 0.01f)
+        {
+            footSoundTimer += Time.deltaTime;
+            if (footSoundTimer > 1 / (speed * 0.5f))
+            {
+                audioSource.PlayOneShot(footSound, 1.5f);
+                footSoundTimer = 0;
+            }
+        }
+    }
     void InteractionStateUpdate()
     {
         if (interactionState == InteractionState.Reviving) // 팀 소생하는 중

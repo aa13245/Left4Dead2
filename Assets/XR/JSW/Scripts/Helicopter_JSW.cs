@@ -26,7 +26,6 @@ public class Helicopter_JSW : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O)) HelicopterEnable();
         if (!isEnable) return;
         // t 값 업데이트 (0에서 1 사이)
         elapsedTime += Time.deltaTime;

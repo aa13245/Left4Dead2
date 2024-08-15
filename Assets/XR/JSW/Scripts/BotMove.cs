@@ -171,6 +171,7 @@ public class BotMove : MonoBehaviour
             Vector3 moveVector = Quaternion.Euler(Vector3.down * transform.eulerAngles.y) * velocity;
             anim.SetFloat("MoveZ", moveVector.z);
             anim.SetFloat("MoveX", moveVector.x);
+            botManager.human.speed = new Vector3(moveVector.x, 0, moveVector.z).magnitude;
         }
     }
     bool isEntered;
