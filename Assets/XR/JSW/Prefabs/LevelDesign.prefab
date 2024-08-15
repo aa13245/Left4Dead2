@@ -6772,7 +6772,7 @@ GameObject:
   - component: {fileID: 2453530639771999405}
   - component: {fileID: 1945590919851244562}
   - component: {fileID: 4557604908874894975}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LevelDesign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6849,7 +6849,8 @@ MonoBehaviour:
   raidZombie:
   - {fileID: 4457177794738909795, guid: 2c37bf3373238414a845308bc2aa3c1f, type: 3}
   - {fileID: 7626263685706064983, guid: 2a7d5810b31c61942bcae04e65d0d3f2, type: 3}
-  specialZombies: []
+  specialZombies:
+  - {fileID: 4919561835316941134, guid: 4874d1156e2fce94884c46ca0f773df4, type: 3}
   tank: {fileID: 1209130252975101918, guid: c34ad65d5e1a2d8469d82ec881c6ccfe, type: 3}
   lights: {fileID: 4512218351231610655}
   fireWorks:
