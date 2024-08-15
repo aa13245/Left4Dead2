@@ -69,6 +69,16 @@ public class Helicopter_JSW : MonoBehaviour
         {
             isEnable = true;
             GetComponent<AudioSource>().Play();
+            StartCoroutine(Rotor());
+        }
+    }
+    public Transform rotor;
+    IEnumerator Rotor()
+    {
+        while (true)
+        {
+            rotor.Rotate(new Vector3(0,100,0));
+            yield return null;
         }
     }
     void EnterCheck()

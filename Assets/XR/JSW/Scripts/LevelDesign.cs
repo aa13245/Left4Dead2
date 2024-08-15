@@ -174,13 +174,14 @@ public class LevelDesign : MonoBehaviour
     float spawnCooltime;
     float specialZomCool = 10;
     int tankCounter;
+    bool heliEnable;
     void RaidUpdate()
     {
         if (!isStarted) return;
         timer += Time.deltaTime;
         if (spawnCooltime > 0) spawnCooltime -= Time.deltaTime;
         if (specialZomCool > 0) specialZomCool -= Time.deltaTime;
-        if (timer > 10) FireWork(false);
+        if (timer > 10 && !heliEnable) FireWork(false);
         // 레이드 1
         if (timer > 10 && timer < 40)
         {
@@ -211,7 +212,8 @@ public class LevelDesign : MonoBehaviour
                 tankCounter++;
                 Spawn(ZomKind.Tank);
             }
-            if (timer > 170 && !helicopter.isEnable){
+            if (timer > 170 && !heliEnable){
+                heliEnable = true;
                 StartCoroutine(Helicopter());
             }
         }
@@ -258,7 +260,7 @@ public class LevelDesign : MonoBehaviour
         if (spawnCooltime <= 0)
         {   // 일반 좀비
             Spawn(ZomKind.Normal);
-            spawnCooltime = 4;
+            spawnCooltime = 3;
         }
         if (specialZomCool <= 0)
         {   // 특수 좀비

@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -21.413364, y: 0.09473324, z: 4.1156845}
-  m_LocalScale: {x: 12.77, y: 12.77, z: 12.77}
+  m_LocalScale: {x: 5.5089483, y: 5.5089483, z: 5.5089483}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2073001850478781031}
@@ -123,7 +123,7 @@ MonoBehaviour:
   layer:
     serializedVersion: 2
     m_Bits: 131328
-  explosionRadius: 20
+  explosionRadius: 5
   player: {fileID: 0}
 --- !u!1001 &7405617828527301358
 PrefabInstance:

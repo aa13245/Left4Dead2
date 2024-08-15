@@ -68,6 +68,8 @@ MonoBehaviour:
   full: {fileID: -4364619484522388234, guid: c40be3174f62c4acf8c1216858c64956, type: 2}
   mat: {fileID: 2100000, guid: be6696e602b70ee4f91d31c2a0a12d3e, type: 2}
   lerpDuration: 15
+  boomerBgm: {fileID: 8300000, guid: ebaba48d00dfd0c4581ff9e90b17f3a7, type: 3}
+  boomerEft: 0
 --- !u!114 &6689908045244367711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20559a358b453b489932b646f2944cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 0
+  isPlayer: 1
   anim2: {fileID: 7106013317995463417}
   arAnim: {fileID: 8220644508377111682}
   hGAnim: {fileID: 8894431460672326163}
@@ -183,6 +185,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d85099fefd84d429788e09001413207b, type: 3}
   footSound: {fileID: 8300000, guid: b3b0ebc2570d16c419c17ad06bcf0ad5, type: 3}
   speed: 0
+  audioSource: {fileID: 0}
   isEntered: 0
   maxHP: 100
   knockedDownMaxHP: 300
@@ -454,7 +457,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0

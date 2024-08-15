@@ -122,6 +122,7 @@ public class EndingScene_JSW : MonoBehaviour
             fadeOut.color = new Color(0, 0, 0, fadeOut.color.a + Time.deltaTime * 3);
             yield return null;
         }
+        humans[0].GetComponent<PlayerControler_KJS>().GameEnd();
         humans[0].SetActive(false);
         for (int i = 1; i < 4; i++) humans[i].SetActive(isDead[i]);
         camObj.SetActive(true);

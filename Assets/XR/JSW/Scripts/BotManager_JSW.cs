@@ -174,7 +174,6 @@ public class BotManager_JSW : MonoBehaviour
                                 {
                                     botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
                                     inventory.SetSlotNum(3);
-                                    print(123123);
                                     human.Medikit(h.gameObject);
                                     return;
                                 }

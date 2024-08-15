@@ -497,4 +497,8 @@ public class PlayerControler_KJS : MonoBehaviour
     {
         full.SetActive(false);
     }
+    public void GameEnd()
+    {
+        full.SetActive(false);
+    }
 }

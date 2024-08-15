@@ -349,6 +349,7 @@ public class JKYHammerFS : MonoBehaviour
                 //러프를 이용해서 좀 더 빨리 회전하게 시킨다
 
             }
+        }
         else
         {
             smith.isStopped = true;
@@ -364,7 +365,6 @@ public class JKYHammerFS : MonoBehaviour
 
             // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
-        } 
     }
     //void ApplyCameraShake(float distanceToPlayer)
     //{
@@ -467,7 +467,7 @@ public class JKYHammerFS : MonoBehaviour
         Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 0)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
-        rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
+        rb.AddForce(directionToPlayer * 20f * Mathf.Min(40, dist)); // 돌의 속도 설정
         rb.useGravity = true;
     }
 
@@ -557,12 +557,10 @@ public class JKYHammerFS : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > attackDelay)
             {
-                anim.SetTrigger("StartAttack");
-                if (currentTime > 3f)
+                if (currentTime > 2f)
                 {
-                    target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject, true);
-                    //target.GetComponent<Human_KJS>().isKnockedBack = true;
-                    target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                    anim.SetTrigger("StartAttack");
+                    StartCoroutine(AttackCoroutine());
                     print("공격");
                     currentTime = 0;
 
@@ -586,7 +584,12 @@ public class JKYHammerFS : MonoBehaviour
 
         }
     }
-
+    IEnumerator AttackCoroutine()
+    {
+        yield return new WaitForSeconds(0.7f);
+        target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject, true);
+        target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+    }
 
     void Damaged()
     {

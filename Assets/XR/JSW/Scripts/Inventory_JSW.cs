@@ -37,6 +37,7 @@ public class Inventory_JSW : MonoBehaviour
     }
     public GameObject hand;
     GameObject handItem;
+    GameObject medikitUI;
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +54,7 @@ public class Inventory_JSW : MonoBehaviour
         slots[2] = null;
         slots[3] = null;
         ChangeHand();
+        if (!human.isPlayer) medikitUI = GameObject.Find("Canvas").transform.Find("Info" + gameObject.name.Substring(3)).Find("MedikitUI").gameObject;
     }
     // 손 아이템 오브젝트 생성
     void ChangeHand()
@@ -120,6 +122,7 @@ public class Inventory_JSW : MonoBehaviour
         }
         slots[slot] = itemObj.GetComponent<Item_JSW>();
         itemObj.SetActive(false);
+        if (slot == 3 && !human.isPlayer) medikitUI.SetActive(true);
         return true;
     }
     public bool Drop(int slot)
@@ -146,6 +149,7 @@ public class Inventory_JSW : MonoBehaviour
                 slots[slot] = null;
                 SetSlotNum(1);
             }
+            if (slot == 3 && !human.isPlayer) medikitUI.SetActive(false);
             return true;
         }
         else return false;
