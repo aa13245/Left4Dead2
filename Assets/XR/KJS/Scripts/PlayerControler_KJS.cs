@@ -73,6 +73,7 @@ public class PlayerControler_KJS : MonoBehaviour
         Swap(); // 슬롯 변경 코드 호출
         HpUiUpdate();
         CamRecovery();
+        human.speed = new Vector3(velocity.x, 0, velocity.z).magnitude;
     }
 
     void HandleInput()

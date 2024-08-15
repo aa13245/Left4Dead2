@@ -177,10 +177,13 @@ MonoBehaviour:
   throwPower: 15
   weapons: []
   fireSounds:
-  - {fileID: 8300000, guid: 736a6ee94d8a94aef925851d18125a0c, type: 3}
-  - {fileID: 8300000, guid: 736a6ee94d8a94aef925851d18125a0c, type: 3}
+  - {fileID: 8300000, guid: 49e06ed545ac9084b8d5787f3b54a254, type: 3}
+  - {fileID: 8300000, guid: 49e06ed545ac9084b8d5787f3b54a254, type: 3}
   - {fileID: 8300000, guid: d85099fefd84d429788e09001413207b, type: 3}
   - {fileID: 8300000, guid: d85099fefd84d429788e09001413207b, type: 3}
+  footSound: {fileID: 8300000, guid: b3b0ebc2570d16c419c17ad06bcf0ad5, type: 3}
+  speed: 0
+  isEntered: 0
   maxHP: 100
   knockedDownMaxHP: 300
   player: {fileID: 0}
@@ -260,7 +263,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
