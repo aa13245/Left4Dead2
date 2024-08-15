@@ -164,7 +164,7 @@ public class EndingScene_JSW : MonoBehaviour
         text.text += humans[2].GetComponent<BotManager_JSW>().botName + " 본인 역할" + (isDead[2] ? " (고)\n" : "\n");
         text.text += humans[3].GetComponent<BotManager_JSW>().botName + " 본인 역할" + (isDead[3] ? " (고)\n" : "\n");
         text.text += "\n\n\n\n\n\n\n\n\n";
-        text.text += "Left4Weeks\n기획 최재훈\n  TA 김은환\n        조수연\n  XR 김준성\n        정광윤\n        지성원";
+        text.text += "Left4Weeks\n  TA 김은환\n        조수연\n  XR 김준성\n        정광윤\n        지성원";
         while (text.color.a < 1)
         {
             text.color = new Color(255, 255, 255, text.color.a + Time.deltaTime * 2);
