@@ -425,6 +425,8 @@ public class PlayerControler_KJS : MonoBehaviour
         //print("emfd");
         StartCoroutine(Bumer());
     }
+    public AudioClip boomerBgm;
+    public bool boomerEft;
     IEnumerator Bumer()
     {
         float elapsedTime = 0f;
@@ -432,6 +434,11 @@ public class PlayerControler_KJS : MonoBehaviour
         mat.SetFloat("_ColorScale", 1f);
         //colorScale = 1f;
         full.SetActive(true);
+        if (!boomerEft)
+        {
+            boomerEft = true;
+            human.audioSource.PlayOneShot(boomerBgm);
+        }
 
         yield return new WaitForSeconds(2f);
         while (elapsedTime < lerpDuration)
@@ -456,6 +463,7 @@ public class PlayerControler_KJS : MonoBehaviour
         {
             mat.SetFloat("_ColorScale", endValue);
             full.SetActive(false);
+            boomerEft = false;
         }
 
 

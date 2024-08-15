@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3278992025720864862}
   - component: {fileID: 4049923779055340659}
   - component: {fileID: 2083405786824832473}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BumerExplode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,6 +124,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131328
   explosionRadius: 20
+  player: {fileID: 0}
 --- !u!1001 &7405617828527301358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -132,6 +133,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8688845141101779973}
     m_Modifications:
+    - target: {fileID: 1791995480500357508, guid: ae07f2a45f14a82428409cfe410e6002,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8791802859087233161, guid: ae07f2a45f14a82428409cfe410e6002,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -186,6 +192,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CFXR4 Firework 1 Cyan-Purple (HDR)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8791802859087666345, guid: ae07f2a45f14a82428409cfe410e6002,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8989881128925888840, guid: ae07f2a45f14a82428409cfe410e6002,
         type: 3}

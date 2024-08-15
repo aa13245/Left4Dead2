@@ -349,22 +349,23 @@ public class JKYHammerFS : MonoBehaviour
                 //러프를 이용해서 좀 더 빨리 회전하게 시킨다
 
             }
-            else
-            {
-                smith.isStopped = true;
-                smith.ResetPath();
+        else
+        {
+            smith.isStopped = true;
+            smith.ResetPath();
 
-                currentTime = attackDelay;
-                m_State = EnemyState.Attack;
-                print("상태전환 Move -> attack");
+            currentTime = attackDelay;
+            m_State = EnemyState.Attack;
+            print("상태전환 Move -> attack");
 
-                // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
-                anim.SetTrigger("MoveToAttackDelay");
-            }
+            // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
+            anim.SetTrigger("MoveToAttackDelay");
+        }
 
             // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
-        } }
+        } 
+    }
     //void ApplyCameraShake(float distanceToPlayer)
     //{
     //    if (obj != null)

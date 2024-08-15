@@ -44,7 +44,7 @@ public class JKYEnemyFSM : MonoBehaviour
     float currentTime = 0;
 
     // 공격딜레이시간
-    float attackDelay = 1f;
+    float attackDelay = 3f;
 
     CharacterController cc;
 

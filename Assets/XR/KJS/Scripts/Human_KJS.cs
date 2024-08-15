@@ -50,7 +50,7 @@ public class Human_KJS : MonoBehaviour
     public AudioClip footSound;
     float footSoundTimer;
     public float speed;
-    AudioSource audioSource;
+    public AudioSource audioSource;
     WaistAngle waistAngle;
     JKYshoot shoot;
     public bool isEntered;

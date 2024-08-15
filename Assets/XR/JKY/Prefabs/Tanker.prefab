@@ -524,14 +524,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff0480fa589ef6c48b436a4f50db8d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_State: 0
   findDistance: 70
   attackDistance: 4
   moveSpeed: 3
-  attackPower: 3
+  attackPower: 24
   weaponPower: 5
   moveDistance: 20
-  hp: 700
-  maxhp: 700
+  hp: 4000
+  maxhp: 4000
   climbSpeed: 1
   detectionDistance: 2
   climb:
@@ -547,10 +548,7 @@ MonoBehaviour:
   knockbackDistance: 7
   rockPrefab: {fileID: 1922619696119781738, guid: d2260882509eb884ab3b9d23842cf3bf,
     type: 3}
-  tank: {fileID: 0}
-  cameraShake: {fileID: 0}
-  maxShakeDistance: 20
-  minShakeDistance: 2
+  tankCamerashake: 0
   extraRotationSpeed: 1
   detectionAngle: 70
   angleStep: 1

@@ -190,7 +190,7 @@ public class BotManager_JSW : MonoBehaviour
                     // 자힐
                     if (human.HP < 40)
                     {
-                        
+                        inventory.SetSlotNum(3);
                         human.Medikit();
                         return;
                     }
@@ -205,7 +205,8 @@ public class BotManager_JSW : MonoBehaviour
                 // 목표가 있을 때
                 if (farmingTarget != null)
                 {   // 시아체크
-                    if (!botSight.SightCheck(farmingTarget)) farmingTarget = null;
+                    //if (!botSight.SightCheck(farmingTarget)) farmingTarget = null;
+                    if (!farmingTarget.activeSelf) farmingTarget = null;
                 }
                 // 없을 때 탐지
                 if (farmingTarget == null)
@@ -237,7 +238,8 @@ public class BotManager_JSW : MonoBehaviour
                     if (Vector3.Distance(transform.position, farmingTarget.transform.position) < 1.5f)
                     {
                         botMove.ChangeBotMoveState(BotMove.BotMoveState.Idle);
-                        human.Interact(farmingTarget, farmingTarget.layer);
+                        if (!botSight.SightCheck(farmingTarget)) farmingTarget = null;
+                        else human.Interact(farmingTarget, farmingTarget.layer);
                     }
                     // 멀 때 이동하기
                     else
