@@ -1212,6 +1212,11 @@ PrefabInstance:
       propertyPath: lights
       value: 
       objectReference: {fileID: 488926103}
+    - target: {fileID: 6493218442064060672, guid: e6532a9f60c4c254794d136d5b8c4842,
+        type: 3}
+      propertyPath: specialZombies.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7504759750466613711, guid: e6532a9f60c4c254794d136d5b8c4842,
         type: 3}
       propertyPath: m_Name
