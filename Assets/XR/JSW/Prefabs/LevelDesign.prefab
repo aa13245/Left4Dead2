@@ -922,7 +922,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6486141632009411646
 Transform:
   m_ObjectHideFlags: 0
@@ -6852,7 +6852,7 @@ MonoBehaviour:
   specialZombies:
   - {fileID: 4919561835316941134, guid: 4874d1156e2fce94884c46ca0f773df4, type: 3}
   tank: {fileID: 1209130252975101918, guid: c34ad65d5e1a2d8469d82ec881c6ccfe, type: 3}
-  lights: {fileID: 4512218351231610655}
+  lights: {fileID: 0}
   fireWorks:
   - {fileID: 3595508772163658795}
   - {fileID: 393342307775268034}
@@ -7605,7 +7605,7 @@ GameObject:
   - component: {fileID: 2523268664754926098}
   - component: {fileID: 4620712742887375959}
   m_Layer: 0
-  m_Name: Radio
+  m_Name: RadioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

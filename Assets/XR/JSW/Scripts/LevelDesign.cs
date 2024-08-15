@@ -67,7 +67,7 @@ public class LevelDesign : MonoBehaviour
     }
     IEnumerator GameStart()
     {
-        AudioSource radio = GameObject.Find("Radio").GetComponent<AudioSource>();
+        AudioSource radio = GameObject.Find("RadioSource").GetComponent<AudioSource>();
         Image scriptUI = GameObject.Find("PingCanvas").transform.Find("ScriptUI").GetComponent<Image>();
         Text script = scriptUI.transform.GetChild(0).GetComponent<Text>();
         yield return new WaitForSeconds(2);
