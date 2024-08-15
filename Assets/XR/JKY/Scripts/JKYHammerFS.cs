@@ -11,7 +11,7 @@ using static UnityEngine.GraphicsBuffer;
 public class JKYHammerFS : MonoBehaviour
 {
     // Start is called before the first frame update
-    enum EnemyState
+    public enum EnemyState
     {
         Idle,
         Move,
@@ -25,7 +25,7 @@ public class JKYHammerFS : MonoBehaviour
     }
 
     // 에너미 상태 변수
-    EnemyState m_State;
+    public EnemyState m_State;
 
     //플레이어 발견 범위
     public float findDistance = 70f;
@@ -98,15 +98,18 @@ public class JKYHammerFS : MonoBehaviour
     private float throwCooldown;
     private float nextThrowTime;
     private bool isCharging = false;
+    public bool tankCamerashake = false;
+
     // 더가까운 플레이어찾기
     private Transform target;
     //private Transform enemy;
+    private ObjRotate_KJS obj;
 
-    //public Transform player;            // 플레이어의 Transform
-    public Transform tank;              // 탱크의 Transform
-    public CameraShake cameraShake;     // CameraShake 스크립트 참조
-    public float maxShakeDistance = 20f; // 최대 흔들림이 발생하는 거리
-    public float minShakeDistance = 2f;  // 흔들림이 시작되는 최소 거리
+    ////public Transform player;            // 플레이어의 Transform
+    //public Transform tank;              // 탱크의 Transform
+    //public CameraShake cameraShake;     // CameraShake 스크립트 참조
+    //public float maxShakeDistance = 20f; // 최대 흔들림이 발생하는 거리
+    //public float minShakeDistance = 2f;  // 흔들림이 시작되는 최소 거리
     void Start()
     {
         // 최초상태 대기
@@ -119,9 +122,9 @@ public class JKYHammerFS : MonoBehaviour
 
         anim = transform.GetComponentInChildren<Animator>();
         smith = GetComponent<NavMeshAgent>();
-
-        //hp = maxhp;
-        rb = GetComponent<Rigidbody>();
+        obj = Camera.main.GetComponent<ObjRotate_KJS>(); // ObjRotate_KJS 스크립트를 카메라에서 참조
+    //hp = maxhp;
+    rb = GetComponent<Rigidbody>();
         //Vector3 enemyy = enemy.position.y;
         //
 
@@ -137,79 +140,92 @@ public class JKYHammerFS : MonoBehaviour
     void Update()
     {
         FindClosestTarget();
+
         // 에너미 상태상수
         switch (m_State)
         {
             case EnemyState.Idle:
                 Idle();
+                tankCamerashake = false;
                 break;
             case EnemyState.Move:
                 Move();
+                tankCamerashake = true;
                 break;
             case EnemyState.Attack:
                 Attack();
+                tankCamerashake = true;
                 break;
             case EnemyState.Throw:
                 Throw();
                 print(a);
+                tankCamerashake = false;
                 break;
             case EnemyState.Run:
                 Run();
+                tankCamerashake = true;
                 break;
-            //case EnemyState.Return:
-            //Return();
-            //break;
             case EnemyState.Climb:
                 Climb();
+                tankCamerashake = false;
                 break;
             case EnemyState.Damaged:
                 //Damaged();
                 break;
             case EnemyState.Die:
+                tankCamerashake = false;
+                // TriggerShake를 다시 활성화하여 기본 진동을 재개합니다.
+                obj.TriggerShake(obj.shakeDuration, obj.shakeMagnitude);
                 //Die();
                 break;
         }
-    }
-    void Idle()
-    {
-        //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
-        //if (distanceToPlayer < findDistance)
-        //{
-        //    if (distanceToPlayer <= lookRadius)
+        //    // tankCamerashake 플래그가 true일 때만 카메라 진동을 적용
+        //    if (tankCamerashake && obj != null)
         //    {
-        //        //플레이어가 시야각도 내에 있는지 확인
-
-        //        Vector3 directionToPlayer = (target.position - transform.position).normalized;
-        //        float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-
-        //        if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
-        //        {
-        //            //raycast로 장애물
-        //            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
-        //            {
-        //                //print(hit.transform.gameObject.name + "/" + target.name);
-        //                if (hit.transform == target)
-        //                {
-        //                    playerInSight = true;
-        //                }
-        //                else
-        //                {
-        //                    playerInSight = false;
-        //                }
-        //            }
-        //        }
-        //        else { playerInSight = false; }
+        //        ApplyCameraShake(Vector3.Distance(transform.position, target.transform.position));
         //    }
-        //    else { playerInSight = false; }
         //}
-                            m_State = EnemyState.Move;
-                            print("상태전환 : Idle -> Move");
 
-                            // 이동 애니메이션으로 전환하기
-                            anim.SetTrigger("IdleToMove");
+        void Idle()
+        {
+            //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+            //if (distanceToPlayer < findDistance)
+            //{
+            //    if (distanceToPlayer <= lookRadius)
+            //    {
+            //        //플레이어가 시야각도 내에 있는지 확인
 
+            //        Vector3 directionToPlayer = (target.position - transform.position).normalized;
+            //        float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+
+            //        if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
+            //        {
+            //            //raycast로 장애물
+            //            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
+            //            {
+            //                //print(hit.transform.gameObject.name + "/" + target.name);
+            //                if (hit.transform == target)
+            //                {
+            //                    playerInSight = true;
+            //                }
+            //                else
+            //                {
+            //                    playerInSight = false;
+            //                }
+            //            }
+            //        }
+            //        else { playerInSight = false; }
+            //    }
+            //    else { playerInSight = false; }
+            //}
+            m_State = EnemyState.Move;
+            print("상태전환 : Idle -> Move");
+
+            // 이동 애니메이션으로 전환하기
+            anim.SetTrigger("IdleToMove");
+
+        }
     }
-
     public float extraRotationSpeed = 0.3f;
     void Move()
     {
@@ -265,6 +281,7 @@ public class JKYHammerFS : MonoBehaviour
                             if (Time.time >= nextThrowTime)
                             {
                                 print("이제 던진다?");
+
                                 m_State = EnemyState.Throw;
                                 print("throw로 상태변환;");
                                 //Throw();
@@ -300,47 +317,71 @@ public class JKYHammerFS : MonoBehaviour
                         //}
                     }
                 }
+                print("여기야!");
                 smith.SetDestination(target.position);
 
+                //    // Tanker가 이동 중이고 tankCamerashake가 true일 때 진동 효과 적용
+                //    if (tankCamerashake && obj != null)
+                //    {
+                //        ApplyCameraShake(distanceToPlayer);
+                //    }
+
+                //}
+
+                // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
+                //else
+                //{
+                //    print("이건뭐지?");
+                //    Vector3 dir = target.transform.position - transform.position;
+                //    dir.y = 0;
+                //    dir.Normalize();
+
+                //    cc.Move(dir * moveSpeed * Time.deltaTime);
+                //}
+
+
+                //자동으 회전하지만...너무 느려서 보정을 해준다
+                //내가 바라볼 방향의 벡터를 구하고
+                print("돌아볼꺼야");
+                Vector3 lookRotation = target.position - transform.position;
+                //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), extraRotationSpeed * Time.deltaTime);
+                //러프를 이용해서 좀 더 빨리 회전하게 시킨다
+
+            }
+            else
+            {
+                smith.isStopped = true;
+                smith.ResetPath();
+
+                currentTime = attackDelay;
+                m_State = EnemyState.Attack;
+                print("상태전환 Move -> attack");
+
+                // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
+                anim.SetTrigger("MoveToAttackDelay");
             }
 
-            // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
-            //else
-            //{
-            //    print("이건뭐지?");
-            //    Vector3 dir = target.transform.position - transform.position;
-            //    dir.y = 0;
-            //    dir.Normalize();
+            // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
-            //    cc.Move(dir * moveSpeed * Time.deltaTime);
-            //}
+        } }
+    //void ApplyCameraShake(float distanceToPlayer)
+    //{
+    //    if (obj != null)
+    //    {
+    //        float maxShakeDistance = obj.maxShakeDistance;
+    //        float intensity = Mathf.Lerp(obj.shakeMagnitude, 0f, distanceToPlayer / maxShakeDistance);
 
-
-            //자동으 회전하지만...너무 느려서 보정을 해준다
-            //내가 바라볼 방향의 벡터를 구하고
-            print("돌아볼꺼야");
-            Vector3 lookRotation = target.position - transform.position;
-            //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), extraRotationSpeed * Time.deltaTime);
-            //러프를 이용해서 좀 더 빨리 회전하게 시킨다
-
-        }
-        else
-        {
-            smith.isStopped = true;
-            smith.ResetPath();
-
-            currentTime = attackDelay;
-            m_State = EnemyState.Attack;
-            print("상태전환 Move -> attack");
-
-            // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
-            anim.SetTrigger("MoveToAttackDelay");
-        }
-
-        // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
-
-    }
+    //        if (distanceToPlayer < maxShakeDistance)
+    //        {
+    //            obj.TriggerShake(obj.shakeDuration, intensity);
+    //        }
+    //        else
+    //        {
+    //            obj.TriggerShake(0f, 0f); // 흔들림 효과를 중지
+    //        }
+    //    }
+    //}
 
     public float detectionAngle = 70.0f;
     public float angleStep = 1.0f;
