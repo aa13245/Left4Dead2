@@ -5040,6 +5040,8 @@ MonoBehaviour:
   bombEffect: {fileID: 4593184484909914552, guid: 2e1e9506f5904a64b81744324fb7cd50,
     type: 3}
   bombSound: {fileID: -5849235698809892756}
+  bombEffectScale: 2
+  muzzleFlashDuration: 0.3
 --- !u!82 &-5849235698809892756
 AudioSource:
   m_ObjectHideFlags: 0
