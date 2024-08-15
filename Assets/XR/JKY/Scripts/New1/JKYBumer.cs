@@ -9,11 +9,11 @@ public class JKYBumer : MonoBehaviour
     public float explosionForce = 700f;
     public float explosionDelay = 2f;
     public GameObject explosionEffect;
-
+    public GameObject player;
     public int explosionDamage = 20; // 폭발 데미지
 
-    public float vomitRange = 25f; // 구토 공격 범위
-    public float vomitCooldown = 9f; // 구토 공격 쿨다운
+    public float vomitRange = 15f; // 구토 공격 범위
+    public float vomitCooldown = 3f; // 구토 공격 쿨다운
     public GameObject vomitEffect;
     public int vomitDamage = 10; // 구토 데미지
     public float vomitAngle = 120f; // 구토 공격 시야각
@@ -27,7 +27,7 @@ public class JKYBumer : MonoBehaviour
     public float hp;
     public float maxhp = 120;
     //[SerializeField]
-
+    Transform spawnPoint;
     public BumerState _currentState;
     public  enum BumerState
     {
@@ -37,6 +37,7 @@ public class JKYBumer : MonoBehaviour
     }
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
         hp = maxhp;
         agent = GetComponent<NavMeshAgent>();
@@ -97,7 +98,7 @@ public class JKYBumer : MonoBehaviour
         {
             //agent.SetDestination(target.position);
 
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            float distanceToTarget = Vector3.Distance(transform.position, player.transform.position);
 
             if (distanceToTarget <= explosionRadius)
             {
@@ -106,19 +107,22 @@ public class JKYBumer : MonoBehaviour
             }
             else if (distanceToTarget <= vomitRange && canVomit)
             {
-                Vector3 directionToTarget = (target.position - transform.position).normalized;
+                Vector3 directionToTarget = (player.transform.position - transform.position).normalized;
                 float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
 
                 if (angleToTarget <= vomitAngle / 2f)
                 {
                     //_currentState = BumerState.Vomit;
                     //Vomit();
+                    //agent.isStopped = true;
                     StartCoroutine(Vomitto(directionToTarget));
+                    //agent.isStopped = false;
+
                 }
             }
             else
             {
-                agent.SetDestination(target.transform.position);
+                agent.SetDestination(player.transform.position);
                 agent.isStopped = false;
             }
         }
@@ -132,7 +136,9 @@ public class JKYBumer : MonoBehaviour
     {
         yield return new WaitForSeconds(explosionDelay);
 
+        print(111);
         // 폭발 효과
+ 
         Instantiate(explosionEffect, transform.position, transform.rotation);
 
         // 폭발 범위 내의 모든 플레이어를 찾기
@@ -155,10 +161,10 @@ public class JKYBumer : MonoBehaviour
     }
     void Vomit()
     {
-        Vector3 directionToTarget = (target.position - transform.position).normalized;
+        Vector3 directionToTarget = (player.transform.position - transform.position).normalized;
         StartCoroutine(Vomitto(directionToTarget));
         //print("?");
-        if (Vector3.Distance(transform.position, target.transform.position) > vomitRange)
+        if (Vector3.Distance(transform.position, player.transform.position) > vomitRange)
         {
             print("설마?");
              ChangeState(BumerState.Walking);
@@ -172,32 +178,49 @@ public class JKYBumer : MonoBehaviour
         animator.SetTrigger("Attack");
    
         canVomit = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         //print(111);
         // 구토 효과
-
+        //spawnPoint.position = transform.position + Vector3.up * 2;
+        Vector3 direction = player.transform.position - (transform.position + Vector3.up *0.7f);
+        direction.Normalize();
+        Quaternion rotation = Quaternion.LookRotation(direction);
         // 구토 범위 내의 모든 플레이어를 찾기
-        GameObject vomit = Instantiate(vomitEffect, target.transform.position, transform.rotation);
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, vomitRange, layer))
-        {
-            //print(hit);
-           // print("독생성");
-            if (hit.collider.CompareTag("Player"))
-            {
-                //Human_KJS pcr = hit.collider.GetComponent<Human_KJS>();
-                //if (pcr != null)
-                //{
-                //    //pcr.ApplyBoomerEffect();
-                //    //pcr.TakeDamage(vomitDamage); // 데미지 적용
-                //}
-            }
-        }
+        GameObject vomit = Instantiate(vomitEffect, transform.position + Vector3.up * 2, rotation);
+        //RaycastHit hit;
+        // 거리 계산
+        float dist = Vector3.Distance(transform.position, player.transform.position);
+        // 돌을 플레이어에게 던짐
+        Vector3 directionToPlayer = (player.transform.position - transform.position + Vector3.up * (dist / 30 + 0)).normalized;
+        print("돌던짐");
+        Rigidbody rb = vomit.GetComponent<Rigidbody>();
+        rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
+        rb.useGravity = true;
+        yield return new WaitForSeconds(1.2f);
+        PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
+        qw.BumerAttack();
+        //if (Physics.Raycast(transform.position, directionToTarget, out hit, vomitRange, layer))
+        //{
+        //    //print(hit);
+        //   // print("독생성wa
+        //    if (hit.collider.CompareTag("Player"))
+        //    {
+        //        //Human_KJS pcr = hit.collider.GetComponent<Human_KJS>();
+        //        //if (pcr != null)
+        //        //{
+        //        //    //pcr.ApplyBoomerEffect();
+        //        //    //pcr.TakeDamage(vomitDamage); // 데미지 적용
+        //        //}
+        //        PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
+        //        qw.BumerAttack();
+        //    }
+        //}
         yield return new WaitForSeconds(vomitCooldown);
         canVomit = true;
 
         // 구토 효과 제거
-        Destroy(vomit, 6f);
+        Destroy(vomit, 4f);
+
 
     }
 

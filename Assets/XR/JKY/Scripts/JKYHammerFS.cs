@@ -11,7 +11,7 @@ using static UnityEngine.GraphicsBuffer;
 public class JKYHammerFS : MonoBehaviour
 {
     // Start is called before the first frame update
-    enum EnemyState
+    public enum EnemyState
     {
         Idle,
         Move,
@@ -25,7 +25,7 @@ public class JKYHammerFS : MonoBehaviour
     }
 
     // 에너미 상태 변수
-    EnemyState m_State;
+    public EnemyState m_State;
 
     //플레이어 발견 범위
     public float findDistance = 70f;
@@ -98,9 +98,18 @@ public class JKYHammerFS : MonoBehaviour
     private float throwCooldown;
     private float nextThrowTime;
     private bool isCharging = false;
+    public bool tankCamerashake = false;
+
     // 더가까운 플레이어찾기
     private Transform target;
     //private Transform enemy;
+    private ObjRotate_KJS obj;
+
+    ////public Transform player;            // 플레이어의 Transform
+    //public Transform tank;              // 탱크의 Transform
+    //public CameraShake cameraShake;     // CameraShake 스크립트 참조
+    //public float maxShakeDistance = 20f; // 최대 흔들림이 발생하는 거리
+    //public float minShakeDistance = 2f;  // 흔들림이 시작되는 최소 거리
     void Start()
     {
         // 최초상태 대기
@@ -113,9 +122,9 @@ public class JKYHammerFS : MonoBehaviour
 
         anim = transform.GetComponentInChildren<Animator>();
         smith = GetComponent<NavMeshAgent>();
-
-        //hp = maxhp;
-        rb = GetComponent<Rigidbody>();
+        obj = Camera.main.GetComponent<ObjRotate_KJS>(); // ObjRotate_KJS 스크립트를 카메라에서 참조
+    //hp = maxhp;
+    rb = GetComponent<Rigidbody>();
         //Vector3 enemyy = enemy.position.y;
         //
 
@@ -131,79 +140,92 @@ public class JKYHammerFS : MonoBehaviour
     void Update()
     {
         FindClosestTarget();
+
         // 에너미 상태상수
         switch (m_State)
         {
             case EnemyState.Idle:
                 Idle();
+                tankCamerashake = false;
                 break;
             case EnemyState.Move:
                 Move();
+                tankCamerashake = true;
                 break;
             case EnemyState.Attack:
                 Attack();
+                tankCamerashake = true;
                 break;
             case EnemyState.Throw:
                 Throw();
                 print(a);
+                tankCamerashake = false;
                 break;
             case EnemyState.Run:
                 Run();
+                tankCamerashake = true;
                 break;
-            //case EnemyState.Return:
-            //Return();
-            //break;
             case EnemyState.Climb:
                 Climb();
+                tankCamerashake = false;
                 break;
             case EnemyState.Damaged:
                 //Damaged();
                 break;
             case EnemyState.Die:
+                tankCamerashake = false;
+                // TriggerShake를 다시 활성화하여 기본 진동을 재개합니다.
+                obj.TriggerShake(obj.shakeDuration, obj.shakeMagnitude);
                 //Die();
                 break;
         }
-    }
-    void Idle()
-    {
-        //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
-        //if (distanceToPlayer < findDistance)
-        //{
-        //    if (distanceToPlayer <= lookRadius)
+        //    // tankCamerashake 플래그가 true일 때만 카메라 진동을 적용
+        //    if (tankCamerashake && obj != null)
         //    {
-        //        //플레이어가 시야각도 내에 있는지 확인
-
-        //        Vector3 directionToPlayer = (target.position - transform.position).normalized;
-        //        float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-
-        //        if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
-        //        {
-        //            //raycast로 장애물
-        //            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
-        //            {
-        //                //print(hit.transform.gameObject.name + "/" + target.name);
-        //                if (hit.transform == target)
-        //                {
-        //                    playerInSight = true;
-        //                }
-        //                else
-        //                {
-        //                    playerInSight = false;
-        //                }
-        //            }
-        //        }
-        //        else { playerInSight = false; }
+        //        ApplyCameraShake(Vector3.Distance(transform.position, target.transform.position));
         //    }
-        //    else { playerInSight = false; }
         //}
-                            m_State = EnemyState.Move;
-                            print("상태전환 : Idle -> Move");
 
-                            // 이동 애니메이션으로 전환하기
-                            anim.SetTrigger("IdleToMove");
+        void Idle()
+        {
+            //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+            //if (distanceToPlayer < findDistance)
+            //{
+            //    if (distanceToPlayer <= lookRadius)
+            //    {
+            //        //플레이어가 시야각도 내에 있는지 확인
 
+            //        Vector3 directionToPlayer = (target.position - transform.position).normalized;
+            //        float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+
+            //        if (angleBetweenEnemyAndPlayer <= fieldOfView / 2f)
+            //        {
+            //            //raycast로 장애물
+            //            if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, lookRadius))
+            //            {
+            //                //print(hit.transform.gameObject.name + "/" + target.name);
+            //                if (hit.transform == target)
+            //                {
+            //                    playerInSight = true;
+            //                }
+            //                else
+            //                {
+            //                    playerInSight = false;
+            //                }
+            //            }
+            //        }
+            //        else { playerInSight = false; }
+            //    }
+            //    else { playerInSight = false; }
+            //}
+            m_State = EnemyState.Move;
+            print("상태전환 : Idle -> Move");
+
+            // 이동 애니메이션으로 전환하기
+            anim.SetTrigger("IdleToMove");
+
+        }
     }
-
     public float extraRotationSpeed = 0.3f;
     void Move()
     {
@@ -259,6 +281,7 @@ public class JKYHammerFS : MonoBehaviour
                             if (Time.time >= nextThrowTime)
                             {
                                 print("이제 던진다?");
+
                                 m_State = EnemyState.Throw;
                                 print("throw로 상태변환;");
                                 //Throw();
@@ -274,50 +297,91 @@ public class JKYHammerFS : MonoBehaviour
                     {
                         print("돌진할꺼야");
                         m_State = EnemyState.Run;
-                        
+                        ////ㅇ ㅕ 기 고침!!!!!!!!!!!!!!
+
+
+                        ////player = GameObject.FindGameObjectsWithTag("Player");
+                        //float distance = Vector3.Distance(target.position, tank.position);
+
+                        //if (distance < maxShakeDistance)
+                        //{
+                        //    float intensity = Mathf.Lerp(cameraShake.maxShakeMagnitude, 0f, distance / maxShakeDistance);
+
+                        //    // 탱크가 플레이어에게 다가올 때 흔들림 효과 적용
+                        //    cameraShake.ShakeCamera(intensity);
+                        //}
+                        //else
+                        //{
+                        //    // 거리가 멀어지면 흔들림을 멈추고 카메라 위치를 원래대로 리셋
+                        //    cameraShake.ResetCameraPosition();
+                        //}
                     }
                 }
+                print("여기야!");
                 smith.SetDestination(target.position);
 
+                //    // Tanker가 이동 중이고 tankCamerashake가 true일 때 진동 효과 적용
+                //    if (tankCamerashake && obj != null)
+                //    {
+                //        ApplyCameraShake(distanceToPlayer);
+                //    }
+
+                //}
+
+                // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
+                //else
+                //{
+                //    print("이건뭐지?");
+                //    Vector3 dir = target.transform.position - transform.position;
+                //    dir.y = 0;
+                //    dir.Normalize();
+
+                //    cc.Move(dir * moveSpeed * Time.deltaTime);
+                //}
+
+
+                //자동으 회전하지만...너무 느려서 보정을 해준다
+                //내가 바라볼 방향의 벡터를 구하고
+                print("돌아볼꺼야");
+                Vector3 lookRotation = target.position - transform.position;
+                //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), extraRotationSpeed * Time.deltaTime);
+                //러프를 이용해서 좀 더 빨리 회전하게 시킨다
+
+            }
+            else
+            {
+                smith.isStopped = true;
+                smith.ResetPath();
+
+                currentTime = attackDelay;
+                m_State = EnemyState.Attack;
+                print("상태전환 Move -> attack");
+
+                // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
+                anim.SetTrigger("MoveToAttackDelay");
             }
 
-            // 이거한이유가 속도가 너무 빨라 지나칠떄 딴데봐서 그러나?
-            //else
-            //{
-            //    print("이건뭐지?");
-            //    Vector3 dir = target.transform.position - transform.position;
-            //    dir.y = 0;
-            //    dir.Normalize();
+            // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
-            //    cc.Move(dir * moveSpeed * Time.deltaTime);
-            //}
+        } }
+    //void ApplyCameraShake(float distanceToPlayer)
+    //{
+    //    if (obj != null)
+    //    {
+    //        float maxShakeDistance = obj.maxShakeDistance;
+    //        float intensity = Mathf.Lerp(obj.shakeMagnitude, 0f, distanceToPlayer / maxShakeDistance);
 
-
-            //자동으 회전하지만...너무 느려서 보정을 해준다
-            //내가 바라볼 방향의 벡터를 구하고
-            print("돌아볼꺼야");
-            Vector3 lookRotation = target.position - transform.position;
-            //내 smith의 벨로시티와 내가 바라보고자 하는 벡터를
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), extraRotationSpeed * Time.deltaTime);
-            //러프를 이용해서 좀 더 빨리 회전하게 시킨다
-
-        }
-        else
-        {
-            smith.isStopped = true;
-            smith.ResetPath();
-
-            m_State = EnemyState.Attack;
-            print("상태전환 Move -> attack");
-
-            // 누적시간을 공격 딜레이 시간만큼 미리 진행시켜 놓는다.
-            currentTime = attackDelay;
-            anim.SetTrigger("MoveToAttackDelay");
-        }
-
-        // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
-
-    }
+    //        if (distanceToPlayer < maxShakeDistance)
+    //        {
+    //            obj.TriggerShake(obj.shakeDuration, intensity);
+    //        }
+    //        else
+    //        {
+    //            obj.TriggerShake(0f, 0f); // 흔들림 효과를 중지
+    //        }
+    //    }
+    //}
 
     public float detectionAngle = 70.0f;
     public float angleStep = 1.0f;
@@ -371,23 +435,35 @@ public class JKYHammerFS : MonoBehaviour
     GameObject rock;
     void Throw()
     {
+
         StartCoroutine(PrepareAndThrowRock());
         ResetThrowCooldown();
         m_State = EnemyState.Move;
 
     }
+    float rocktime;
     IEnumerator PrepareAndThrowRock()
     {
-        // 돌을 에너미 위에 생성
-        rock = Instantiate(rockPrefab, transform.position + Vector3.up* 2f   , Quaternion.identity);
-        print("위에 돌생성");
         smith.isStopped = true;
-        yield return new WaitForSeconds(1.0f); // 2초 기다림
+        anim.SetTrigger("Throw");
+        rock = Instantiate(rockPrefab, transform.position + Vector3.up * 3f, Quaternion.identity);
+        while(rocktime < 0.7f)
+        {
+            rocktime += Time.deltaTime;
+            rock.transform.Translate(Vector3.up * 2f * Time.deltaTime);
+            yield return null;
+        }
+        rocktime = 0;
+        // 돌을 에너미 위에 생성
+        //yield return new WaitForSeconds(0.3f); // 2초 기다림
+        //rock = Instantiate(rockPrefab, transform.position + Vector3.up* 4.5f   , Quaternion.identity);
+        print("위에 돌생성");
+        yield return new WaitForSeconds(0.7f); // 2초 기다림
         smith.isStopped = false;
         // 거리 계산
         float dist = Vector3.Distance(transform.position, target.transform.position);
         // 돌을 플레이어에게 던짐
-        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 2)).normalized;
+        Vector3 directionToPlayer = (target.transform.position - transform.position + Vector3.up * (dist / 30 + 0)).normalized;
         print("돌던짐");
         Rigidbody rb = rock.GetComponent<Rigidbody>();
         rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
@@ -465,81 +541,7 @@ public class JKYHammerFS : MonoBehaviour
     float movingTime = 0;
     bool isMovingUp = false;
     float ey;
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("climb"))
-        {
-            isClimbing = true;
-            cy = collision.transform.position.y;
-            cly = collision.transform.localScale.y / 2;
-        }
-    }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(collision.gameObject.layer == LayerMask.NameToLayer("climb"))
-    //    {
-    //        ey = gameObject.transform.position.y;
-    //        isMoving = false;
-    //        print("부딪혓다");
-    //        isMovingUp = true;
-    //        cc.Move((climbTarget - transform.position) * climbSpeed * Time.deltaTime);
-    //        if (gameObject.transform.position.y > collision.transform.position.y + collision.transform.localScale.y/2 + ey)
-    //        {
-    //            print("끝까지 올라왔다");
-    //            movingTime += Time.deltaTime;
-    //            isMovingUp = false;
-    //            isMoving = true;
-    //            //cc.Move((player.transform.position - gameObject.transform.position) * moveSpeed * Time.deltaTime);
 
-    //            if (movingTime > 2f)
-    //            {
-    //                print("좀만 앞으로가");
-    //                isMoving = false;
-    //                movingTime = 0;
-    //                smith.enabled = true;
-    //                smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-    //                smith.destination = player.position;
-    //            }
-    //        }
-
-    //    }
-    //}
-    //void DetectWall()
-    //{
-    //    RaycastHit hit;
-    //    if (Physics.Raycast(transform.position, transform.forward, out hit, detectionDistance, climb))
-    //    {
-    //        if (hit.collider != null)
-    //        {
-    //            print(222);
-    //            isClimbing = true;
-    //            rb.useGravity = false; // 벽을 탈 때 중력을 제거합니다.
-    //        }
-    //    }
-    //    else
-    //    {
-    //        isClimbing = false;
-    //        rb.useGravity = true; // 벽을 타지 않을 때 중력을 다시 활성화합니다.
-    //    }
-
-    //}
-
-    //void ClimbWall()
-    //{
-    //    print("올라간다");
-    //    //cc.Move((climbTarget- transform.position) * climbSpeed * Time.deltaTime);
-    //    cc.Move((player.transform.position - transform.position * moveSpeed * Time.deltaTime));
-
-    //    //// 벽을 다 올라갔는지 체크
-    //    //if (Vector3.Distance(transform.position, climbTarget) < 0.1f)
-    //    //{
-    //    //    isClimbing = false;
-    //    //    smith.enabled = true;
-    //    //    smith.Warp(climbTarget); // 새로운 위치로 NavMeshAgent 이동
-    //    //    smith.destination = player.position;
-    //    //}
-    //}
-    //여기 바꿧다!!!!!!!!!!!!!!!!!!!!!!!!!1
     public float rotationSpeed = 15f;
     void Attack()
     {
@@ -554,21 +556,27 @@ public class JKYHammerFS : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > attackDelay)
             {
+                anim.SetTrigger("StartAttack");
+                if (currentTime > 3f)
+                {
+                    target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject, true);
+                    //target.GetComponent<Human_KJS>().isKnockedBack = true;
+                    target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                    print("공격");
+                    currentTime = 0;
+
+                }
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 //target.GetComponent<Human_KJS>().tankerSkill1();
                 Vector3 knockbackDirection = (target.transform.position - gameObject.transform.position).normalized;
-                target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject);
-                //target.GetComponent<Human_KJS>().isKnockedBack = true;
-                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
-                print("공격");
-                currentTime = 0;
 
-                anim.SetTrigger("StartAttack");
 
             }
         }
         else
         {
+            smith.isStopped = false;
+
             m_State = EnemyState.Move;
             print("상태전환 : attack ->move");
             currentTime = 0;
@@ -578,11 +586,7 @@ public class JKYHammerFS : MonoBehaviour
         }
     }
 
-    //public void AttackAction()
-    //{
-    //    //print("attackaction");
-    //    player.GetComponent<PlayerControler_KJS>().DamageAction();
-    //}
+
     void Damaged()
     {
         // 피격 상태를 처리하기 위한 코루틴\
@@ -602,7 +606,7 @@ public class JKYHammerFS : MonoBehaviour
     public void HitEnemy(float hitPower, GameObject attacker)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
-        if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
+        if (m_State == EnemyState.Die || m_State == EnemyState.Return)
         {
             return;
         }
@@ -624,11 +628,14 @@ public class JKYHammerFS : MonoBehaviour
 
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 
     void Die()
     {
+        anim.SetTrigger("Die");
         // 진행중인 피격 코루틴을 중지한다.
         StopAllCoroutines();
         // 죽음상태를 처리하기 위한 코루틴을 실행한다.
@@ -643,7 +650,7 @@ public class JKYHammerFS : MonoBehaviour
         cc.enabled = false;
 
         // 2초 동안 기다린 후에 자기 자신을 제거한다.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         print("소멸");
         Destroy(gameObject);
         //rockPrefab.SetActive(false);
@@ -656,6 +663,7 @@ public class JKYHammerFS : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        //GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);

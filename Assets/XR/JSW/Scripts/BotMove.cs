@@ -12,6 +12,7 @@ public class BotMove : MonoBehaviour
     BotManager_JSW botManager;
     CharacterController cc;
     Animator anim;
+    LevelDesign levelDesign;
     public enum BotMoveState
     {
         Idle,
@@ -44,6 +45,7 @@ public class BotMove : MonoBehaviour
         GetComponent<Human_KJS>().stun = Stun;
         anim = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
+        levelDesign = GameObject.Find("LevelDesign").GetComponent<LevelDesign>();
     }
     // 맞았을 때 감속
     public void Slow()
@@ -75,6 +77,11 @@ public class BotMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isEntered)
+        {
+            EnterMove();
+            return;
+        }
         if (cc.isGrounded) yVelocity = 0;
         if (botManager.human.knockBackVector.magnitude > 0.1f)
         {
@@ -102,7 +109,13 @@ public class BotMove : MonoBehaviour
             }
         }
         else if (botMoveState == BotMoveState.Follow)
-        {   // 타겟을 사격 가능 || 플레이어가 거리 내로 옴
+        {   
+            if (levelDesign.helicopter.isArrived && Vector3.Distance(transform.position, levelDesign.botDest.transform.position) < 3)
+            {
+                EnterHelicopter();
+                return;
+            }
+            // 타겟을 사격 가능 || 플레이어가 거리 내로 옴
             if ((botManager.PriorityTarget != null && (botManager.TargetVisible && targetDis <= botManager.botSight.FireRange - 1)) || targetDis < followDis - 1)
             {   // 도착
                 if (agent.isOnNavMesh) agent.isStopped = true;
@@ -158,6 +171,22 @@ public class BotMove : MonoBehaviour
             Vector3 moveVector = Quaternion.Euler(Vector3.down * transform.eulerAngles.y) * velocity;
             anim.SetFloat("MoveZ", moveVector.z);
             anim.SetFloat("MoveX", moveVector.x);
+            botManager.human.speed = new Vector3(moveVector.x, 0, moveVector.z).magnitude;
         }
+    }
+    bool isEntered;
+    void EnterHelicopter()
+    {
+        agent.SetDestination(player.transform.position);
+        if (Vector3.Distance(levelDesign.helicopter.transform.position, transform.position) < 2)
+        {
+            agent.enabled = false;
+            isEntered = true;
+        }
+    }
+    void EnterMove()
+    {
+        transform.position -= (transform.position - levelDesign.helicopter.transform.position) * Time.deltaTime * 3;
+        anim.SetFloat("MoveZ", (transform.position - levelDesign.helicopter.transform.position).magnitude);
     }
 }

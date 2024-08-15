@@ -12,7 +12,7 @@ public class JKYAttackable : MonoBehaviour
     } = 100;
     [SerializeField]
     private JKYRagdollEnabler RagdollEnabler;
-    private JKYEnemyMove1 move1;
+    private JKYEnemyMove move1;
     [SerializeField]
     private float FadeOutDelay = 2f;
 
@@ -38,7 +38,7 @@ public class JKYAttackable : MonoBehaviour
     {
         //CharacterController cc = GetComponentInParent<CharacterController>();
         RagdollEnabler = GetComponent<JKYRagdollEnabler>();
-        move1 = GetComponent<JKYEnemyMove1>();
+        move1 = GetComponent<JKYEnemyMove>();
        
         if (RagdollEnabler != null)
         {
@@ -58,20 +58,21 @@ public class JKYAttackable : MonoBehaviour
         int randomTrigger = Random.Range(1, 3);
         if (randomTrigger == 1)
         {
-            move1.Animator.SetTrigger("LDamaged");
+            move1.Animator.SetTrigger("LDamage");
         }
         else if (randomTrigger == 2)
         {
-            move1.Animator.SetTrigger("RDamaged");
+            move1.Animator.SetTrigger("RDamage");
         }
     }
     public void HitEnemy(float hitPower, GameObject attacker)
     {
-
+        move1.Agent.isStopped = true;
         TriggerRandomDamage();
         //move1.State = JKYEnemyMove1.EnemyState.Damaged;
         print(Life);
         Life -= hitPower;
+        move1.Agent.isStopped = false;
         OnTakeDamage?.Invoke();
         if (Life <= 0 && RagdollEnabler != null)
         {
@@ -84,7 +85,7 @@ public class JKYAttackable : MonoBehaviour
 
     private IEnumerator FadeOut()
     {
-        cc.enabled = false;
+        //cc.enabled = false;
         yield return new WaitForSeconds(FadeOutDelay);
 
         if (RagdollEnabler != null)

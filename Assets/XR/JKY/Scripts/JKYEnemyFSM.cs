@@ -44,7 +44,7 @@ public class JKYEnemyFSM : MonoBehaviour
     float currentTime = 0;
 
     // 공격딜레이시간
-    float attackDelay = 2f;
+    float attackDelay = 1f;
 
     CharacterController cc;
 
@@ -78,7 +78,8 @@ public class JKYEnemyFSM : MonoBehaviour
     private Vector3 climbTarget;
     private bool isMoving = false;
 
-
+    public AudioSource audio;
+    public AudioClip[] sounds;
 
     // 에너미 시야각
     public float lookRadius = 8f; // 시야반경
@@ -90,6 +91,7 @@ public class JKYEnemyFSM : MonoBehaviour
     //private Transform enemy;
     void Start()
     {
+        audio = GetComponent<AudioSource>();
         // 최초상태 대기
         m_State = EnemyState.Idle;
         player = GameObject.Find("Player").transform;
@@ -163,11 +165,11 @@ public class JKYEnemyFSM : MonoBehaviour
                         //print(hit.transform.gameObject.name + "/" + target.name);
                         //if (hit.transform == target)
                         {
+                            anim.SetTrigger("IdleToMove");
                             m_State = EnemyState.Move;
                             print("상태전환 : Idle -> Move");
 
                             // 이동 애니메이션으로 전환하기
-                            anim.SetTrigger("IdleToMove");
                         }
                         
                     }
@@ -182,6 +184,8 @@ public class JKYEnemyFSM : MonoBehaviour
     Vector3 climbReadyPo;
     public Transform testTr;
     public float extraRotationSpeed = 0.3f;
+    private bool isAudioPlaying = false;
+
     void Move()
     {
 
@@ -200,7 +204,10 @@ public class JKYEnemyFSM : MonoBehaviour
             //smith.ResetPath();
             // 내비게이션으로 접근하는 최소 거리를 공격 가능 거리로 설정한다.
             smith.stoppingDistance = attackDistance;
-
+            if (!isAudioPlaying)
+            {
+                PlayRunningSound();
+            }
             //내비게이션의 목적지를 플레이어의 위치로 설정한다.
 
 
@@ -216,6 +223,7 @@ public class JKYEnemyFSM : MonoBehaviour
             {
                 smith.SetDestination(target.position);
                 //y값
+                //audio.PlayOneShot(sounds[1]);
 
 
                 if (checkForClimbingShortcut())
@@ -226,6 +234,7 @@ public class JKYEnemyFSM : MonoBehaviour
                     // smith.SetDestination(target.position);
                         print("durldhkTsl");
                         smith.ResetPath();
+
                         smith.SetDestination(target.position);
                     }
                 }
@@ -261,7 +270,7 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             smith.isStopped = true;
             smith.ResetPath();
-
+            StopRunningSound();
             m_State = EnemyState.Attack;
             print("상태전환 Move -> attack");
 
@@ -273,7 +282,24 @@ public class JKYEnemyFSM : MonoBehaviour
         // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
     }
-
+    private void PlayRunningSound()
+    {
+        if (audio != null && sounds != null)
+        {
+            audio.clip = sounds[1];
+            audio.loop = true;
+            audio.Play();
+            isAudioPlaying = true;
+        }
+    }
+    private void StopRunningSound()
+    {
+        if (audio != null)
+        {
+            audio.Stop();
+            isAudioPlaying = false;
+        }
+    }
     private void OnDrawGizmos()
     {
         if (transform != null)
@@ -345,7 +371,7 @@ public class JKYEnemyFSM : MonoBehaviour
             }
             else
             {
-                print(111);
+               // print(111);
                 
             }
         }
@@ -508,6 +534,8 @@ public class JKYEnemyFSM : MonoBehaviour
             {
                 //player.GetComponent<JKYPlayerMove>().DamageAction(attackPower);
                 target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                //audio.PlayOneShot(sounds[0]);
+
                 print("공격");
                 currentTime = 0;
 
@@ -550,7 +578,7 @@ public class JKYEnemyFSM : MonoBehaviour
     public void HitEnemy(float hitPower, GameObject attacker)
     {
         //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
-        if(m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
+        if(m_State == EnemyState.Die || m_State == EnemyState.Return)
         {
             return;
         }
@@ -569,9 +597,11 @@ public class JKYEnemyFSM : MonoBehaviour
         {
             m_State = EnemyState.Die;
             print("상태전환 Any state -> Die");
-
+            smith.isStopped = true;
             anim.SetTrigger("Die");
             Die();
+            JKYEnemyHPSystem dead = GetComponent<JKYEnemyHPSystem>();
+            dead.isDead = true;
         }
     }
 
@@ -603,27 +633,40 @@ public class JKYEnemyFSM : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);
         allTargets.AddRange(allies);
+        allTargets.AddRange(pipe);
         //allTargets.Remove(target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead);
         float closestDistance = Mathf.Infinity;
         Transform closestTarget = null;
 
         foreach (GameObject target in allTargets)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+            
+            if (target.gameObject.tag == "Pipe") 
             {
-                closestDistance = distanceToTarget;
+                print(target);
                 closestTarget = target.transform;
+                break;
+            }
+            else
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                {
+                    closestDistance = distanceToTarget;
+                    closestTarget = target.transform;
                 
+                }
+
             }
         }
 
         target = closestTarget;
-        //print(target);
+        print(target);
     }
 
 

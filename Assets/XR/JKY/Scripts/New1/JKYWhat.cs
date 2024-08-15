@@ -2,253 +2,300 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class JKYWhat : MonoBehaviour
 {
-    public float Attackdistance = 20f;
-    public float explosionForce = 700f;
-    public float explosionDelay = 2f;
-    public GameObject explosionEffect;
-
-    public int explosionDamage = 20; // 폭발 데미지
-
-    public float vomitRange = 25f; // 구토 공격 범위
-    public float vomitCooldown = 9f; // 구토 공격 쿨다운
-    public GameObject vomitEffect;
-    public int vomitDamage = 10; // 구토 데미지
-    public float vomitAngle = 120f; // 구토 공격 시야각
-    public PlayerControler_KJS pc;
-    private NavMeshAgent agent;
+    // Start is called before the first frame update
+    [SerializeField]
+    private JKYAttackable Attackable;
+    [SerializeField]
+    NavMeshAgent Agent;
+    [SerializeField]
+    public Animator Animator;
+    [SerializeField]
+    public EnemyState State;
+    [SerializeField]
     private Transform target;
-    private bool hasExploded = false;
-    private bool canVomit = true;
-    Animator animator;
-    public LayerMask layer;
-    public float hp;
-    public float maxhp = 120;
-    //[SerializeField]
+    [SerializeField]
+    private float FieldOfView = 65;
+    [SerializeField]
+    private float LineOfSightDistance = 7f;
+    [SerializeField]
+    private float IdleSpeedModifier = 0.25f;
 
-    public BumerState _currentState;
-    public enum BumerState
+    private float InitialSpeed;
+    private Vector3 TargetLocation;
+    public float attackPower = 3;
+    public static NavMeshTriangulation Triangulation;
+
+    public enum EnemyState
     {
-        Walking,
-        Attack,
-        Explode
+        Initial,
+        Idle,
+        Chasing,
+        Attacking,
+        Damaged,
+        Dead
     }
-    void Start()
+    private void Awake()
     {
-        animator = GetComponent<Animator>();
-        hp = maxhp;
-        agent = GetComponent<NavMeshAgent>();
-        target = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어를 타겟으로 설정
-        GetComponent<JKYEnemyHPSystem>().getDamage = HitEnemy;
+
+        Agent = GetComponent<NavMeshAgent>();
+        Attackable = GetComponent<JKYAttackable>();
+        Animator = transform.GetComponentInChildren<Animator>();
+        //InitialSpeed = Agent.speed;
+        State = EnemyState.Chasing;
+        //Agent.stoppingDistance = 3f;
+        if (Triangulation.vertices == null || Triangulation.vertices.Length == 0)
+        {
+            Triangulation = NavMesh.CalculateTriangulation();
+        }
+
+        Attackable.OnTakeDamage += GetAggressive;
+    }
+
+    private void GetAggressive()
+    {
+        if (State == EnemyState.Idle || State == EnemyState.Initial)
+        {
+            State = EnemyState.Chasing;
+            Agent.speed = InitialSpeed;
+            Animator.SetBool("HasTarget", true);
+        }
     }
 
     public void Update()
     {
-        print(_currentState);
         FindClosestTarget();
-        switch (_currentState)
+        print(State);
+        if (Agent.enabled)
         {
-            case BumerState.Walking:
-                Walking();
-                break;
-            case BumerState.Attack:
-                ATTack();
-                break;
-            case BumerState.Explode:
-                //Explode();
-                break;
-        }
-
-    }
-    public float currTime;
-    public void ChangeState(BumerState state)
-    {
-        _currentState = state;
-        currTime = 0;
-        agent.isStopped = true;
-        switch (_currentState)
-        {
-            case BumerState.Walking:
-                animator.SetTrigger(_currentState.ToString());
-                Walking();
-                break;
-            case BumerState.Attack:
-                animator.SetTrigger("Attack");
-                ATTack();
-                break;
-            case BumerState.Explode:
-                CapsuleCollider coll = GetComponent<CapsuleCollider>();
-                coll.enabled = false;
-                break;
-        }
-    }
-
-    void onDie()
-    {
-        //tartCoroutine(Explode1());
-        hasExploded = true;
-        //ChangeState(BumerState.Explode);
-    }
-    void Walking()
-    {
-        
-        agent.SetDestination(target.transform.position);
-        
-        float distanceToTarget = Vector3.Distance(transform.position, target.position);
-
-        if (distanceToTarget <= Attackdistance)
-        {
-            _currentState = BumerState.Attack;
-
-        }
-            else if (distanceToTarget <= vomitRange && canVomit)
+            switch (State)
             {
-                Vector3 directionToTarget = (target.position - transform.position).normalized;
-                float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
-
-                if (angleToTarget <= vomitAngle / 2f)
-                {
-                    //_currentState = BumerState.Vomit;
-                    //Vomit();
-                    StartCoroutine(Vomitto(directionToTarget));
-                }
-            }
-            else
-            {
-                agent.SetDestination(target.transform.position);
-                agent.isStopped = false;
-            { }
-        
-    }
-    //void Explode()
-    //{
-    //    StartCoroutine(Explode1());
-    //    hasExploded = true;
-    //}
-    //IEnumerator Explode1()
-    //{
-    //    yield return new WaitForSeconds(explosionDelay);
-
-    //    // 폭발 효과
-    //    Instantiate(explosionEffect, transform.position, transform.rotation);
-
-    //    // 폭발 범위 내의 모든 플레이어를 찾기
-    //    Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layer);
-    //    foreach (Collider nearbyObject in colliders)
-    //    {
-    //        if (nearbyObject.CompareTag("Player"))
-    //        {
-    //            PlayerControler_KJS pc = nearbyObject.GetComponent<PlayerControler_KJS>();
-    //            if (pc != null)
-    //            {
-    //                //pc.ApplyBoomerEffect();
-    //                //pc.TakeDamage(explosionDamage); // 데미지 적용
-    //            }
-    //        }
-    //    }
-
-    //    // 부머 제거
-    //    Destroy(gameObject);
-    }
-    void ATTack()
-    {
-        Vector3 directionToTarget = (target.position - transform.position).normalized;
-        StartCoroutine(Vomitto(directionToTarget));
-        //print("?");
-        if (Vector3.Distance(transform.position, target.transform.position) > vomitRange)
-        {
-            print("설마?");
-            ChangeState(BumerState.Walking);
-
-        }
-
-
-    }
-    IEnumerator Vomitto(Vector3 directionToTarget)
-    {
-        animator.SetTrigger("Attack");
-
-        canVomit = false;
-        yield return new WaitForSeconds(1f);
-        //print(111);
-        // 구토 효과
-
-        // 구토 범위 내의 모든 플레이어를 찾기
-        GameObject vomit = Instantiate(vomitEffect, target.transform.position, transform.rotation);
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, vomitRange, layer))
-        {
-            //print(hit);
-            // print("독생성");
-            if (hit.collider.CompareTag("Player"))
-            {
-                //Human_KJS pcr = hit.collider.GetComponent<Human_KJS>();
-                //if (pcr != null)
-                //{
-                //    //pcr.ApplyBoomerEffect();
-                //    //pcr.TakeDamage(vomitDamage); // 데미지 적용
-                //}
+                case EnemyState.Initial:
+                    State = EnemyState.Idle;
+                    break;
+                case EnemyState.Idle:
+                    DoIdleMovement();
+                    break;
+                case EnemyState.Chasing:
+                    DoTargetMovement();
+                    break;
+                case EnemyState.Attacking:
+                    DoAttack();
+                    break;
+                case EnemyState.Damaged:
+                    //DoDamaged();
+                    break;
             }
         }
-        yield return new WaitForSeconds(vomitCooldown);
-        canVomit = true;
-
-        // 구토 효과 제거
-        Destroy(vomit, 6f);
-
     }
 
-    public void HitEnemy(float hitPower, GameObject attacker)
+    private void DoIdleMovement()
     {
-        //만일, 이미 피격 상태이거나 사망 상태 또느 ㄴ복귀 상태라면 아무런 처리도 하지 않고 함수를 종ㅇ료
-        //if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return)
-        //{
-        //    return;
-        //}
-        //플레이어 공격력만큼 에너미의 체력을 감소시킨다.
-        hp -= hitPower;
-        print(hp);
-        // 에너미의 체력이 0보다 크면 피격 상태로 전환
-        if (hp > 0)
+        Vector3 direction = (target.transform.position - transform.position).normalized;
+        print(00);
+        if (Vector3.Distance(transform.position, target.position) < LineOfSightDistance)
+        //&& Vector3.Dot(transform.forward, direction) >= Mathf.Cos(FieldOfView))
         {
-            //m_State = EnemyState.Damaged;
-            //print("상태 전환 Any State -> Damaged");
-            //Damaged();
+
+            GetAggressive();
         }
-        // 죽음
         else
         {
 
-            onDie();
+            Agent.speed = InitialSpeed * IdleSpeedModifier;
+            Animator.SetBool("HasTarget", false);
+
+            if (Vector3.Distance(transform.position, TargetLocation) <= Agent.stoppingDistance || TargetLocation == Vector3.zero)
+            {
+                Vector3 triangle1 = Triangulation.vertices[Random.Range(0, Triangulation.vertices.Length)];
+                Vector3 triangle2 = Triangulation.vertices[Random.Range(0, Triangulation.vertices.Length)];
+
+                TargetLocation = Vector3.Lerp(triangle1, triangle2, Random.value);
+                Agent.SetDestination(TargetLocation);
+            }
         }
     }
+
+    private void DoTargetMovement()
+    {
+        Agent.stoppingDistance = 2;
+        Animator.SetBool("HasTarget", true);
+        if (Vector3.Distance(target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 1)
+        {
+            Agent.SetDestination(target.position);
+        }
+        else
+        {
+            State = EnemyState.Attacking;
+        }
+    }
+
+    private void DoAttack()
+    {
+        print(Agent.stoppingDistance);
+        print(Agent.radius);
+        //if (Vector3.Distance(target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 1)
+        //{
+        //    Animator.SetBool("IsAttacking", false);
+        //    State = EnemyState.Chasing;
+        //}
+        //else
+        //{
+        //    Quaternion lookRotation = Quaternion.LookRotation((target.position - transform.position).normalized);
+        //    transform.rotation = Quaternion.Euler(0, lookRotation.eulerAngles.y, 0);
+        //    Animator.SetBool("IsAttacking", true);
+        //    target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+        //}
+        if (IsDelayComplete(damageDelay))
+        {
+            // 나의 행동을 결정하자.
+            // 만약에 Player와 거리가 attakRange보다 작으면
+            //float dist = Vector3.Distance(player.transform.position, transform.position);
+            if (Vector3.Distance(target.position, transform.position) > (Agent.stoppingDistance + Agent.radius) * 1)
+            {
+                // 런
+                Animator.SetBool("IsAttacking", false);
+                State = EnemyState.Chasing;
+                currTime = 0;
+
+            }
+            // 그렇지 않고 인지범위보다 작으면
+
+            // 그렇지 않고 인지범위보다 크면
+            else
+            {
+                Quaternion lookRotation = Quaternion.LookRotation((target.position - transform.position).normalized);
+                transform.rotation = Quaternion.Euler(0, lookRotation.eulerAngles.y, 0);
+                Animator.SetBool("IsAttacking", true);
+                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                currTime = 0;
+            }
+
+        }
+    }
+
+    bool isDamageMotion = false;
+
+    public float damageDelay = 1;
+    public void DoDamaged()
+    {
+        print("여기들와?");
+        if (isDamageMotion == false)
+        {
+
+            Animator.SetTrigger("Damage");
+            isDamageMotion = true;
+        }
+        //StartCoroutine(damage());
+        if (IsDelayComplete(1.3f))
+        {
+            // 나의 행동을 결정하자.
+            // 만약에 Player와 거리가 attakRange보다 작으면
+            //float dist = Vector3.Distance(target.transform.position, transform.position);
+            if (Vector3.Distance(target.position, transform.position) < (Agent.stoppingDistance + Agent.radius) * 1)
+            {
+                // 공격상태로 전환
+                State = EnemyState.Attacking;
+
+            }
+            // 그렇지 않고 인지범위보다 작으면
+
+            else
+            {
+                // 대기상태로 전환
+                State = EnemyState.Chasing;
+
+            }
+
+            isDamageMotion = false;
+
+        }
+        //private IEnumerator damage()
+        //{
+        //    Animator.SetBool("Damaged", true);
+        //    yield return new WaitForSeconds(1.5f);
+
+        //    if (Vector3.Distance(target.position, transform.position) <= (Agent.stoppingDistance + Agent.radius) * 1)
+        //    {
+        //        // 공격상태로 전환
+        //        //Animator.SetBool("Damaged", false);
+
+        //        State = EnemyState.Attacking;
+
+
+        //    }
+        //    // 그렇지 않고 인지범위보다 크면
+        //    else
+        //    {
+        //        //Animator.SetBool("Damaged", false);
+        //        // 대기상태로 전환
+        //        State = EnemyState.Chasing;
+        //    }
+
+
+    }
+    public float currTime;
+    bool IsDelayComplete(float delayTime)
+    {
+        // 시간을 증가 시키자.
+        currTime += Time.deltaTime;
+        //만약에 시간이 delayTime보다 커지면
+        if (currTime >= delayTime)
+        {
+            //// 현재시간 초기화
+            currTime = 0;
+            // true반환
+            return true;
+
+        }
+        // 그렇지 않으면
+
+        // false 반환
+        return false;
+    }
+
 
     void FindClosestTarget()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        //GameObject[] players = LayerMask.NameToLayer("Player_KJS");
         GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
-        //GameObject[] allies = GameObject.FindGameObjectsWithTag("Bot_JSW");
+        GameObject[] pipe = GameObject.FindGameObjectsWithTag("Pipe");
         List<GameObject> allTargets = new List<GameObject>();
         allTargets.AddRange(players);
         allTargets.AddRange(allies);
+        allTargets.AddRange(pipe);
 
         float closestDistance = Mathf.Infinity;
         Transform closestTarget = null;
 
         foreach (GameObject target in allTargets)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+
+            if (target.gameObject.tag == "Pipe")
             {
-                closestDistance = distanceToTarget;
+                print(target);
                 closestTarget = target.transform;
+                break;
+            }
+            else
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                {
+                    closestDistance = distanceToTarget;
+                    closestTarget = target.transform;
+
+                }
+
             }
         }
 
         target = closestTarget;
         //print(target);
     }
+
+
 }
