@@ -485,4 +485,8 @@ public class PlayerControler_KJS : MonoBehaviour
         //    }
         //}
     }
+    private void OnDestroy()
+    {
+        full.SetActive(false);
+    }
 }
