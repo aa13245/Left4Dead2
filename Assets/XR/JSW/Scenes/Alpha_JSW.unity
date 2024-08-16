@@ -210,6 +210,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bot1
       objectReference: {fileID: 0}
+    - target: {fileID: 2774561796032662858, guid: 1196ee1ccbc9d4948826d87bcf235338,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4175896164268521132, guid: 1196ee1ccbc9d4948826d87bcf235338,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -553,6 +558,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bot3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2353600345049940301, guid: 2c4c590a33e6991489462ca081e2fa2d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8942517279040574848, guid: 2c4c590a33e6991489462ca081e2fa2d,
         type: 3}
@@ -949,6 +959,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bot2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7483987482565353713, guid: 7646765e4b452c0468bd36180558adb0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
