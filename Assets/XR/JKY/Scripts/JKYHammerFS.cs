@@ -105,11 +105,12 @@ public class JKYHammerFS : MonoBehaviour
     //private Transform enemy;
     private ObjRotate_KJS obj;
 
-    ////public Transform player;            // 플레이어의 Transform
-    //public Transform tank;              // 탱크의 Transform
-    //public CameraShake cameraShake;     // CameraShake 스크립트 참조
-    //public float maxShakeDistance = 20f; // 최대 흔들림이 발생하는 거리
-    //public float minShakeDistance = 2f;  // 흔들림이 시작되는 최소 거리
+    //public Transform player;            // 플레이어의 Transform
+    public Transform tank;              // 탱크의 Transform
+    public float maxShakeDistance = 20f; // 최대 흔들림이 발생하는 거리
+    public float minShakeDistance = 2f; // 흔들림이 시작되는 최소 거리
+    public float maxShakeMagnitude = 0.2f; // 최대 진동 세기 (기존 값보다 낮춤)
+    public float minShakeMagnitude = 0.05f; // 최소 진동 세기 (기존 값보다 낮춤)// 
     void Start()
     {
         // 최초상태 대기
@@ -159,7 +160,7 @@ public class JKYHammerFS : MonoBehaviour
             case EnemyState.Throw:
                 Throw();
                 print(a);
-                tankCamerashake = false;
+                
                 break;
             case EnemyState.Run:
                 Run();
@@ -179,14 +180,8 @@ public class JKYHammerFS : MonoBehaviour
                 //Die();
                 break;
         }
-        //    // tankCamerashake 플래그가 true일 때만 카메라 진동을 적용
-        //    if (tankCamerashake && obj != null)
-        //    {
-        //        ApplyCameraShake(Vector3.Distance(transform.position, target.transform.position));
-        //    }
-        //}
-
-        void Idle()
+    
+    void Idle()
         {
             //float distanceToPlayer = Vector3.Distance(transform.position, target.position);
             //if (distanceToPlayer < findDistance)
@@ -281,7 +276,7 @@ public class JKYHammerFS : MonoBehaviour
                             if (Time.time >= nextThrowTime)
                             {
                                 print("이제 던진다?");
-
+                                tankCamerashake = false; // 탱커 진동 비활성화
                                 m_State = EnemyState.Throw;
                                 print("throw로 상태변환;");
                                 //Throw();
@@ -365,25 +360,24 @@ public class JKYHammerFS : MonoBehaviour
             // 만일 현재 위치가 초기 위치에서 이동 가능 범위를 넘어간다면...
 
         } }
-    //void ApplyCameraShake(float distanceToPlayer)
-    //{
-    //    if (obj != null)
-    //    {
-    //        float maxShakeDistance = obj.maxShakeDistance;
-    //        float intensity = Mathf.Lerp(obj.shakeMagnitude, 0f, distanceToPlayer / maxShakeDistance);
+    void ApplyCameraShake()
+    {
+        if (obj != null)
+        {
+            float distanceToPlayer = Vector3.Distance(tank.position, player.position);
 
-    //        if (distanceToPlayer < maxShakeDistance)
-    //        {
-    //            obj.TriggerShake(obj.shakeDuration, intensity);
-    //        }
-    //        else
-    //        {
-    //            obj.TriggerShake(0f, 0f); // 흔들림 효과를 중지
-    //        }
-    //    }
-    //}
+            if (distanceToPlayer <= maxShakeDistance)
+            {
+                float normalizedDistance = Mathf.Clamp01((distanceToPlayer - minShakeDistance) / (maxShakeDistance - minShakeDistance));
+                float shakeMagnitude = Mathf.Lerp(obj.maxShakeMagnitude, 0f, normalizedDistance);
 
-    public float detectionAngle = 70.0f;
+                // 카메라 진동 적용
+                obj.TriggerShake(obj.shakeDuration, shakeMagnitude);
+            }
+        }
+    }
+
+public float detectionAngle = 70.0f;
     public float angleStep = 1.0f;
     void checkForClimbingShortcut()
     {
@@ -434,16 +428,18 @@ public class JKYHammerFS : MonoBehaviour
 
     GameObject rock;
     void Throw()
-    {
-
+    { 
         StartCoroutine(PrepareAndThrowRock());
         ResetThrowCooldown();
         m_State = EnemyState.Move;
-
     }
     float rocktime;
     IEnumerator PrepareAndThrowRock()
     {
+        // 진동을 멈춤
+        obj.TriggerShake(0f, 0f); // 기존 진동을 멈추기 위해 강제로 0으로 설정
+        tankCamerashake = false;  // 탱커 진동도 멈춤
+
         smith.isStopped = true;
         anim.SetTrigger("Throw");
         rock = Instantiate(rockPrefab, transform.position + Vector3.up * 3f, Quaternion.identity);
@@ -468,6 +464,9 @@ public class JKYHammerFS : MonoBehaviour
         Rigidbody rb = rock.GetComponent<Rigidbody>();
         rb.AddForce(directionToPlayer * 20f * Mathf.Min(20, dist)); // 돌의 속도 설정
         rb.useGravity = true;
+
+        // 진동 재활성화
+        tankCamerashake = true;
     }
 
     void Run()
