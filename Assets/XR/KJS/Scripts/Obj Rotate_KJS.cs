@@ -81,7 +81,7 @@ public class ObjRotate_KJS : MonoBehaviour
         // 기절 높이 오프셋
         if (knockedCamOffset) Camera.main.transform.Translate(new Vector3(0, -0.7f, 0), Space.World);
 
-        CursorSet();
+        //CursorSet();
     }
 
     public void TriggerShake(float duration, float magnitude)

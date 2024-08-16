@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
+//using System.Collections.Generic;
+//using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -288,7 +288,17 @@ public class PlayerControler_KJS : MonoBehaviour
 
         velocity.y = 0;
 
-        cc.Move(((!stun && human.humanState == Human_KJS.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
+        //Debug.LogError("dir : " + dir + ", boo :  " + (!stun && human.humanState == Human_KJS.HumanState.Normal) + ", state : " + human.humanState.ToString());
+        //cc.Move(Vector3.right * 5 * Time.deltaTime);
+        //cc.Move(((!stun && human.humanState == Human_KJS.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
+    }
+
+    private void LateUpdate()
+    {
+
+        Debug.LogError(cc.name);
+        cc.Move(Vector3.right * 5 * Time.deltaTime);
+
     }
 
     void Reload()
