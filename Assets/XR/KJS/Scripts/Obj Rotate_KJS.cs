@@ -42,16 +42,19 @@ public class ObjRotate_KJS : MonoBehaviour
     void Update()
     {
         // 흔들림 효과 적용
-        if (shakeTime > 0)
+        if (useRotX)
         {
-            transform.localPosition = originalPosition + Random.insideUnitSphere * shakeMagnitude;
-            shakeTime -= Time.deltaTime;
-        }
-        else
-        {
-            shakeTime = 0f;
-            transform.localPosition = originalPosition;
-            // Tanker의 카메라 흔들림 변수 확인
+            if (shakeTime > 0)
+            {
+                transform.localPosition = originalPosition + Random.insideUnitSphere * shakeMagnitude;
+                shakeTime -= Time.deltaTime;
+            }
+            else
+            {
+                shakeTime = 0f;
+                transform.localPosition = originalPosition;
+                // Tanker의 카메라 흔들림 변수 확인
+            }
         }
         //// Tanker가 애니메이션 상태일 때만 진동 발생
         //if (tankerTransform != null && hammerFS != null && hammerFS.tankCamerashake)
