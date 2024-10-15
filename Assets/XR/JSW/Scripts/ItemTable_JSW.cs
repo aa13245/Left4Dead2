@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static ItemTable_JSW;
 
  public class ItemTable_JSW : MonoBehaviour
 {
     public static ItemTable_JSW instance;
-
     // 카테고리별 구조체
     public struct MainWeapon
     {
@@ -145,7 +143,7 @@ using static ItemTable_JSW;
     }
     // 아이템 테이블
     public Dictionary<Items, object> itemTable = new Dictionary<Items, object> { };
-    public GameObject[] itemObjs;
+    public GameObject[] itemObjs; // Prefab
     public MainWeapon ak47, spas, m4a1;
     public SubWeapon pistol;
     public MeleeWeapon electricGuitar, crowbar;

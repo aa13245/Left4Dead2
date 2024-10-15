@@ -8,6 +8,9 @@ public class Inventory_JSW : MonoBehaviour
     Human_KJS human;
     // 시작 기본권총
     public GameObject pistolPrefab;
+    public GameObject hand;
+    GameObject handItem;
+    GameObject medikitUI;
 
     // 슬롯 4개
     Item_JSW[] slots = new Item_JSW[4];
@@ -34,11 +37,7 @@ public class Inventory_JSW : MonoBehaviour
             return true;
         }
         else return false;
-    }
-    public GameObject hand;
-    GameObject handItem;
-    GameObject medikitUI;
-
+    } // 슬롯 변경
     // Start is called before the first frame update
     void Start()
     {
@@ -55,8 +54,7 @@ public class Inventory_JSW : MonoBehaviour
         slots[3] = null;
         ChangeHand();
         if (!human.isPlayer) medikitUI = GameObject.Find("Canvas").transform.Find("Info" + gameObject.name.Substring(3)).Find("MedikitUI").gameObject;
-    }
-    // 손 아이템 오브젝트 생성
+    } // 시작 시 기본권총 장착
     void ChangeHand()
     {
         Destroy(handItem);
@@ -67,8 +65,7 @@ public class Inventory_JSW : MonoBehaviour
             handItem.transform.localPosition = Vector3.zero;
             handItem.transform.localEulerAngles = Vector3.zero;
         }
-    }
-    // 아이템 줍기
+    } // 손 아이템 오브젝트 생성
     public bool PickUp(GameObject itemObj)
     {   // 아이템 레이어 체크
         if (itemObj.layer != LayerMask.NameToLayer("Item_JSW")) return false;
@@ -124,7 +121,7 @@ public class Inventory_JSW : MonoBehaviour
         itemObj.SetActive(false);
         if (slot == 3 && !human.isPlayer) medikitUI.SetActive(true);
         return true;
-    }
+    } // 아이템 줍기
     public bool Drop(int slot)
     {
         if (slots[slot] != null)
@@ -135,8 +132,7 @@ public class Inventory_JSW : MonoBehaviour
             return true;
         }
         return false;
-    }
-    // 발사 & 사용
+    } // 아이템 버리기
     public bool Use(int slot)
     {
         if (slots[slot].value1 > 0)
@@ -153,7 +149,7 @@ public class Inventory_JSW : MonoBehaviour
             return true;
         }
         else return false;
-    }
+    } // 발사 & 사용
     public bool CheckReloadEnable(int slot)
     {   // 주무기
         if (slot == 0)
@@ -182,7 +178,7 @@ public class Inventory_JSW : MonoBehaviour
             else return false;
         }
         else return false;
-    }
+    } // 장전 가능 여부
     public bool Reload(int slot)
     {   // 주무기
         if (slot == 0)
@@ -218,11 +214,5 @@ public class Inventory_JSW : MonoBehaviour
             else return false;
         }
         else return false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    } // 장전
 }

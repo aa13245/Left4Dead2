@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicController : MonoBehaviour, InteractObj_JSW
+public class MusicController : MonoBehaviour, IInteractObj_JSW
 {
     LevelDesign levelDesign;
     public bool Interact()

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static ItemTable_JSW;
 using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UI.Image;
 
@@ -96,7 +95,7 @@ public class Human_KJS : MonoBehaviour
     }
 
     //플레이어 체력 변수
-    float hp = 100;
+    public float hp = 100;
     public float HP
     {
         get { return hp; }
@@ -146,55 +145,6 @@ public class Human_KJS : MonoBehaviour
     Inventory_JSW inventory;
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
-
-    public enum HumanState
-    {
-        Normal,
-        KnockedDown,
-        Dead,
-
-    }
-    public HumanState humanState;
-    public void ChangeHumanState(HumanState s)
-    {
-        if (humanState == s) return;
-        humanState = s;
-        // 부활
-        if (s == HumanState.Normal)
-        {
-            HP = 30;
-            TempHP = 29;
-            if (isPlayer) player.SetKnockedDown(false);
-        }
-        // 기절
-        else if (s == HumanState.KnockedDown)
-        {
-            HP = knockedDownMaxHP;
-            TempHP = knockedDownMaxHP;
-            Reload(false);
-            anim.ResetTrigger("Revive");
-            anim.CrossFade("KnockDown", 0.01f, 0);
-            anim.CrossFade("KnockDown", 0.01f, 1);
-            if (isPlayer) player.SetKnockedDown(true);
-        }
-        // 사망
-        else if (s == HumanState.Dead)
-        {
-            Reload(false);
-            anim.SetTrigger("Die");
-        }
-    }
-    public enum InteractionState
-    {
-        None,
-        Reviving,
-        GetReviving,
-        Healing,
-        SelfHealing,
-        GetHealing
-    }
-    public InteractionState interactionState;
-
     void Start()
     {
         cc = GetComponent<CharacterController>();
@@ -233,21 +183,56 @@ public class Human_KJS : MonoBehaviour
         RecoilRecovery();
         FootSound();
     }
+
+    public enum HumanState
+    {
+        Normal,
+        KnockedDown,
+        Dead,
+    }
+    public HumanState humanState;
+    public void ChangeHumanState(HumanState s)
+    {
+        if (humanState == s) return;
+        humanState = s;
+        // 부활
+        if (s == HumanState.Normal)
+        {
+            HP = 30;
+            TempHP = 29;
+            if (isPlayer) player.SetKnockedDown(false);
+        }
+        // 기절
+        else if (s == HumanState.KnockedDown)
+        {
+            HP = knockedDownMaxHP;
+            TempHP = knockedDownMaxHP;
+            Reload(false);
+            anim.CrossFade("KnockDown", 0.01f, 0);
+            anim.CrossFade("KnockDown", 0.01f, 1);
+            if (isPlayer) player.SetKnockedDown(true);
+        }
+        // 사망
+        else if (s == HumanState.Dead)
+        {
+            Reload(false);
+            anim.SetTrigger("Die");
+        }
+    }
+    public enum InteractionState
+    {
+        None,
+        Reviving,
+        GetReviving,
+        Healing,
+        SelfHealing,
+        GetHealing
+    }
+    public InteractionState interactionState;
+
     float interactionTime;
     float interactionTimer;
     GameObject interactor;
-    void FootSound()
-    {
-        if (speed > 0.01f)
-        {
-            footSoundTimer += Time.deltaTime;
-            if (footSoundTimer > 1 / (speed * 0.5f))
-            {
-                audioSource.PlayOneShot(footSound, 1.5f);
-                footSoundTimer = 0;
-            }
-        }
-    }
     void InteractionStateUpdate()
     {
         if (interactionState == InteractionState.Reviving) // 팀 소생하는 중
@@ -328,7 +313,7 @@ public class Human_KJS : MonoBehaviour
     {
         On, Cancel, Success
     }
-    public void Revie(GameObject target, SetInteraction set)    
+    public void Revie(GameObject target, SetInteraction set)
     {   
         Human_KJS targetComp = target.GetComponent<Human_KJS>();
         if (set == SetInteraction.On)
@@ -348,6 +333,8 @@ public class Human_KJS : MonoBehaviour
                     // 소생 UI On 필요
                     player.InteractionUIEnable(true, "동료 소생");
                 }
+                anim.ResetTrigger("Idle");
+                anim.SetTrigger("Reviver");
             }
         }
         else
@@ -359,8 +346,9 @@ public class Human_KJS : MonoBehaviour
                 // 소생 UI Off 필요
                 player.InteractionUIEnable(false);
             }
+            anim.SetTrigger("Idle");
         }
-    }
+    } // 팀원 소생
     public void GetRevive(GameObject who, SetInteraction set)
     {
         if (set == SetInteraction.On)
@@ -394,7 +382,7 @@ public class Human_KJS : MonoBehaviour
                 player.InteractionUIEnable(false);
             }
         }
-    }
+    } // 소생 받기
     public void Heal(GameObject target, SetInteraction set)
     {
         Human_KJS targetComp = target.GetComponent<Human_KJS>();
@@ -414,6 +402,8 @@ public class Human_KJS : MonoBehaviour
                     player.InteractionUIEnable(true, "동료 치료", "대상자: " + target.GetComponent<BotManager_JSW>().botName);
                 }
             }
+            anim.ResetTrigger("Idle");
+            anim.SetTrigger("Heal");
         }
         else
         {
@@ -421,7 +411,7 @@ public class Human_KJS : MonoBehaviour
             {
                 // 회복템 제거 필요
                 inventory.Use(3);
-                //
+                if (isPlayer) WeaponSwitch();
             }
             interactionState = InteractionState.None;
             targetComp.GetHeal(gameObject, set);
@@ -430,8 +420,9 @@ public class Human_KJS : MonoBehaviour
                 // 회복 UI Off 필요
                 player.InteractionUIEnable(false);
             }
+            anim.SetTrigger("Idle");
         }
-    }
+    }  // 팀원 회복
     public void GetHeal(GameObject who, SetInteraction set)
     {
         if (set == SetInteraction.On)
@@ -459,7 +450,7 @@ public class Human_KJS : MonoBehaviour
                 player.InteractionUIEnable(false);
             }
         }
-    }
+    } // 회복 받기
     void SelfHeal(SetInteraction set)
     {
         if (set == SetInteraction.On)
@@ -473,6 +464,8 @@ public class Human_KJS : MonoBehaviour
                 // 자힐 UI ON 필요
                 player.InteractionUIEnable(true, "자가 치료");
             }
+            anim.ResetTrigger("Idle");
+            anim.SetTrigger("SelfHeal");
         }
         else
         {
@@ -483,6 +476,7 @@ public class Human_KJS : MonoBehaviour
                 //
                 float nowHp = HP - TempHP;
                 HP = nowHp + (79.8f - (nowHp * 0.7976f));
+                if (isPlayer) WeaponSwitch();
             }
             interactionState = InteractionState.None;
             if (isPlayer)
@@ -490,8 +484,9 @@ public class Human_KJS : MonoBehaviour
                 // 자힐 UI Off 필요
                 player.InteractionUIEnable(false);
             }
+            anim.SetTrigger("Idle");
         }
-    }
+    } // 자가 회복
 
     void HpUpdate()
     {   // 일시체력 감소
@@ -887,7 +882,7 @@ public class Human_KJS : MonoBehaviour
                 // 오브젝트와 상호작용
                 else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("InteractObj"))
                 {
-                    TopObj(hitInfo.transform.gameObject).GetComponent<InteractObj_JSW>().Interact();
+                    TopObj(hitInfo.transform.gameObject).GetComponent<IInteractObj_JSW>().Interact();
                 }
             }
 
@@ -1035,6 +1030,23 @@ public class Human_KJS : MonoBehaviour
             }
         }
     }
-    
+    void FootSound()
+    {
+        if (speed > 0.01f)
+        {
+            footSoundTimer += Time.deltaTime;
+            if (footSoundTimer > 1 / (speed * 0.5f))
+            {
+                audioSource.PlayOneShot(footSound, 1.5f);
+                footSoundTimer = 0;
+            }
+        }
+    }
+    void WeaponSwitch()
+    {
+        WeaponSwitcher weaponSwitcher = GetComponent<WeaponSwitcher>();
+        weaponSwitcher.SwitchWeapon(weaponSwitcher.fpsModel2, 1);
+        weaponSwitcher.UpdateWeaponObjects();
+    }
 }
 

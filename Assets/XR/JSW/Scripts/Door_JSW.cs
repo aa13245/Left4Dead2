@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door_JSW : MonoBehaviour, InteractObj_JSW
+public class Door_JSW : MonoBehaviour, IInteractObj_JSW
 {
     bool isOpend;
     float speed = 90;

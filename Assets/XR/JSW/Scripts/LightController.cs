@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LightController : MonoBehaviour, InteractObj_JSW
+public class LightController : MonoBehaviour, IInteractObj_JSW
 {
     LevelDesign levelDesign;
     public bool Interact()

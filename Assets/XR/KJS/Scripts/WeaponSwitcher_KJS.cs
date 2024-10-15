@@ -146,7 +146,7 @@ public class WeaponSwitcher : MonoBehaviour
         UpdateWeaponObjects();
     }
 
-    void SwitchWeapon(GameObject newWeapon, int num)
+    public void SwitchWeapon(GameObject newWeapon, int num)
     {
         if (inventory[num] == null) return;
 
@@ -191,7 +191,7 @@ public class WeaponSwitcher : MonoBehaviour
         }
     }
 
-    void UpdateWeaponObjects()
+    public void UpdateWeaponObjects()
     {
         if (medikitObject != null)
         {

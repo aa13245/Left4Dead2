@@ -88,18 +88,17 @@ public class BotManager_JSW : MonoBehaviour
                   3. 장전
                   4. 파밍
             */
-
             // 소생
             foreach (Human_KJS h in humans)
-            {
+            {   // 기절상태이고 소생받고있지 않은 팀원이 있을 때
                 if (h.humanState == Human_KJS.HumanState.KnockedDown && h.interactionState == Human_KJS.InteractionState.None)
-                {   // 내가 기절한 팀원과 가장 가까운지 체크
+                {   // 내가 기절한 팀원과 가장 가까운지, 다른 팀원 상태 체크
                     bool isMe = true;
                     for (int i = 1; i < 4; i++)
                     {
-                        Human_KJS other = humans[i].GetComponent<Human_KJS>();
+                        Human_KJS other = humans[i];
                         if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
-                            Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(humans[i].transform.position, h.transform.position))
+                            Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(other.transform.position, h.transform.position))
                         {
                             isMe = false;
                         }
@@ -157,10 +156,10 @@ public class BotManager_JSW : MonoBehaviour
                             bool isMe = true;
                             for (int i = 1; i < 4; i++)
                             {
-                                Human_KJS other = humans[i].GetComponent<Human_KJS>();
+                                Human_KJS other = humans[i];
                                 if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
                                     other.GetComponent<Inventory_JSW>()[3] != null &&
-                                    Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(humans[i].transform.position, h.transform.position))
+                                    Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(other.transform.position, h.transform.position))
                                 {
                                     isMe = false;
                                 }
