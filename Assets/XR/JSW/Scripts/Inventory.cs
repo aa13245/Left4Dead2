@@ -1,33 +1,33 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-using UnityEngine;
-//using static UnityEditor.Progress;
+﻿using UnityEngine;
 
-public class Inventory_JSW : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
     Human_KJS human;
     // 시작 기본권총
     public GameObject pistolPrefab;
 
     // 슬롯 4개
-    Item_JSW[] slots = new Item_JSW[4];
-    public Item_JSW this[int idx] { get{ return slots[idx]; } }
+    Item[] slots = new Item[4];
+    public Item this[int idx] { get{ return slots[idx]; } }
     // 현재 선택된 슬롯
     int slotNum = 1;
     public int SlotNum { get { return slotNum; } }
+    // 슬롯 변경
     public bool SetSlotNum(int value)
-    {
+    {   // 아이템 정보 캐싱 프로퍼티 설정
         if (slots[value] != null && slotNum != value)
         {
             slotNum = value;
-            var item = ItemTable_JSW.instance.itemTable[slots[slotNum].kind];
-            if (item is ItemTable_JSW.MainWeapon mainWeapon)
+            var item = ItemTable.instance.itemTable[slots[slotNum].kind];
+            if (item is ItemTable.MainWeapon mainWeapon)
             {
                 human.MinRecoil = mainWeapon.minRecoil;
+                human.MaxRecoil = mainWeapon.maxRecoil;
             }
-            else if (item is ItemTable_JSW.SubWeapon subWeapon)
+            else if (item is ItemTable.SubWeapon subWeapon)
             {
                 human.MinRecoil = subWeapon.minRecoil;
+                human.MaxRecoil = subWeapon.maxRecoil;
             }
             else human.MinRecoil = 0;
             ChangeHand();
@@ -46,10 +46,10 @@ public class Inventory_JSW : MonoBehaviour
         // 슬롯 초기화
         slots[0] = null;
         if (pistolPrefab != null)
-        {
+        {   // 시작은 기본권총
             GameObject pistol = Instantiate(pistolPrefab);
             pistol.SetActive(false);
-            slots[1] = pistol.GetComponent<Item_JSW>();
+            slots[1] = pistol.GetComponent<Item>();
         }
         slots[2] = null;
         slots[3] = null;
@@ -60,24 +60,24 @@ public class Inventory_JSW : MonoBehaviour
     void ChangeHand()
     {
         Destroy(handItem);
-        if (ItemTable_JSW.instance.itemObjs[(int)slots[slotNum].kind] != null && hand != null)
+        if (ItemTable.instance.itemObjs[(int)slots[slotNum].kind] != null && hand != null)
         {
-            handItem = Instantiate(ItemTable_JSW.instance.itemObjs[(int)slots[slotNum].kind]);
+            handItem = Instantiate(ItemTable.instance.itemObjs[(int)slots[slotNum].kind]);
             handItem.transform.parent = hand.transform;
             handItem.transform.localPosition = Vector3.zero;
             handItem.transform.localEulerAngles = Vector3.zero;
         }
     }
-    // 아이템 줍기
+    // 아이템 줍기 - 성공 / 실패 반환
     public bool PickUp(GameObject itemObj)
     {   // 아이템 레이어 체크
         if (itemObj.layer != LayerMask.NameToLayer("Item_JSW")) return false;
         // 아이템 컴포넌트 접근
-        Item_JSW itemComp = null;
+        Item itemComp = null;
         Transform currTf = itemObj.transform;
         while (currTf != null)
         {
-            itemComp = currTf.GetComponent<Item_JSW>();
+            itemComp = currTf.GetComponent<Item>();
             if (itemComp != null) break;
             currTf = currTf.parent;
         }
@@ -85,18 +85,18 @@ public class Inventory_JSW : MonoBehaviour
 
         // 주무기 교체
         int slot = 0;
-        object item = ItemTable_JSW.instance.itemTable[itemComp.kind];
-        if (item is ItemTable_JSW.MainWeapon)
+        object item = ItemTable.instance.itemTable[itemComp.kind];
+        if (item is ItemTable.MainWeapon)
         {
             slot = 0;
         }
         // 보조무기 교체
-        else if (item is ItemTable_JSW.SubWeapon || item is ItemTable_JSW.MeleeWeapon)
+        else if (item is ItemTable.SubWeapon || item is ItemTable.MeleeWeapon)
         {
             slot = 1;
         }
         // 투척류 교체
-        else if (item is ItemTable_JSW.Projectile)
+        else if (item is ItemTable.Projectile)
         {   // 현재 소지템과 동일한지 확인
             if (slots[2] == null || slots[2].kind != itemComp.kind)
             {
@@ -105,7 +105,7 @@ public class Inventory_JSW : MonoBehaviour
             else return false;
         }
         // 회복템 교체
-        else if (item is ItemTable_JSW.Recovery)
+        else if (item is ItemTable.Recovery)
         {   // 현재 소지템과 동일한지 확인
             if (slots[3] == null || slots[3].kind != itemComp.kind)
             {
@@ -120,11 +120,12 @@ public class Inventory_JSW : MonoBehaviour
             slots[slot].transform.position = transform.position + transform.forward * 0.4f + Vector3.up * 1.6f;
             slots[slot].gameObject.SetActive(true);
         }
-        slots[slot] = itemObj.GetComponent<Item_JSW>();
+        slots[slot] = itemObj.GetComponent<Item>();
         itemObj.SetActive(false);
         if (slot == 3 && !human.isPlayer) medikitUI.SetActive(true);
         return true;
     }
+    // 버리기 - 성공 / 실패 반환
     public bool Drop(int slot)
     {
         if (slots[slot] != null)
@@ -136,7 +137,7 @@ public class Inventory_JSW : MonoBehaviour
         }
         return false;
     }
-    // 발사 & 사용
+    // 발사 & 사용 - 성공 / 실패 반환
     public bool Use(int slot)
     {
         if (slots[slot].value1 > 0)
@@ -154,11 +155,12 @@ public class Inventory_JSW : MonoBehaviour
         }
         else return false;
     }
+    // 재장전 가능 여부 반환
     public bool CheckReloadEnable(int slot)
     {   // 주무기
         if (slot == 0)
         {
-            if (ItemTable_JSW.instance.itemTable[slots[0].kind] is ItemTable_JSW.MainWeapon item)
+            if (ItemTable.instance.itemTable[slots[0].kind] is ItemTable.MainWeapon item)
             {   // 가득 찼거나 보유 총알이 없을 때
                 if (slots[0].value1 == item.magazineCapacity || slots[0].value2 == 0) return false;
                 else
@@ -171,7 +173,7 @@ public class Inventory_JSW : MonoBehaviour
         // 보조무기
         else if (slot == 1)
         {
-            if (ItemTable_JSW.instance.itemTable[slots[1].kind] is ItemTable_JSW.SubWeapon item)
+            if (ItemTable.instance.itemTable[slots[1].kind] is ItemTable.SubWeapon item)
             {
                 if (slots[1].value1 == item.magazineCapacity) return false;
                 else
@@ -183,11 +185,12 @@ public class Inventory_JSW : MonoBehaviour
         }
         else return false;
     }
+    // 재장전 - 성공 / 실패 반환
     public bool Reload(int slot)
     {   // 주무기
         if (slot == 0)
         {
-            if (ItemTable_JSW.instance.itemTable[slots[0].kind] is ItemTable_JSW.MainWeapon item)
+            if (ItemTable.instance.itemTable[slots[0].kind] is ItemTable.MainWeapon item)
             {   // 가득 찼거나 보유 총알이 없을 때
                 if (slots[0].value1 == item.magazineCapacity || slots[0].value2 == 0) return false;
                 else
@@ -206,7 +209,7 @@ public class Inventory_JSW : MonoBehaviour
         // 보조무기
         else if (slot == 1)
         {
-            if (ItemTable_JSW.instance.itemTable[slots[1].kind] is ItemTable_JSW.SubWeapon item)
+            if (ItemTable.instance.itemTable[slots[1].kind] is ItemTable.SubWeapon item)
             {   
                 if (slots[1].value1 == item.magazineCapacity) return false;
                 else

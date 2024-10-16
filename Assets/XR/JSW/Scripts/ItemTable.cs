@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using static ItemTable_JSW;
 
- public class ItemTable_JSW : MonoBehaviour
+ public class ItemTable : MonoBehaviour
 {
-    public static ItemTable_JSW instance;
+    public static ItemTable instance;
 
     // 카테고리별 구조체
     public struct MainWeapon

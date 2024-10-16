@@ -102,19 +102,19 @@ public class BotSight_JSW : MonoBehaviour
             }
             if (SightCheck(topObj, 360))
             {
-                if (slotNum == 0 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.MainWeapon)
+                if (slotNum == 0 && ItemTable.instance.itemTable[topObj.GetComponent<Item>().kind] is ItemTable.MainWeapon)
                 {
                     return topObj;
                 }
-                else if (slotNum == 1 && (ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.SubWeapon || ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.MeleeWeapon))
+                else if (slotNum == 1 && (ItemTable.instance.itemTable[topObj.GetComponent<Item>().kind] is ItemTable.SubWeapon || ItemTable.instance.itemTable[topObj.GetComponent<Item>().kind] is ItemTable.MeleeWeapon))
                 {
                     return topObj;
                 }
-                else if (slotNum == 2 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.Projectile)
+                else if (slotNum == 2 && ItemTable.instance.itemTable[topObj.GetComponent<Item>().kind] is ItemTable.Projectile)
                 {
                     return topObj;
                 }
-                if (slotNum == 3 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.Recovery)
+                if (slotNum == 3 && ItemTable.instance.itemTable[topObj.GetComponent<Item>().kind] is ItemTable.Recovery)
                 {
                     return topObj;
                 }

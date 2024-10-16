@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
@@ -66,7 +65,7 @@ public class LevelDesign : MonoBehaviour
         StartCoroutine(GameStart());
     }
     IEnumerator GameStart()
-    {
+    {   // 게임 시작 - 라디오 및 시작 브금 재생, 잠시 후 페이드 아웃
         AudioSource radio = GameObject.Find("RadioSource").GetComponent<AudioSource>();
         Image scriptUI = GameObject.Find("PingCanvas").transform.Find("ScriptUI").GetComponent<Image>();
         Text script = scriptUI.transform.GetChild(0).GetComponent<Text>();
@@ -287,12 +286,14 @@ public class LevelDesign : MonoBehaviour
         }
         
     }
+    // 진행 안내 핑 UI 위치 업데이트
     int pingLvl;
     void pingPosUpdate()
     {
         if (pingLvl == 1) canvas.transform.position = Camera.main.WorldToScreenPoint(pingPos[0].transform.position);
         else if (pingLvl == 2) canvas.transform.position = Camera.main.WorldToScreenPoint(pingPos[1].transform.position);
     }
+    // 공연장 입장 시 1번 핑 ON
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer != LayerMask.NameToLayer("Player_KJS")) return;

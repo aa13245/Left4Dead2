@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LightController : MonoBehaviour, InteractObj_JSW
 {
     LevelDesign levelDesign;
+    // 무대 조명 On 상호작용
     public bool Interact()
     {
         if (levelDesign.LightOn()) return true;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static ItemTable_JSW;
+using static ItemTable;
 using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UI.Image;
 
@@ -143,7 +143,7 @@ public class Human_KJS : MonoBehaviour
     //PlayerMove_KJS player;
     public PlayerControler_KJS player;
     // 인벤토리 컴포넌트
-    Inventory_JSW inventory;
+    Inventory inventory;
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
 
@@ -201,7 +201,7 @@ public class Human_KJS : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         if (gameObject.name == "Player") isPlayer = true;
         player = GameObject.Find("Player").GetComponent<PlayerControler_KJS>();
-        inventory = GetComponent<Inventory_JSW>();
+        inventory = GetComponent<Inventory>();
         hp = maxHP;
         objRotate = Camera.main.GetComponent<ObjRotate_KJS>();
         //anim2 = transform.Find("FPSModel").GetComponent<Animator>();
@@ -608,7 +608,7 @@ public class Human_KJS : MonoBehaviour
         if (humanState == HumanState.Dead) return;
         if (isReloaing) { return; }
         // 아이템 정보
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MainWeapon itemInfo)
         {
             if (currTime >= itemInfo.fireRate)
             {
@@ -686,7 +686,7 @@ public class Human_KJS : MonoBehaviour
         if (isReloaing) { return; }
 
         // 권총이냐
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.SubWeapon itemInfo)
         {
             if (currTime >= itemInfo.fireRate)
             {
@@ -743,7 +743,7 @@ public class Human_KJS : MonoBehaviour
 
         }
         // 근접무기냐
-        else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MeleeWeapon itemInfo2)
+        else if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MeleeWeapon itemInfo2)
         {
 
         }
@@ -765,7 +765,7 @@ public class Human_KJS : MonoBehaviour
         if (humanState == HumanState.Dead || isReloaing) return;
 
         // 현재 아이템이 수류탄인지 확인
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Projectile itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.Projectile itemInfo)
         {
             // 장탄 확인
             if (inventory[inventory.SlotNum].value1 <= 0)
@@ -804,7 +804,7 @@ public class Human_KJS : MonoBehaviour
     {
         if (humanState == HumanState.Dead) return;
         // 회복템 사용
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Recovery itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.Recovery itemInfo)
         {   // 자힐
             if (target == null)
             {
@@ -918,7 +918,7 @@ public class Human_KJS : MonoBehaviour
         {
             if (!isReloaing && inventory.CheckReloadEnable(inventory.SlotNum))
             {   // 주무기일 때
-                if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon mainWeapon)
+                if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MainWeapon mainWeapon)
                 {   // 장전 On
                     reloadTimer = 0;
                     isReloaing = true;
@@ -929,7 +929,7 @@ public class Human_KJS : MonoBehaviour
                     if (isPlayer) arAnim.SetTrigger("AR_Reload");
                     anim.CrossFade("Reloaing_Main", 0.01f, 1);
                 }
-                else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon subWeapon)
+                else if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.SubWeapon subWeapon)
                 {   // 장전 On
                     reloadTimer = 0;
                     isReloaing = true;

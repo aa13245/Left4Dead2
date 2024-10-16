@@ -7,7 +7,7 @@ public class BotManager_JSW : MonoBehaviour
 {
     public BotMove botMove;
     public BotSight_JSW botSight;
-    public Inventory_JSW inventory;
+    public Inventory inventory;
     public Human_KJS human;
     Human_KJS[] humans = new Human_KJS[4];
     int myIdx;
@@ -37,7 +37,7 @@ public class BotManager_JSW : MonoBehaviour
         tempHpImage = canvas.transform.Find("Info"+ gameObject.name[3].ToString() +"/TempHPbar/Fill Area/Fill").GetComponent<Image>();
         botMove = GetComponent<BotMove>();
         botSight = GetComponent<BotSight_JSW>();
-        inventory = GetComponent<Inventory_JSW>();
+        inventory = GetComponent<Inventory>();
         human = GetComponent<Human_KJS>();
         humans[0] = GameObject.Find("Player").GetComponent<Human_KJS>();
         for (int i = 1; i < 4; i++)
@@ -159,7 +159,7 @@ public class BotManager_JSW : MonoBehaviour
                             {
                                 Human_KJS other = humans[i].GetComponent<Human_KJS>();
                                 if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
-                                    other.GetComponent<Inventory_JSW>()[3] != null &&
+                                    other.GetComponent<Inventory>()[3] != null &&
                                     Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(humans[i].transform.position, h.transform.position))
                                 {
                                     isMe = false;
@@ -216,7 +216,7 @@ public class BotManager_JSW : MonoBehaviour
                         farmingTarget = botSight.ItemDetect(0);
                     }
                     // 주무기가 있는데 잔여 탄약이 최대 소지량 절반 이하일 때
-                    if (farmingTarget == null && inventory[0] != null && ItemTable_JSW.instance.itemTable[inventory[0].kind] is ItemTable_JSW.MainWeapon item && inventory[0].value2 < item.maxAmmoCapacity / 2)
+                    if (farmingTarget == null && inventory[0] != null && ItemTable.instance.itemTable[inventory[0].kind] is ItemTable.MainWeapon item && inventory[0].value2 < item.maxAmmoCapacity / 2)
                     {   // 주무기 탐지
                         farmingTarget = botSight.ItemDetect(0);
                     }

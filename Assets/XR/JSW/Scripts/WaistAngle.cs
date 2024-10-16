@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using static Human_KJS;
 
 public class WaistAngle : MonoBehaviour
@@ -8,7 +6,7 @@ public class WaistAngle : MonoBehaviour
     Animator anim;
     Human_KJS human;
     float charRecoil;
-
+    // 봇 반동 (캐릭터)
     public void CharRecoilSet(float value)
     {
         charRecoil = value;

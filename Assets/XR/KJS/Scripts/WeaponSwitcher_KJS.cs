@@ -13,7 +13,7 @@ public class WeaponSwitcher : MonoBehaviour
     private GameObject currentWeapon;
     private int currentWeaponIndex = -1;
 
-    Inventory_JSW inventory;
+    Inventory inventory;
 
     // medikit과 projectile 모델
     private GameObject medikitObject;
@@ -22,7 +22,7 @@ public class WeaponSwitcher : MonoBehaviour
 
     void Start()
     {
-        inventory = GetComponentInParent<Inventory_JSW>();
+        inventory = GetComponentInParent<Inventory>();
         currentWeaponIndex = 1; // 초기 무기는 서브 무기로 설정
 
         // 무기 및 FPS 모델 초기화

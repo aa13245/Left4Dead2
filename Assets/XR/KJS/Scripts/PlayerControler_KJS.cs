@@ -32,7 +32,7 @@ public class PlayerControler_KJS : MonoBehaviour
     Text interactionText2;
     public GameObject hitEffect;
     public Human_KJS human;
-    public Inventory_JSW inventory;
+    public Inventory inventory;
     public Animator anim;
 
     // 새로운 변수 추가: 현재 슬롯 번호를 추적
@@ -45,7 +45,7 @@ public class PlayerControler_KJS : MonoBehaviour
         // 기존 초기화 코드
         cc = GetComponent<CharacterController>();
         human = GetComponent<Human_KJS>();
-        inventory = GetComponent<Inventory_JSW>();
+        inventory = GetComponent<Inventory>();
         GameObject canvas = GameObject.Find("Canvas");
         hpSlider = canvas.transform.Find("Info0/HPbar").GetComponent<Slider>();
         hpImage = canvas.transform.Find("Info0/HPbar/Fill Area/Fill").GetComponent<Image>();
@@ -81,7 +81,7 @@ public class PlayerControler_KJS : MonoBehaviour
 
         // 클릭을 연속으로 받아야 하는 상황 - 자동 소총을 들고 있는 상황
         if (inventory.SlotNum == 0 &&
-            ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon itemInfo &&
+            ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MainWeapon itemInfo &&
             itemInfo.isSniper == false && itemInfo.isShotgun == false)
         {
 
@@ -294,20 +294,20 @@ public class PlayerControler_KJS : MonoBehaviour
     void Reload()
     {
         int currentSlot = inventory.SlotNum;
-        Item_JSW currentItem = inventory[currentSlot];
+        Item currentItem = inventory[currentSlot];
 
         if (currentItem != null)
         {
-            ItemTable_JSW.Items itemKind = currentItem.kind;
-            if (ItemTable_JSW.instance.itemTable.TryGetValue(itemKind, out var itemObject))
+            ItemTable.Items itemKind = currentItem.kind;
+            if (ItemTable.instance.itemTable.TryGetValue(itemKind, out var itemObject))
             {
                 float reloadSpeed = 0f;
 
-                if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
+                if (itemObject is ItemTable.MainWeapon mainWeapon)
                 {
                     reloadSpeed = mainWeapon.reloadSpeed;
                 }
-                else if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
+                else if (itemObject is ItemTable.SubWeapon subWeapon)
                 {
                     reloadSpeed = subWeapon.reloadSpeed;
                 }
@@ -340,10 +340,10 @@ public class PlayerControler_KJS : MonoBehaviour
 
         if (inventory.SlotNum == 0)
         {
-            Item_JSW item = inventory[0];
-            if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
+            Item item = inventory[0];
+            if (item != null && ItemTable.instance.itemTable.TryGetValue(item.kind, out var itemObject))
             {
-                if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
+                if (itemObject is ItemTable.MainWeapon mainWeapon)
                 {
                     item.value1 = mainWeapon.magazineCapacity;
                 }
@@ -351,10 +351,10 @@ public class PlayerControler_KJS : MonoBehaviour
         }
         else if (inventory.SlotNum == 1)
         {
-            Item_JSW item = inventory[1];
-            if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
+            Item item = inventory[1];
+            if (item != null && ItemTable.instance.itemTable.TryGetValue(item.kind, out var itemObject))
             {
-                if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
+                if (itemObject is ItemTable.SubWeapon subWeapon)
                 {
                     item.value1 = subWeapon.magazineCapacity;
                 }
