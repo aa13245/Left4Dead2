@@ -327,7 +327,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
             currentTime += Time.deltaTime;
             if (currentTime > attackDelay)
             {
-                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                target.GetComponent<Human>().GetDamage(attackPower, gameObject);
                 audio.PlayOneShot(sounds[0]);
                 print("공격");
                 currentTime = 0;
@@ -446,7 +446,7 @@ public class JKYEnemySpawn1 : MonoBehaviour
             else
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                if (distanceToTarget < closestDistance && target.GetComponent<Human>().humanState != Human.HumanState.Dead)
                 {
                     closestDistance = distanceToTarget;
                     closestTarget = target.transform;

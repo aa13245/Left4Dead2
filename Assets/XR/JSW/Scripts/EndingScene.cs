@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EndingScene_JSW : MonoBehaviour
+public class EndingScene : MonoBehaviour
 {
     bool sceneEnable;
     LevelDesign levelDesign;
@@ -153,7 +153,7 @@ public class EndingScene_JSW : MonoBehaviour
         {
             text.text = "애도를 표합니다:\n";
             if (isDead[0]) text.text += "플레이어\n";
-            for (int i = 1; i < 4; i++) if (isDead[i]) text.text += humans[i].GetComponent<BotManager_JSW>().botName + "\n";
+            for (int i = 1; i < 4; i++) if (isDead[i]) text.text += humans[i].GetComponent<BotManager>().botName + "\n";
             text.text += "\n\n\n\n\n\n\n\n\n\n\n\n\n";
         }
         else
@@ -161,9 +161,9 @@ public class EndingScene_JSW : MonoBehaviour
             text.text = "생존자들이 탈출했습니다!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         }
         text.text += "생존자\n\n플레이어 로셸 역할" + (isDead[0] ? " (고)\n" : "\n");
-        text.text += humans[1].GetComponent<BotManager_JSW>().botName + " 본인 역할" + (isDead[1] ? " (고)\n" : "\n");
-        text.text += humans[2].GetComponent<BotManager_JSW>().botName + " 본인 역할" + (isDead[2] ? " (고)\n" : "\n");
-        text.text += humans[3].GetComponent<BotManager_JSW>().botName + " 본인 역할" + (isDead[3] ? " (고)\n" : "\n");
+        text.text += humans[1].GetComponent<BotManager>().botName + " 본인 역할" + (isDead[1] ? " (고)\n" : "\n");
+        text.text += humans[2].GetComponent<BotManager>().botName + " 본인 역할" + (isDead[2] ? " (고)\n" : "\n");
+        text.text += humans[3].GetComponent<BotManager>().botName + " 본인 역할" + (isDead[3] ? " (고)\n" : "\n");
         text.text += "\n\n\n\n\n\n\n\n\n";
         text.text += "Left4Weeks\n  TA 김은환\n        조수연\n  XR 김준성\n        정광윤\n        지성원";
         while (text.color.a < 1)

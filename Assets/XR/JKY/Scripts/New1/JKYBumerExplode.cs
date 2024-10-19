@@ -19,15 +19,15 @@ public class JKYBumerExplode : MonoBehaviour
             //if (pc != null)
             {
                 //pc.ApplyBoomerEffect();
-                Human_KJS human = nearbyObject.GetComponent<Human_KJS>();
-                nearbyObject.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                Human human = nearbyObject.GetComponent<Human>();
+                nearbyObject.GetComponent<Human>().GetDamage(attackPower, gameObject);
                 if (nearbyObject.gameObject.layer == LayerMask.NameToLayer("Player_KJS"))
                 {
                     PlayerControler_KJS qw = player.gameObject.GetComponent<PlayerControler_KJS>();
                     qw.BumerAttack();
                 }
                 //pc.TakeDamage(explosionDamage); // 데미지 적용
-                nearbyObject.gameObject.GetComponent<Human_KJS>().ApplyKnockBack(gameObject, false);
+                nearbyObject.gameObject.GetComponent<Human>().ApplyKnockBack(gameObject, false);
             }
 
         }

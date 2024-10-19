@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BotManager_JSW : MonoBehaviour
+public class BotManager : MonoBehaviour
 {
     public BotMove botMove;
-    public BotSight_JSW botSight;
-    public Inventory_JSW inventory;
-    public Human_KJS human;
-    Human_KJS[] humans = new Human_KJS[4];
+    public BotSight botSight;
+    public Inventory inventory;
+    public Human human;
+    Human[] humans = new Human[4];
     int myIdx;
     public string botName;
 
@@ -36,14 +36,14 @@ public class BotManager_JSW : MonoBehaviour
         tempHpSlider = canvas.transform.Find("Info"+ gameObject.name[3].ToString() +"/TempHPbar").GetComponent<Slider>();
         tempHpImage = canvas.transform.Find("Info"+ gameObject.name[3].ToString() +"/TempHPbar/Fill Area/Fill").GetComponent<Image>();
         botMove = GetComponent<BotMove>();
-        botSight = GetComponent<BotSight_JSW>();
-        inventory = GetComponent<Inventory_JSW>();
-        human = GetComponent<Human_KJS>();
-        humans[0] = GameObject.Find("Player").GetComponent<Human_KJS>();
+        botSight = GetComponent<BotSight>();
+        inventory = GetComponent<Inventory>();
+        human = GetComponent<Human>();
+        humans[0] = GameObject.Find("Player").GetComponent<Human>();
         for (int i = 1; i < 4; i++)
         {
             string name = "Bot" + i;
-            humans[i] = GameObject.Find(name).GetComponent<Human_KJS>();
+            humans[i] = GameObject.Find(name).GetComponent<Human>();
             if (gameObject.name == name) myIdx = i;
         }
     }
@@ -89,15 +89,15 @@ public class BotManager_JSW : MonoBehaviour
                   4. 파밍
             */
             // 소생
-            foreach (Human_KJS h in humans)
+            foreach (Human h in humans)
             {   // 기절상태이고 소생받고있지 않은 팀원이 있을 때
-                if (h.humanState == Human_KJS.HumanState.KnockedDown && h.interactionState == Human_KJS.InteractionState.None)
+                if (h.humanState == Human.HumanState.KnockedDown && h.interactionState == Human.InteractionState.None)
                 {   // 내가 기절한 팀원과 가장 가까운지, 다른 팀원 상태 체크
                     bool isMe = true;
                     for (int i = 1; i < 4; i++)
                     {
-                        Human_KJS other = humans[i];
-                        if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
+                        Human other = humans[i];
+                        if (i != myIdx && other.humanState == Human.HumanState.Normal && other.interactionState == Human.InteractionState.None &&
                             Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(other.transform.position, h.transform.position))
                         {
                             isMe = false;
@@ -138,7 +138,7 @@ public class BotManager_JSW : MonoBehaviour
                 GameObject teamTarget;
                 for (int i = 1; i < 4; i++)
                 {
-                    teamTarget = humans[i].GetComponent<BotSight_JSW>().Target;
+                    teamTarget = humans[i].GetComponent<BotSight>().Target;
                     if (teamTarget != null)
                     {
                         botSight.Rot(teamTarget.transform.position);
@@ -149,16 +149,16 @@ public class BotManager_JSW : MonoBehaviour
                 if (inventory[3] != null) // 내 회복템 확인
                 {
                     // 팀원 힐
-                    foreach (Human_KJS h in humans)
+                    foreach (Human h in humans)
                     {
-                        if (h.humanState == Human_KJS.HumanState.Normal && h.interactionState == Human_KJS.InteractionState.None && h.HP < 40 && h.gameObject != gameObject)
+                        if (h.humanState == Human.HumanState.Normal && h.interactionState == Human.InteractionState.None && h.HP < 40 && h.gameObject != gameObject)
                         {   // 내가 대사와 가장 가까운지 체크
                             bool isMe = true;
                             for (int i = 1; i < 4; i++)
                             {
-                                Human_KJS other = humans[i];
-                                if (i != myIdx && other.humanState == Human_KJS.HumanState.Normal && other.interactionState == Human_KJS.InteractionState.None &&
-                                    other.GetComponent<Inventory_JSW>()[3] != null &&
+                                Human other = humans[i];
+                                if (i != myIdx && other.humanState == Human.HumanState.Normal && other.interactionState == Human.InteractionState.None &&
+                                    other.GetComponent<Inventory>()[3] != null &&
                                     Vector3.Distance(gameObject.transform.position, h.transform.position) > Vector3.Distance(other.transform.position, h.transform.position))
                                 {
                                     isMe = false;
@@ -215,7 +215,7 @@ public class BotManager_JSW : MonoBehaviour
                         farmingTarget = botSight.ItemDetect(0);
                     }
                     // 주무기가 있는데 잔여 탄약이 최대 소지량 절반 이하일 때
-                    if (farmingTarget == null && inventory[0] != null && ItemTable_JSW.instance.itemTable[inventory[0].kind] is ItemTable_JSW.MainWeapon item && inventory[0].value2 < item.maxAmmoCapacity / 2)
+                    if (farmingTarget == null && inventory[0] != null && ItemTable.instance.itemTable[inventory[0].kind] is ItemTable.MainWeapon item && inventory[0].value2 < item.maxAmmoCapacity / 2)
                     {   // 주무기 탐지
                         farmingTarget = botSight.ItemDetect(0);
                     }
@@ -248,7 +248,7 @@ public class BotManager_JSW : MonoBehaviour
             }
         }
         // 공격
-        if (botSight.FireEnable && human.interactionState != Human_KJS.InteractionState.Reviving && human.interactionState != Human_KJS.InteractionState.SelfHealing && human.interactionState != Human_KJS.InteractionState.Healing)
+        if (botSight.FireEnable && human.interactionState != Human.InteractionState.Reviving && human.interactionState != Human.InteractionState.SelfHealing && human.interactionState != Human.InteractionState.Healing)
         {   // 총을 안들고 있을 때
             if (inventory.SlotNum != 0)
             {   // 주무기가 있으면 들기
@@ -259,16 +259,16 @@ public class BotManager_JSW : MonoBehaviour
             if (priorityTarget != null) target = priorityTarget;
             else if (botSight.Target != null) target = botSight.Target;
             if (target == null) return;
-            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human_KJS.HumanState.KnockedDown ? 0.8f : 1.4f);
+            Vector3 origin = transform.position + transform.forward + Vector3.up * (human.humanState == Human.HumanState.KnockedDown ? 0.8f : 1.4f);
             Vector3 dir = target.transform.position + Vector3.up - origin;
             human.MouseClick(origin, dir);
         }
     }
     void HpUiUpdate()
     {
-        hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
-        tempHpSlider.value = human.HP / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
-        if (human.humanState == Human_KJS.HumanState.Normal)
+        hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        tempHpSlider.value = human.HP / (human.humanState == Human.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        if (human.humanState == Human.HumanState.Normal)
         {
             Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, hpSlider.value), 1, 1);
             c.a = 1;
@@ -276,7 +276,7 @@ public class BotManager_JSW : MonoBehaviour
             c.a = 0.5f;
             tempHpImage.color = c;
         }
-        else if (human.humanState == Human_KJS.HumanState.KnockedDown)
+        else if (human.humanState == Human.HumanState.KnockedDown)
         {
             Color c = Color.HSVToRGB(0, 1, 1);
             c.a = 1;

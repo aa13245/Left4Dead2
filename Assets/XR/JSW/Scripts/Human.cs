@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.UI.Image;
 
-public class Human_KJS : MonoBehaviour
+public class Human : MonoBehaviour
 {
     public bool isPlayer;
     CharacterController cc;
@@ -54,6 +49,8 @@ public class Human_KJS : MonoBehaviour
     JKYshoot shoot;
     public bool isEntered;
     float minRecoil = 2;
+    //PlayerMove_KJS player;
+    public PlayerControler_KJS player;
 
     void PlayFireSound(int soundIndex)
     {
@@ -68,7 +65,7 @@ public class Human_KJS : MonoBehaviour
             audioSource.PlayOneShot(fireSounds[soundIndex]);
         }
     }
-
+    #region 구현부
     public float MinRecoil
     {
         get { return minRecoil; }
@@ -139,10 +136,8 @@ public class Human_KJS : MonoBehaviour
     public bool IsReloaing { get { return isReloaing; } }
     
 
-    //PlayerMove_KJS player;
-    public PlayerControler_KJS player;
     // 인벤토리 컴포넌트
-    Inventory_JSW inventory;
+    Inventory inventory;
     // 공격받을 때 슬로우걸리는 함수
     public Action slow;
     void Start()
@@ -151,7 +146,7 @@ public class Human_KJS : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         if (gameObject.name == "Player") isPlayer = true;
         player = GameObject.Find("Player").GetComponent<PlayerControler_KJS>();
-        inventory = GetComponent<Inventory_JSW>();
+        inventory = GetComponent<Inventory>();
         hp = maxHP;
         objRotate = Camera.main.GetComponent<ObjRotate_KJS>();
         //anim2 = transform.Find("FPSModel").GetComponent<Animator>();
@@ -237,7 +232,7 @@ public class Human_KJS : MonoBehaviour
     {
         if (interactionState == InteractionState.Reviving) // 팀 소생하는 중
         {
-            Human_KJS targetComp = interactor.GetComponent<Human_KJS>();
+            Human targetComp = interactor.GetComponent<Human>();
             interactionTimer += Time.deltaTime;
             // 상호작용 UI 업데이트
             if (isPlayer)
@@ -246,7 +241,7 @@ public class Human_KJS : MonoBehaviour
             }
             else 
             {
-                GetComponent<BotSight_JSW>().Rot(interactor.transform.position);
+                GetComponent<BotSight>().Rot(interactor.transform.position);
                 if (targetComp.isPlayer) player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
             if (interactionTimer >= interactionTime)
@@ -265,7 +260,7 @@ public class Human_KJS : MonoBehaviour
         }
         else if (interactionState == InteractionState.Healing) // 팀 회복해 주는 중
         {
-            Human_KJS targetComp = interactor.GetComponent<Human_KJS>();
+            Human targetComp = interactor.GetComponent<Human>();
             interactionTimer += Time.deltaTime;
             // 상호작용 UI 업데이트
             if (isPlayer)
@@ -274,7 +269,7 @@ public class Human_KJS : MonoBehaviour
             }
             else 
             {
-                GetComponent<BotSight_JSW>().Rot(interactor.transform.position);
+                GetComponent<BotSight>().Rot(interactor.transform.position);
                 if (targetComp.isPlayer) player.InteractionSliderUpdate(interactionTimer / interactionTime);
             }
             if (interactionTimer >= interactionTime)
@@ -315,7 +310,7 @@ public class Human_KJS : MonoBehaviour
     }
     public void Revie(GameObject target, SetInteraction set)
     {   
-        Human_KJS targetComp = target.GetComponent<Human_KJS>();
+        Human targetComp = target.GetComponent<Human>();
         if (set == SetInteraction.On)
         {   // 자신 조건 체크
             if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
@@ -358,7 +353,7 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 소생 받는 UI On 필요
-                player.InteractionUIEnable(true, "소생 중", "구원자: " + who.GetComponent<BotManager_JSW>().botName);
+                player.InteractionUIEnable(true, "소생 중", "구원자: " + who.GetComponent<BotManager>().botName);
             }
             anim.SetTrigger("Revive");
         }
@@ -385,7 +380,7 @@ public class Human_KJS : MonoBehaviour
     } // 소생 받기
     public void Heal(GameObject target, SetInteraction set)
     {
-        Human_KJS targetComp = target.GetComponent<Human_KJS>();
+        Human targetComp = target.GetComponent<Human>();
         if (set == SetInteraction.On)
         {
             if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
@@ -399,7 +394,7 @@ public class Human_KJS : MonoBehaviour
                 if (isPlayer)
                 {
                     // 회복 UI On 필요
-                    player.InteractionUIEnable(true, "동료 치료", "대상자: " + target.GetComponent<BotManager_JSW>().botName);
+                    player.InteractionUIEnable(true, "동료 치료", "대상자: " + target.GetComponent<BotManager>().botName);
                 }
             }
             anim.ResetTrigger("Idle");
@@ -433,7 +428,7 @@ public class Human_KJS : MonoBehaviour
             if (isPlayer)
             {
                 // 회복 받는 UI On 필요
-                player.InteractionUIEnable(true, "치료 중", "치료자: " + who.GetComponent<BotManager_JSW>().botName);
+                player.InteractionUIEnable(true, "치료 중", "치료자: " + who.GetComponent<BotManager>().botName);
             }
         }
         else
@@ -576,6 +571,127 @@ public class Human_KJS : MonoBehaviour
         float randomAzimuth = UnityEngine.Random.Range(0f, 360f);
         return Quaternion.AngleAxis(randomAzimuth, dir) * (Quaternion.AngleAxis(randomAngle, Quaternion.Euler(new Vector3(0, 90, 0)) * dir) * dir);
     }
+    public void Medikit(GameObject target = null)
+    {
+        if (humanState == HumanState.Dead) return;
+        // 회복템 사용
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.Recovery itemInfo)
+        {   // 자힐
+            if (target == null)
+            {
+                // 풀피가 아닐 때
+                if (HP < 99)
+                {
+                    // 아이템 사용시간 구현 필요
+                    //hp = itemInfo.value;
+                
+                    SelfHeal(SetInteraction.On);
+                }
+            }
+            else
+            {
+                if (target.GetComponent<Human>().HP < itemInfo.value)
+                {
+                    Heal(target, SetInteraction.On);
+                }
+            }
+        }
+    }
+    public void Interact(GameObject target = null, int layer = 0)
+    {
+        if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
+        // 플레이어 일 때
+        if (target == null)
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 3,
+                ~(1 << LayerMask.NameToLayer("Player_KJS"))))
+            {   // 대상이 아이템
+                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
+                {
+                    inventory.PickUp(hitInfo.transform.gameObject);
+                }
+                // 대상이 기절한 아군
+                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
+                {
+                    Revie(hitInfo.transform.gameObject, SetInteraction.On);
+                }
+                // 오브젝트와 상호작용
+                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("InteractObj"))
+                {
+                    TopObj(hitInfo.transform.gameObject).GetComponent<IInteractObj>().Interact();
+                }
+            }
+
+        }
+        // 봇일 때
+        else
+        {
+            if (layer == LayerMask.NameToLayer("Item_JSW"))
+            {
+                inventory.PickUp(target);
+            }
+            else if (layer == LayerMask.NameToLayer("Bot_JSW") || layer == LayerMask.NameToLayer("Player_KJS"))
+            {
+                Revie(target, SetInteraction.On);
+            }
+        }
+    }
+    public void Drop()
+    {
+        inventory.Drop(inventory.SlotNum);
+    }
+    GameObject TopObj(GameObject obj)
+    {
+        GameObject topObj = obj;
+        while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == obj.layer)
+        {
+            topObj = topObj.transform.parent.gameObject;
+        }
+        return topObj;
+    }
+    public Action stun;
+    public void Stun(GameObject stone)
+    {
+        if (humanState == HumanState.Dead) return;
+        stun();
+    }
+    float knockBackPow = 30;
+    float boomerKnockBackPow = 9;
+    public Vector3 knockBackVector = Vector3.zero;
+    public void ApplyKnockBack(GameObject zombie, bool tank)
+    {
+        if (humanState == HumanState.Dead) return;
+        if (tank)
+        {   // 탱크 넉백
+            Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
+            dir.Normalize();
+            knockBackVector = dir * knockBackPow;
+        }
+        else
+        {   // 부머 넉백
+            Vector3 dir = transform.position - zombie.transform.position;
+            dir.Normalize();
+            knockBackVector = dir * boomerKnockBackPow;
+        }
+    }
+    void KnockBackUpdate()
+    {
+        knockBackVector -= knockBackVector * 1 * Time.deltaTime;
+    }
+    void FootSound()
+    {
+        if (speed > 0.01f)
+        {
+            footSoundTimer += Time.deltaTime;
+            if (footSoundTimer > 1 / (speed * 0.5f))
+            {
+                audioSource.PlayOneShot(footSound, 1.5f);
+                footSoundTimer = 0;
+            }
+        }
+    }
+#endregion
     void Bullet(Vector3 origin = new Vector3(), Vector3 dir = new Vector3())
     {
         //비활성화 되어잇는 총알을 찾아라(반복문)
@@ -603,7 +719,7 @@ public class Human_KJS : MonoBehaviour
         if (humanState == HumanState.Dead) return;
         if (isReloaing) { return; }
         // 아이템 정보
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MainWeapon itemInfo)
         {
             if (currTime >= itemInfo.fireRate)
             {
@@ -681,7 +797,7 @@ public class Human_KJS : MonoBehaviour
         if (isReloaing) { return; }
 
         // 권총이냐
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.SubWeapon itemInfo)
         {
             if (currTime >= itemInfo.fireRate)
             {
@@ -738,7 +854,7 @@ public class Human_KJS : MonoBehaviour
 
         }
         // 근접무기냐
-        else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MeleeWeapon itemInfo2)
+        else if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MeleeWeapon itemInfo2)
         {
 
         }
@@ -760,7 +876,7 @@ public class Human_KJS : MonoBehaviour
         if (humanState == HumanState.Dead || isReloaing) return;
 
         // 현재 아이템이 수류탄인지 확인
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Projectile itemInfo)
+        if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.Projectile itemInfo)
         {
             // 장탄 확인
             if (inventory[inventory.SlotNum].value1 <= 0)
@@ -795,32 +911,6 @@ public class Human_KJS : MonoBehaviour
         }
     }
 
-    public void Medikit(GameObject target = null)
-    {
-        if (humanState == HumanState.Dead) return;
-        // 회복템 사용
-        if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.Recovery itemInfo)
-        {   // 자힐
-            if (target == null)
-            {
-                // 풀피가 아닐 때
-                if (HP < 99)
-                {
-                    // 아이템 사용시간 구현 필요
-                    //hp = itemInfo.value;
-                
-                    SelfHeal(SetInteraction.On);
-                }
-            }
-            else
-            {
-                if (target.GetComponent<Human_KJS>().HP < itemInfo.value)
-                {
-                    Heal(target, SetInteraction.On);
-                }
-            }
-        }
-    }
     void GiveDamage(GameObject target, float dmg)
     {
         // 좀비 공격
@@ -832,7 +922,7 @@ public class Human_KJS : MonoBehaviour
         // 아군 공격
         else if (target.layer == LayerMask.NameToLayer(isPlayer ? "Bot_JSW" : "Player_KJS"))
         {
-            target.GetComponent<Human_KJS>().GetDamage(dmg/100, gameObject);
+            target.GetComponent<Human>().GetDamage(dmg/100, gameObject);
         }
     }
     void EquipWeapon(int slotNum)
@@ -860,50 +950,6 @@ public class Human_KJS : MonoBehaviour
         }
         else return false;
     }
-    public void Interact(GameObject target = null, int layer = 0)
-    {
-        if (humanState != HumanState.Normal || interactionState != InteractionState.None) return;
-        // 플레이어 일 때
-        if (target == null)
-        {
-            RaycastHit hitInfo;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 3,
-                ~(1 << LayerMask.NameToLayer("Player_KJS"))))
-            {   // 대상이 아이템
-                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Item_JSW"))
-                {
-                    inventory.PickUp(hitInfo.transform.gameObject);
-                }
-                // 대상이 기절한 아군
-                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
-                {
-                    Revie(hitInfo.transform.gameObject, SetInteraction.On);
-                }
-                // 오브젝트와 상호작용
-                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("InteractObj"))
-                {
-                    TopObj(hitInfo.transform.gameObject).GetComponent<IInteractObj_JSW>().Interact();
-                }
-            }
-
-        }
-        // 봇일 때
-        else
-        {
-            if (layer == LayerMask.NameToLayer("Item_JSW"))
-            {
-                inventory.PickUp(target);
-            }
-            else if (layer == LayerMask.NameToLayer("Bot_JSW") || layer == LayerMask.NameToLayer("Player_KJS"))
-            {
-                Revie(target, SetInteraction.On);
-            }
-        }
-    }
-    public void Drop()
-    {
-        inventory.Drop(inventory.SlotNum);
-    }
     float reloadTime;
     float reloadTimer;
     public void Reload(bool on)
@@ -913,7 +959,7 @@ public class Human_KJS : MonoBehaviour
         {
             if (!isReloaing && inventory.CheckReloadEnable(inventory.SlotNum))
             {   // 주무기일 때
-                if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon mainWeapon)
+                if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MainWeapon mainWeapon)
                 {   // 장전 On
                     reloadTimer = 0;
                     isReloaing = true;
@@ -924,7 +970,7 @@ public class Human_KJS : MonoBehaviour
                     if (isPlayer) arAnim.SetTrigger("AR_Reload");
                     anim.CrossFade("Reloaing_Main", 0.01f, 1);
                 }
-                else if (ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.SubWeapon subWeapon)
+                else if (ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.SubWeapon subWeapon)
                 {   // 장전 On
                     reloadTimer = 0;
                     isReloaing = true;
@@ -955,44 +1001,6 @@ public class Human_KJS : MonoBehaviour
             inventory.Reload(inventory.SlotNum);
             if (isPlayer) player.SlotUIChange();
         }
-    }
-    GameObject TopObj(GameObject obj)
-    {
-        GameObject topObj = obj;
-        while (topObj.transform.parent != null && topObj.transform.parent.gameObject.layer == obj.layer)
-        {
-            topObj = topObj.transform.parent.gameObject;
-        }
-        return topObj;
-    }
-    public Action stun;
-    public void Stun(GameObject stone)
-    {
-        if (humanState == HumanState.Dead) return;
-        stun();
-    }
-    float knockBackPow = 30;
-    float boomerKnockBackPow = 9;
-    public Vector3 knockBackVector = Vector3.zero;
-    public void ApplyKnockBack(GameObject zombie, bool tank)
-    {
-        if (humanState == HumanState.Dead) return;
-        if (tank)
-        {   // 탱크 넉백
-            Vector3 dir = transform.position - zombie.transform.position + Vector3.up * 0.7f;
-            dir.Normalize();
-            knockBackVector = dir * knockBackPow;
-        }
-        else
-        {   // 부머 넉백
-            Vector3 dir = transform.position - zombie.transform.position;
-            dir.Normalize();
-            knockBackVector = dir * boomerKnockBackPow;
-        }
-    }
-    void KnockBackUpdate()
-    {
-        knockBackVector -= knockBackVector * 1 * Time.deltaTime;
     }
     void ChangeAnimatorController(RuntimeAnimatorController controller)
     {
@@ -1027,18 +1035,6 @@ public class Human_KJS : MonoBehaviour
                     if (anim2.GetBool(param.name))
                         anim2.SetTrigger(param.name);
                     break;
-            }
-        }
-    }
-    void FootSound()
-    {
-        if (speed > 0.01f)
-        {
-            footSoundTimer += Time.deltaTime;
-            if (footSoundTimer > 1 / (speed * 0.5f))
-            {
-                audioSource.PlayOneShot(footSound, 1.5f);
-                footSoundTimer = 0;
             }
         }
     }

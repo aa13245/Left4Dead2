@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Human_KJS;
+using static Human;
 
 public class WaistAngle : MonoBehaviour
 {
     Animator anim;
-    Human_KJS human;
+    Human human;
     float charRecoil;
-
+    // 봇 캐릭터 반동
     public void CharRecoilSet(float value)
     {
         charRecoil = value;
@@ -29,7 +29,7 @@ public class WaistAngle : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        human = GetComponentInParent<Human_KJS>();
+        human = GetComponentInParent<Human>();
     }
 
     // Update is called once per frame

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +6,7 @@ public class BotMove : MonoBehaviour
 {
     GameObject player;
     NavMeshAgent agent;
-    BotManager_JSW botManager;
+    BotManager botManager;
     CharacterController cc;
     Animator anim;
     LevelDesign levelDesign;
@@ -25,14 +22,6 @@ public class BotMove : MonoBehaviour
     {
         if (botMoveState == s) return;
         botMoveState = s;
-        if (s == BotMoveState.Idle)
-        {
-
-        }
-        else if (s == BotMoveState.Follow)
-        {
-
-        }
     }
 
     // Start is called before the first frame update
@@ -40,9 +29,9 @@ public class BotMove : MonoBehaviour
     {
         player = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
-        botManager = GetComponent<BotManager_JSW>();
-        GetComponent<Human_KJS>().slow = Slow;
-        GetComponent<Human_KJS>().stun = Stun;
+        botManager = GetComponent<BotManager>();
+        GetComponent<Human>().slow = Slow;
+        GetComponent<Human>().stun = Stun;
         anim = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
         levelDesign = GameObject.Find("LevelDesign").GetComponent<LevelDesign>();
@@ -88,7 +77,7 @@ public class BotMove : MonoBehaviour
             yVelocity += -9.81f * Time.deltaTime;
             cc.Move((botManager.human.knockBackVector + Vector3.up * yVelocity) * Time.deltaTime);
         }
-        if (botManager.human.humanState != Human_KJS.HumanState.Normal || botManager.human.interactionState != Human_KJS.InteractionState.None)
+        if (botManager.human.humanState != Human.HumanState.Normal || botManager.human.interactionState != Human.InteractionState.None)
         {
             if(agent.isOnNavMesh) agent.isStopped = true;
             return;

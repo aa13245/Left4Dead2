@@ -31,7 +31,7 @@ public class JKYRock : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player_KJS") || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
         {
             print("스턴되면서 카메라흔들림");
-            Human_KJS human = other.GetComponent<Human_KJS>();
+            Human human = other.GetComponent<Human>();
             human.Stun(gameObject);
             human.GetDamage(dmg, gameObject);
             

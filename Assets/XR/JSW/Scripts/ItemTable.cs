@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
- public class ItemTable_JSW : MonoBehaviour
+ public class ItemTable : MonoBehaviour
 {
-    public static ItemTable_JSW instance;
+    public static ItemTable instance;
     // 카테고리별 구조체
     public struct MainWeapon
     {

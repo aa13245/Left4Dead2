@@ -21,7 +21,7 @@ public class LevelDesign : MonoBehaviour
     public VisualEffect[] fireWorks;
     bool isStarted;
 
-    public Helicopter_JSW helicopter;
+    public Helicopter helicopter;
     public Transform botDest;
     GameObject canvas;
     public GameObject[] pingPos;
@@ -44,7 +44,7 @@ public class LevelDesign : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        helicopter = GameObject.Find("Helicopter").GetComponent<Helicopter_JSW>();
+        helicopter = GameObject.Find("Helicopter").GetComponent<Helicopter>();
         botDest = GameObject.Find("BotDest").transform;
         // 시작 좀비 스폰
         zomStartSpawnPoints = GameObject.Find("ZombieStartSpawnPoints");
@@ -67,6 +67,7 @@ public class LevelDesign : MonoBehaviour
     }
     IEnumerator GameStart()
     {
+        // 시작 브금, 라디오, 대사 On, 잠시 뒤 fade out
         AudioSource radio = GameObject.Find("RadioSource").GetComponent<AudioSource>();
         Image scriptUI = GameObject.Find("PingCanvas").transform.Find("ScriptUI").GetComponent<Image>();
         Text script = scriptUI.transform.GetChild(0).GetComponent<Text>();
@@ -97,7 +98,7 @@ public class LevelDesign : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O) && !helicopter.isEnable) StartCoroutine(Helicopter());
         RaidUpdate();
-        pingPosUpdate();
+        PingPosUpdate();
     }
     public bool LightOn()
     {
@@ -285,14 +286,15 @@ public class LevelDesign : MonoBehaviour
         {
             Instantiate(tank, raidSpawnPoints.transform.GetChild(Random.Range(0, raidSpawnPoints.transform.childCount)).transform.position, Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), null);
         }
-        
     }
+    // 진행 안내 핑 UI
     int pingLvl;
-    void pingPosUpdate()
+    void PingPosUpdate()
     {
         if (pingLvl == 1) canvas.transform.position = Camera.main.WorldToScreenPoint(pingPos[0].transform.position);
         else if (pingLvl == 2) canvas.transform.position = Camera.main.WorldToScreenPoint(pingPos[1].transform.position);
     }
+    // 공연장 입장 시 첫번째 핑 On
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer != LayerMask.NameToLayer("Player_KJS")) return;

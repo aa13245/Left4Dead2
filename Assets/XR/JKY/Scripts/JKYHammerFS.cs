@@ -587,8 +587,8 @@ public class JKYHammerFS : MonoBehaviour
     IEnumerator AttackCoroutine()
     {
         yield return new WaitForSeconds(0.7f);
-        target.GetComponent<Human_KJS>().ApplyKnockBack(gameObject, true);
-        target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+        target.GetComponent<Human>().ApplyKnockBack(gameObject, true);
+        target.GetComponent<Human>().GetDamage(attackPower, gameObject);
     }
 
     void Damaged()
@@ -679,7 +679,7 @@ public class JKYHammerFS : MonoBehaviour
         foreach (GameObject target in allTargets)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+            if (distanceToTarget < closestDistance && target.GetComponent<Human>().humanState != Human.HumanState.Dead)
             {
                 closestDistance = distanceToTarget;
                 closestTarget = target.transform;

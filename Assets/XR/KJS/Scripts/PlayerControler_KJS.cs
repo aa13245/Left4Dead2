@@ -31,8 +31,8 @@ public class PlayerControler_KJS : MonoBehaviour
     Text interactionText1;
     Text interactionText2;
     public GameObject hitEffect;
-    public Human_KJS human;
-    public Inventory_JSW inventory;
+    public Human human;
+    public Inventory inventory;
     public Animator anim;
 
     // 새로운 변수 추가: 현재 슬롯 번호를 추적
@@ -44,8 +44,8 @@ public class PlayerControler_KJS : MonoBehaviour
 
         // 기존 초기화 코드
         cc = GetComponent<CharacterController>();
-        human = GetComponent<Human_KJS>();
-        inventory = GetComponent<Inventory_JSW>();
+        human = GetComponent<Human>();
+        inventory = GetComponent<Inventory>();
         GameObject canvas = GameObject.Find("Canvas");
         hpSlider = canvas.transform.Find("Info0/HPbar").GetComponent<Slider>();
         hpImage = canvas.transform.Find("Info0/HPbar/Fill Area/Fill").GetComponent<Image>();
@@ -60,8 +60,8 @@ public class PlayerControler_KJS : MonoBehaviour
         interactionText2 = interactionUI.transform.Find("Text2").GetComponent<Text>();
         velocity = Vector3.zero;
         anim = transform.Find("Ch28_nonPBR").GetComponent<Animator>();
-        GetComponent<Human_KJS>().slow = Slow;
-        GetComponent<Human_KJS>().stun = Stun;
+        GetComponent<Human>().slow = Slow;
+        GetComponent<Human>().stun = Stun;
     }
 
 
@@ -81,7 +81,7 @@ public class PlayerControler_KJS : MonoBehaviour
 
         // 클릭을 연속으로 받아야 하는 상황 - 자동 소총을 들고 있는 상황
         if (inventory.SlotNum == 0 &&
-            ItemTable_JSW.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable_JSW.MainWeapon itemInfo &&
+            ItemTable.instance.itemTable[inventory[inventory.SlotNum].kind] is ItemTable.MainWeapon itemInfo &&
             itemInfo.isSniper == false && itemInfo.isShotgun == false)
         {
 
@@ -171,10 +171,10 @@ public class PlayerControler_KJS : MonoBehaviour
     void HpUiUpdate()
     {
         // 현재 플레이어 hp를 hp슬라이더의 value에 반영
-        hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
-        tempHpSlider.value = human.HP / (human.humanState == Human_KJS.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        hpSlider.value = (human.HP - human.TempHP) / (human.humanState == Human.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
+        tempHpSlider.value = human.HP / (human.humanState == Human.HumanState.KnockedDown ? human.knockedDownMaxHP : human.maxHP);
         hpText.text = ((int)human.HP).ToString();
-        if (human.humanState == Human_KJS.HumanState.Normal)
+        if (human.humanState == Human.HumanState.Normal)
         {
             Color c = Color.HSVToRGB(Mathf.Lerp(0, 0.3392157f, hpSlider.value), 1, 1);
             c.a = 1;
@@ -183,7 +183,7 @@ public class PlayerControler_KJS : MonoBehaviour
             c.a = 0.5f;
             tempHpImage.color = c;
         }
-        else if (human.humanState == Human_KJS.HumanState.KnockedDown)
+        else if (human.humanState == Human.HumanState.KnockedDown)
         {
             Color c = Color.HSVToRGB(0, 1, 1);
             c.a = 1;
@@ -202,7 +202,7 @@ public class PlayerControler_KJS : MonoBehaviour
     bool stun;
     public void Stun()
     {
-        if (human.humanState == Human_KJS.HumanState.Normal)
+        if (human.humanState == Human.HumanState.Normal)
         {
             StartCoroutine(StunWait());
         }
@@ -219,7 +219,7 @@ public class PlayerControler_KJS : MonoBehaviour
 
     void CamRecovery()
     {
-        if (human.humanState == Human_KJS.HumanState.Normal)
+        if (human.humanState == Human.HumanState.Normal)
         {
             Camera.main.transform.Rotate(new Vector3(0, 0, Time.deltaTime * 3 * Mathf.DeltaAngle(Camera.main.transform.localEulerAngles.z, 0)));
         }
@@ -260,7 +260,7 @@ public class PlayerControler_KJS : MonoBehaviour
             jumpcurrCnt = 0;
         }
 
-        if (Input.GetButtonDown("Jump") && cc.isGrounded && human.humanState == Human_KJS.HumanState.Normal && human.interactionState == Human_KJS.InteractionState.None)
+        if (Input.GetButtonDown("Jump") && cc.isGrounded && human.humanState == Human.HumanState.Normal && human.interactionState == Human.InteractionState.None)
         {
             yVelocity = jumPower;
             jumpcurrCnt++;
@@ -269,7 +269,7 @@ public class PlayerControler_KJS : MonoBehaviour
         yVelocity += gravity * Time.deltaTime;
         dir.y = yVelocity;
 
-        if ((h != 0 || v != 0) && !stun && human.humanState == Human_KJS.HumanState.Normal && human.interactionState == Human_KJS.InteractionState.None)
+        if ((h != 0 || v != 0) && !stun && human.humanState == Human.HumanState.Normal && human.interactionState == Human.InteractionState.None)
         {
             velocity += dir * acceleration * Time.deltaTime;
         }
@@ -288,26 +288,26 @@ public class PlayerControler_KJS : MonoBehaviour
 
         velocity.y = 0;
 
-        cc.Move(((!stun && human.humanState == Human_KJS.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
+        cc.Move(((!stun && human.humanState == Human.HumanState.Normal ? velocity : Vector3.zero) + Vector3.up * yVelocity + human.knockBackVector) * Time.deltaTime);
     }
 
     void Reload()
     {
         int currentSlot = inventory.SlotNum;
-        Item_JSW currentItem = inventory[currentSlot];
+        ItemStatus currentItem = inventory[currentSlot];
 
         if (currentItem != null)
         {
-            ItemTable_JSW.Items itemKind = currentItem.kind;
-            if (ItemTable_JSW.instance.itemTable.TryGetValue(itemKind, out var itemObject))
+            ItemTable.Items itemKind = currentItem.kind;
+            if (ItemTable.instance.itemTable.TryGetValue(itemKind, out var itemObject))
             {
                 float reloadSpeed = 0f;
 
-                if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
+                if (itemObject is ItemTable.MainWeapon mainWeapon)
                 {
                     reloadSpeed = mainWeapon.reloadSpeed;
                 }
-                else if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
+                else if (itemObject is ItemTable.SubWeapon subWeapon)
                 {
                     reloadSpeed = subWeapon.reloadSpeed;
                 }
@@ -340,10 +340,10 @@ public class PlayerControler_KJS : MonoBehaviour
 
         if (inventory.SlotNum == 0)
         {
-            Item_JSW item = inventory[0];
-            if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
+            ItemStatus item = inventory[0];
+            if (item != null && ItemTable.instance.itemTable.TryGetValue(item.kind, out var itemObject))
             {
-                if (itemObject is ItemTable_JSW.MainWeapon mainWeapon)
+                if (itemObject is ItemTable.MainWeapon mainWeapon)
                 {
                     item.value1 = mainWeapon.magazineCapacity;
                 }
@@ -351,10 +351,10 @@ public class PlayerControler_KJS : MonoBehaviour
         }
         else if (inventory.SlotNum == 1)
         {
-            Item_JSW item = inventory[1];
-            if (item != null && ItemTable_JSW.instance.itemTable.TryGetValue(item.kind, out var itemObject))
+            ItemStatus item = inventory[1];
+            if (item != null && ItemTable.instance.itemTable.TryGetValue(item.kind, out var itemObject))
             {
-                if (itemObject is ItemTable_JSW.SubWeapon subWeapon)
+                if (itemObject is ItemTable.SubWeapon subWeapon)
                 {
                     item.value1 = subWeapon.magazineCapacity;
                 }

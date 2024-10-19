@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static Human_KJS;
+using static Human;
 
 public class JKYEnemyHPSystem : MonoBehaviour
 {

@@ -170,7 +170,7 @@ public class JKYWhat : MonoBehaviour
                 Quaternion lookRotation = Quaternion.LookRotation((target.position - transform.position).normalized);
                 transform.rotation = Quaternion.Euler(0, lookRotation.eulerAngles.y, 0);
                 Animator.SetBool("IsAttacking", true);
-                target.GetComponent<Human_KJS>().GetDamage(attackPower, gameObject);
+                target.GetComponent<Human>().GetDamage(attackPower, gameObject);
                 currTime = 0;
             }
 
@@ -283,7 +283,7 @@ public class JKYWhat : MonoBehaviour
             else
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-                if (distanceToTarget < closestDistance && target.GetComponent<Human_KJS>().humanState != Human_KJS.HumanState.Dead)
+                if (distanceToTarget < closestDistance && target.GetComponent<Human>().humanState != Human.HumanState.Dead)
                 {
                     closestDistance = distanceToTarget;
                     closestTarget = target.transform;

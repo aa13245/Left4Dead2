@@ -1,31 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class EnterSencer_JSW : MonoBehaviour
+// 헬기 입장 체크
+public class EnterSencer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player_KJS") || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW")){
-            other.transform.GetComponent<Human_KJS>().isEntered = true;
+            other.transform.GetComponent<Human>().isEntered = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player_KJS") || other.gameObject.layer == LayerMask.NameToLayer("Bot_JSW"))
         {
-            other.transform.GetComponent<Human_KJS>().isEntered = false;
+            other.transform.GetComponent<Human>().isEntered = false;
         }
     }
 }

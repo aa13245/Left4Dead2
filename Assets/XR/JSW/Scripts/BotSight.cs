@@ -4,10 +4,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BotSight_JSW : MonoBehaviour
+public class BotSight : MonoBehaviour
 {
     NavMeshAgent agent;
-    BotManager_JSW botManager;
+    BotManager botManager;
     GameObject target;
     public GameObject Target {  get { return target; } }
     public float fov = 150;
@@ -21,7 +21,7 @@ public class BotSight_JSW : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        botManager = GetComponent<BotManager_JSW>();
+        botManager = GetComponent<BotManager>();
     }
 
     // Update is called once per frame
@@ -86,6 +86,7 @@ public class BotSight_JSW : MonoBehaviour
         }
         return null;
     }
+    // 아이템 체크
     public GameObject ItemDetect(int slotNum)
     {
         // 범위 내 감지
@@ -102,19 +103,19 @@ public class BotSight_JSW : MonoBehaviour
             }
             if (SightCheck(topObj, 360))
             {
-                if (slotNum == 0 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.MainWeapon)
+                if (slotNum == 0 && ItemTable.instance.itemTable[topObj.GetComponent<ItemStatus>().kind] is ItemTable.MainWeapon)
                 {
                     return topObj;
                 }
-                else if (slotNum == 1 && (ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.SubWeapon || ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.MeleeWeapon))
+                else if (slotNum == 1 && (ItemTable.instance.itemTable[topObj.GetComponent<ItemStatus>().kind] is ItemTable.SubWeapon || ItemTable.instance.itemTable[topObj.GetComponent<ItemStatus>().kind] is ItemTable.MeleeWeapon))
                 {
                     return topObj;
                 }
-                else if (slotNum == 2 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.Projectile)
+                else if (slotNum == 2 && ItemTable.instance.itemTable[topObj.GetComponent<ItemStatus>().kind] is ItemTable.Projectile)
                 {
                     return topObj;
                 }
-                if (slotNum == 3 && ItemTable_JSW.instance.itemTable[topObj.GetComponent<Item_JSW>().kind] is ItemTable_JSW.Recovery)
+                if (slotNum == 3 && ItemTable.instance.itemTable[topObj.GetComponent<ItemStatus>().kind] is ItemTable.Recovery)
                 {
                     return topObj;
                 }
@@ -155,5 +156,4 @@ public class BotSight_JSW : MonoBehaviour
         if (Mathf.Abs(deltaAngle) < 5) fireEnable = true;
         transform.Rotate(Vector3.up * deltaAngle * Time.deltaTime * rotSpeed);
     }
-    // 아이템 체크
 }

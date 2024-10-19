@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicController : MonoBehaviour, IInteractObj_JSW
+public class MusicController : MonoBehaviour, IInteractObj
 {
     LevelDesign levelDesign;
+    // 무대 음악 On
     public bool Interact()
     {
         if (levelDesign.MusicOn()) return true;
