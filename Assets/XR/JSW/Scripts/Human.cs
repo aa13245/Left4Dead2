@@ -52,19 +52,6 @@ public class Human : MonoBehaviour
     //PlayerMove_KJS player;
     public PlayerControler_KJS player;
 
-    void PlayFireSound(int soundIndex)
-    {
-        if (soundIndex < 0 || soundIndex >= fireSounds.Length)
-        {
-            Debug.LogWarning("잘못된 사운드 인덱스입니다.");
-            return;
-        }
-
-        if (fireSounds[soundIndex] != null)
-        {
-            audioSource.PlayOneShot(fireSounds[soundIndex]);
-        }
-    }
     #region 구현부
     public float MinRecoil
     {
@@ -691,7 +678,21 @@ public class Human : MonoBehaviour
             }
         }
     }
-#endregion
+    #endregion
+    #region 팀원
+    void PlayFireSound(int soundIndex)
+    {
+        if (soundIndex < 0 || soundIndex >= fireSounds.Length)
+        {
+            Debug.LogWarning("잘못된 사운드 인덱스입니다.");
+            return;
+        }
+
+        if (fireSounds[soundIndex] != null)
+        {
+            audioSource.PlayOneShot(fireSounds[soundIndex]);
+        }
+    }
     void Bullet(Vector3 origin = new Vector3(), Vector3 dir = new Vector3())
     {
         //비활성화 되어잇는 총알을 찾아라(반복문)
@@ -1044,5 +1045,6 @@ public class Human : MonoBehaviour
         weaponSwitcher.SwitchWeapon(weaponSwitcher.fpsModel2, 1);
         weaponSwitcher.UpdateWeaponObjects();
     }
+    #endregion
 }
 
