@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
+//using System.Collections.Generic;
+//using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -425,6 +425,8 @@ public class PlayerControler_KJS : MonoBehaviour
         //print("emfd");
         StartCoroutine(Bumer());
     }
+    public AudioClip boomerBgm;
+    public bool boomerEft;
     IEnumerator Bumer()
     {
         float elapsedTime = 0f;
@@ -432,6 +434,11 @@ public class PlayerControler_KJS : MonoBehaviour
         mat.SetFloat("_ColorScale", 1f);
         //colorScale = 1f;
         full.SetActive(true);
+        if (!boomerEft)
+        {
+            boomerEft = true;
+            human.audioSource.PlayOneShot(boomerBgm);
+        }
 
         yield return new WaitForSeconds(2f);
         while (elapsedTime < lerpDuration)
@@ -456,6 +463,7 @@ public class PlayerControler_KJS : MonoBehaviour
         {
             mat.SetFloat("_ColorScale", endValue);
             full.SetActive(false);
+            boomerEft = false;
         }
 
 
@@ -484,5 +492,13 @@ public class PlayerControler_KJS : MonoBehaviour
 
         //    }
         //}
+    }
+    private void OnDestroy()
+    {
+        full.SetActive(false);
+    }
+    public void GameEnd()
+    {
+        full.SetActive(false);
     }
 }

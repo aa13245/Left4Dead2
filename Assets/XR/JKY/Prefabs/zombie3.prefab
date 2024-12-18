@@ -2514,12 +2514,12 @@ MonoBehaviour:
   FieldOfView: 65
   LineOfSightDistance: 7
   IdleSpeedModifier: 0.25
-  attackPower: 2
+  attackPower: 1
   audio: {fileID: 0}
   sounds:
   - {fileID: 8300000, guid: 9847cc8d8d4bb9d4496de9c33c8e2ef1, type: 3}
   - {fileID: 8300000, guid: 505bdd526517029439e6811582bfc121, type: 3}
-  damageDelay: 1
+  damageDelay: 3
   currTime: 0
 --- !u!54 &5712702483429851865
 Rigidbody:

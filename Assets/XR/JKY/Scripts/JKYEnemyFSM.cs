@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+//using System.Net.Http.Headers;
+//using Unity.VisualScripting;
+//using Unity.VisualScripting.FullSerializer;
+//using UnityEditor;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
+//using UnityEngine.UIElements;
+//using static UnityEngine.GraphicsBuffer;
 
 public class JKYEnemyFSM : MonoBehaviour
 {
@@ -44,7 +44,7 @@ public class JKYEnemyFSM : MonoBehaviour
     float currentTime = 0;
 
     // 공격딜레이시간
-    float attackDelay = 1f;
+    float attackDelay = 3f;
 
     CharacterController cc;
 

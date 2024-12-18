@@ -135,6 +135,7 @@ public class LevelDesign : MonoBehaviour
         concertAudio.clip = music[0];
         concertAudio.Play();
         msgObj.SetActive(true);
+        yield return new WaitForSeconds(1);
         while (msgObj.GetComponent<RectTransform>().anchoredPosition.y > -185)
         {   // 내려옴
             msgObj.GetComponent<RectTransform>().anchoredPosition += Vector2.down * Time.deltaTime * 1000;
@@ -142,9 +143,9 @@ public class LevelDesign : MonoBehaviour
             mainText.color += new Color(0, 0, 0, Time.deltaTime * 3);
             yield return null;
         }
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(4);
         audioSource.PlayOneShot(bgm_horde);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
         // 사라짐
         while (icon.color.a > 0)
         {
@@ -173,13 +174,14 @@ public class LevelDesign : MonoBehaviour
     float spawnCooltime;
     float specialZomCool = 10;
     int tankCounter;
+    bool heliEnable;
     void RaidUpdate()
     {
         if (!isStarted) return;
         timer += Time.deltaTime;
         if (spawnCooltime > 0) spawnCooltime -= Time.deltaTime;
         if (specialZomCool > 0) specialZomCool -= Time.deltaTime;
-        if (timer > 10) FireWork(false);
+        if (timer > 10 && !heliEnable) FireWork(false);
         // 레이드 1
         if (timer > 10 && timer < 40)
         {
@@ -192,34 +194,35 @@ public class LevelDesign : MonoBehaviour
         }
 
         // 레이드 2
-        if (timer > 100 && timer < 130)
+        if (timer > 80 && timer < 110)
         {
             SpawnInterval();
-            if (timer > 120 && tankCounter == 1)
+            if (timer > 100 && tankCounter == 1)
             {
                 tankCounter++;
                 Spawn(ZomKind.Tank);
             }
         }
         // 무한 레이드
-        if (timer > 190)
+        if (timer > 150)
         {
             SpawnInterval();
-            if (timer > 200 && tankCounter == 2)
+            if (timer > 160 && tankCounter == 2)
             {
                 tankCounter++;
                 Spawn(ZomKind.Tank);
             }
-            if (timer > 210 && !helicopter.isEnable){
+            if (timer > 170 && !heliEnable){
+                heliEnable = true;
                 StartCoroutine(Helicopter());
             }
         }
     }
     IEnumerator RaidCoroutine()
     {
-        yield return new WaitForSeconds(100);
+        yield return new WaitForSeconds(80);
         audioSource.PlayOneShot(bgm_horde);
-        yield return new WaitForSeconds(190);
+        yield return new WaitForSeconds(150);
         audioSource.PlayOneShot(bgm_horde);
     }
     IEnumerator Helicopter()
@@ -257,7 +260,7 @@ public class LevelDesign : MonoBehaviour
         if (spawnCooltime <= 0)
         {   // 일반 좀비
             Spawn(ZomKind.Normal);
-            spawnCooltime = 5;
+            spawnCooltime = 3;
         }
         if (specialZomCool <= 0)
         {   // 특수 좀비
